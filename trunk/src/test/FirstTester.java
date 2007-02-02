@@ -3,6 +3,7 @@ package test;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.GoogleTalkConnection;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.Roster;
@@ -26,10 +27,10 @@ public class FirstTester {
 			addRosterListener(con);
 			addPacketListener(con);
 
-			// Chat chat = con.createChat("dragonetail@gmail.com");
-			// chat.sendMessage("Howdy!");
-			// Message message = chat.nextMessage();
-			// System.out.println(message.getBody());
+			 Chat chat = con.createChat("sheena.lv@gmail.com");
+			 chat.sendMessage("Howdy!");
+			 Message message = chat.nextMessage();
+			 System.out.println(message.getBody());
 
 			while (true) {
 				try {

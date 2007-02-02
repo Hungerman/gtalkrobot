@@ -64,6 +64,8 @@ public class GTRobot {
 				// which is fine for this example.
 				System.out.println("Presence changed: " + user + " : "
 						+ roster.getPresence(user));
+				
+				GlobalContext.getInstance().getUser(user);
 			}
 
 			public void entriesAdded(Collection userList) {

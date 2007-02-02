@@ -1,17 +1,33 @@
 package test.command;
 
-import java.util.Hashtable;
-
 import test.context.GlobalContext;
 import test.context.UserEntry;
 
 public class AbstractCommand {
-	private static final String ERROR_MESSAGE ="ERROR_MESSAGE";
-	private UserEntry userEntry = null;
-	private Hashtable internalData = new Hashtable();
+	private UserEntry userEntry;
+
+	private String originMessage;
+
+	private String errorMessage;
 
 	public AbstractCommand(String user) {
-		userEntry = GlobalContext.getInstance().getUser((String) user);
+		setUserEntry(GlobalContext.getInstance().getUser((String) user));
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+
+	public String getOriginMessage() {
+		return originMessage;
+	}
+
+	public void setOriginMessage(String orginMessage) {
+		this.originMessage = orginMessage;
 	}
 
 	public UserEntry getUserEntry() {
@@ -20,23 +36,6 @@ public class AbstractCommand {
 
 	public void setUserEntry(UserEntry userEntry) {
 		this.userEntry = userEntry;
-	}
-
-	public Hashtable getInternalData() {
-		return internalData;
-	}
-
-	public void setInternalData(Hashtable internalData) {
-		this.internalData = internalData;
-	}
-	
-	public void setErrorMessage(String msg)
-	{
-		internalData.put(ERROR_MESSAGE,msg);
-	}
-	public String getErrorMessage()
-	{
-		return (String)internalData.get(ERROR_MESSAGE);
 	}
 
 }

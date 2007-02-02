@@ -14,13 +14,13 @@ public class GlobalContext {
 
 	private static final GlobalContext instance = new GlobalContext();
 
-	private CacheManager manager = null;
+	private CacheManager manager;
 
-	private Cache userCache = null;
+	private Cache userCache;
 
-	private Cache chatCache = null;
+	private Cache chatCache;
 
-	private XMPPConnection connection = null;
+	private XMPPConnection connection;
 
 	private GlobalContext() {
 		initializeCache();
