@@ -11,10 +11,13 @@ public class UserEntry implements Serializable {
 
 	private boolean chattable;
 
+	private boolean echoable;
+
 	public UserEntry(String user) {
 		this.user = user;
 		this.nickName = user;
 		this.chattable = true;
+		echoable = false;
 	}
 
 	public boolean isChattable() {
@@ -40,6 +43,15 @@ public class UserEntry implements Serializable {
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
+
+	public boolean isEchoable() {
+		return echoable;
+	}
+
+	public void setEchoable(boolean echoable) {
+		this.echoable = echoable;
+	}
+
 	// public RosterEntry getRosterEntry() {
 	// return rosterEntry;
 	// }

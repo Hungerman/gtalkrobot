@@ -1,5 +1,7 @@
 package test.processer;
 
+import java.util.List;
+
 import org.jivesoftware.smack.XMPPException;
 
 import test.command.AbstractCommand;
@@ -20,18 +22,18 @@ public class InvalidCommandProcessor extends AbstractProcessor {
 		InvalidCommand command = (InvalidCommand) abstractCommand;
 
 		StringBuffer messageBuffer = new StringBuffer();
-		String[] argv = command.getArgv();
-		if (argv == null || argv.length < 1) {
+		List argv = command.getArgv();
+		if (argv == null || argv.size() < 1) {
 			messageBuffer.append("Command is NULL!");
 		} else {
 			messageBuffer.append("[ ");
-			for (int i = 0; i < argv.length; i++) {
-				messageBuffer.append(argv[i]).append(' ');
+			for (int i = 0; i < argv.size(); i++) {
+				messageBuffer.append((String)argv.get(i)).append(' ');
 			}
 			messageBuffer.append("] ");
 		}
 		messageBuffer
-				.append("is not recognized as an internal or external command!");
+				.append("is not recognized as a command!");
 		sendBackMessage(abstractCommand, messageBuffer.toString());
 	}
 

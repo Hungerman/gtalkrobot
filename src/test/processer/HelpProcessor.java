@@ -22,7 +22,10 @@ public class HelpProcessor extends AbstractProcessor {
 
 		StringBuffer messageBuffer = new StringBuffer();
 		messageBuffer.append("Welcome to gtalkbot!\n").append("\n").append(
-				"Commands:").append("  [ /help ] show this message");
+				"Commands:\n").append("\t[ /help ] show this message").append(
+				"\t[ /nochat|away ] set to away").append(
+				"\t[ /chat|available ] set to available").append(
+				"\t[ /echo [on|off] ] set to available");
 
 		sendBackMessage(abstractCommand, messageBuffer.toString());
 	}
