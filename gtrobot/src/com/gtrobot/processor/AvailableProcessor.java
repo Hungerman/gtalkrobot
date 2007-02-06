@@ -7,31 +7,30 @@ import com.gtrobot.command.AvailableCommand;
 import com.gtrobot.context.UserEntry;
 import com.gtrobot.exception.CommandMatchedException;
 
-
 public class AvailableProcessor extends AbstractProcessor {
 
-	protected void beforeProcess(AbstractCommand abstractCommand)
-			throws CommandMatchedException {
-		if (!(abstractCommand instanceof AvailableCommand)) {
-			throw new CommandMatchedException(abstractCommand, this);
+	protected void beforeProcess(AbstractCommand abCmd)
+			throws CommandMatchedException, XMPPException {
+		if (!(abCmd instanceof AvailableCommand)) {
+			throw new CommandMatchedException(abCmd, this);
 		}
-		super.beforeProcess(abstractCommand);
+		super.beforeProcess(abCmd);
 	}
 
-	protected void internalProcess(AbstractCommand abstractCommand)
-			throws XMPPException {
-		// AvailableCommand command = (AvailableCommand) abstractCommand;
+	protected void internalProcess(AbstractCommand abCmd) throws XMPPException {
+		AvailableCommand cmd = (AvailableCommand) abCmd;
 
-		UserEntry userEntry = abstractCommand.getUserEntry();
+		UserEntry userEntry = cmd.getUserEntry();
 		userEntry.setChattable(true);
+		ctx.updateUser(userEntry.getUser());
 
-		StringBuffer messageBuffer = new StringBuffer();
-		messageBuffer
-				.append("Welcome back to chatting!\n")
-				.append(
-						" If you do not want chatting for a while, please use [/nochat] to stop chatting.\n");
+		StringBuffer msgBuf = new StringBuffer();
+		msgBuf.append(cmd.getI18NMessage("available.title"));
+		msgBuf.append(endl);
+		msgBuf.append(cmd.getI18NMessage("available.prompt"));
+		msgBuf.append(endl);
 
-		sendBackMessage(abstractCommand, messageBuffer.toString());
+		sendBackMessage(cmd, msgBuf.toString());
 	}
 
 }

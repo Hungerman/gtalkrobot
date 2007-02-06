@@ -7,34 +7,34 @@ import com.gtrobot.command.BroadcastMessageCommand;
 import com.gtrobot.context.UserEntry;
 import com.gtrobot.exception.CommandMatchedException;
 
-
 public class BroadcastMessageProcessor extends AbstractProcessor {
 
-	protected void beforeProcess(AbstractCommand abstractCommand)
-			throws CommandMatchedException {
-		if (!(abstractCommand instanceof BroadcastMessageCommand)) {
-			throw new CommandMatchedException(abstractCommand, this);
+	protected void beforeProcess(AbstractCommand abCmd)
+			throws CommandMatchedException, XMPPException {
+		if (!(abCmd instanceof BroadcastMessageCommand)) {
+			throw new CommandMatchedException(abCmd, this);
 		}
 
-		super.beforeProcess(abstractCommand);
+		super.beforeProcess(abCmd);
 	}
 
-	protected void internalProcess(AbstractCommand abstractCommand)
-			throws XMPPException {
-		BroadcastMessageCommand command = (BroadcastMessageCommand) abstractCommand;
+	protected void internalProcess(AbstractCommand abCmd) throws XMPPException {
+		BroadcastMessageCommand cmd = (BroadcastMessageCommand) abCmd;
 
-		UserEntry userEntry = abstractCommand.getUserEntry();
+		UserEntry userEntry = abCmd.getUserEntry();
 
 		if (!userEntry.isChattable()) {
-			StringBuffer messageBuffer = new StringBuffer();
-			messageBuffer
-					.append(
-							"Sorry, your message was not deliveried as you are [away] of chatting now!\n")
-					.append(" Please use [/chat] back to chatting.\n").append(
-							"\nYour Message:\n\t").append(
-							command.getMessageContent());
+			StringBuffer msgBuf = new StringBuffer();
+
+			msgBuf.append(cmd.getI18NMessage("broadcast.error.title"));
+			msgBuf.append(endl);
+			msgBuf.append(cmd.getI18NMessage("broadcast.error.prompt"));
+			msgBuf.append(endl);
+			msgBuf.append(cmd.getMessageContent());
+
+			sendBackMessage(cmd, msgBuf.toString());
 		} else {
-			broadcastMessage(command, command.getMessageContent());
+			broadcastMessage(cmd, cmd.getMessageContent());
 		}
 	}
 

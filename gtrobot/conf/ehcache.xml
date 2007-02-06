@@ -43,7 +43,7 @@
     <defaultCache
         maxElementsInMemory="10000"
         eternal="false"
-        overflowToDisk="true"
+        overflowToDisk="false"
         timeToIdleSeconds="1800"
         timeToLiveSeconds="1800"
         diskPersistent="false"
@@ -75,6 +75,16 @@
         timeToLiveSeconds="1800"
         diskPersistent="false"
         diskExpiryThreadIntervalSeconds="1800"/>
+        
+    <cache name="sessionCache"
+        maxElementsInMemory="40"
+        eternal="false"
+        overflowToDisk="true"
+        timeToIdleSeconds="180"
+        timeToLiveSeconds="180"
+        diskPersistent="false"
+        diskExpiryThreadIntervalSeconds="180"/>
+        
           
     <!-- See http://ehcache.sourceforge.net/documentation/#mozTocId258426 for how to configure caching for your objects -->
 </ehcache>
