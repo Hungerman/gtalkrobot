@@ -8,34 +8,28 @@ import com.gtrobot.command.AbstractCommand;
 import com.gtrobot.command.InvalidCommand;
 import com.gtrobot.exception.CommandMatchedException;
 
-
 public class InvalidCommandProcessor extends AbstractProcessor {
 
-	protected void beforeProcess(AbstractCommand abstractCommand)
-			throws CommandMatchedException {
-		if (!(abstractCommand instanceof InvalidCommand)) {
-			throw new CommandMatchedException(abstractCommand, this);
+	protected void beforeProcess(AbstractCommand abCmd)
+			throws CommandMatchedException, XMPPException {
+		if (!(abCmd instanceof InvalidCommand)) {
+			throw new CommandMatchedException(abCmd, this);
 		}
-		super.beforeProcess(abstractCommand);
+		super.beforeProcess(abCmd);
 	}
 
-	protected void internalProcess(AbstractCommand abstractCommand) throws XMPPException {
-		InvalidCommand command = (InvalidCommand) abstractCommand;
+	protected void internalProcess(AbstractCommand abCmd) throws XMPPException {
+		InvalidCommand cmd = (InvalidCommand) abCmd;
 
-		StringBuffer messageBuffer = new StringBuffer();
-		List argv = command.getArgv();
+		StringBuffer msgBuf = new StringBuffer();
+		List argv = cmd.getArgv();
 		if (argv == null || argv.size() < 1) {
-			messageBuffer.append("Command is NULL!");
+			msgBuf.append(cmd.getI18NMessage("invalid.command.null"));
 		} else {
-			messageBuffer.append("[ ");
-			for (int i = 0; i < argv.size(); i++) {
-				messageBuffer.append((String)argv.get(i)).append(' ');
-			}
-			messageBuffer.append("] ");
+			msgBuf.append(cmd.getI18NMessage("invalid.command"));
+			msgBuf.append(cmd.getOriginMessage());
 		}
-		messageBuffer
-				.append("is not recognized as a command!");
-		sendBackMessage(abstractCommand, messageBuffer.toString());
+		sendBackMessage(cmd, msgBuf.toString());
 	}
 
 }

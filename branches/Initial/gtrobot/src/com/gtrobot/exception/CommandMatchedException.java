@@ -3,7 +3,6 @@ package com.gtrobot.exception;
 import com.gtrobot.command.AbstractCommand;
 import com.gtrobot.processor.AbstractProcessor;
 
-
 public class CommandMatchedException extends Exception {
 	private static final long serialVersionUID = 5164473922992670075L;
 

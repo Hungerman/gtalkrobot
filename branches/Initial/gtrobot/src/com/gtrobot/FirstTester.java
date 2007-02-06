@@ -27,10 +27,10 @@ public class FirstTester {
 			addRosterListener(con);
 			addPacketListener(con);
 
-			 Chat chat = con.createChat("sheena.lv@gmail.com");
-			 chat.sendMessage("Howdy!");
-			 Message message = chat.nextMessage();
-			 System.out.println(message.getBody());
+			Chat chat = con.createChat("sheena.lv@gmail.com");
+			chat.sendMessage("Howdy!");
+			Message message = chat.nextMessage();
+			System.out.println(message.getBody());
 
 			while (true) {
 				try {

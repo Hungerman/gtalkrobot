@@ -1,9 +1,9 @@
 package com.gtrobot.command;
 
-import utils.MessageUtil;
 
 import com.gtrobot.context.GlobalContext;
 import com.gtrobot.context.UserEntry;
+import com.gtrobot.utils.MessageUtil;
 
 public class AbstractCommand {
 	private UserEntry userEntry;
@@ -41,7 +41,7 @@ public class AbstractCommand {
 	}
 
 	public String getI18NMessage(String key) {
-		return MessageUtil.getInstance().getMessage(key, userEntry);
+		return MessageUtil.getInstance().getMessage(key, userEntry.getLocale());
 	}
 
 }

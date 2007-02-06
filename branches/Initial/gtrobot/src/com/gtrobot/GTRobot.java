@@ -3,6 +3,8 @@ package com.gtrobot;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.GoogleTalkConnection;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.Roster;
@@ -13,11 +15,13 @@ import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 
+
 import com.gtrobot.command.AbstractCommand;
 import com.gtrobot.context.GlobalContext;
-
+import com.gtrobot.utils.MessageUtil;
 
 public class GTRobot {
+	protected static final transient Log log = LogFactory.getLog(GTRobot.class);
 
 	public static void main(String[] args) {
 		GoogleTalkConnection con;
@@ -25,48 +29,45 @@ public class GTRobot {
 			// XMPPConnection.DEBUG_ENABLED = true;
 			con = createConnection();
 			GlobalContext.getInstance().setConnection(con);
-			
-			addRosterListener(con);
-			addPacketListener(con);
 
-			// Chat chat = con.createChat("dragonetail@gmail.com");
-			// chat.sendMessage("Howdy!");
-			// Message message = chat.nextMessage();
-			// System.out.println(message.getBody());
+			initRosterListener(con);
+			addPacketListener(con);
 
 			while (true) {
 				try {
 					Thread.sleep(1000000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					log.error("InterruptedException!", e);
 				}
 			}
 		} catch (XMPPException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("System error!", e);
 		}
 	}
 
 	private static GoogleTalkConnection createConnection() throws XMPPException {
+		MessageUtil messageUtil = MessageUtil.getInstance();
+		String username = messageUtil.getMessage("gtrobot.username");
+		String password = messageUtil.getMessage("gtrobot.password");
+
 		GoogleTalkConnection con;
 		con = new GoogleTalkConnection();
-		con.login("joey.at.japan", "mengyang");
+		con.login(username, password);
 		return con;
 	}
 
-	private static void addRosterListener(GoogleTalkConnection con)
+	private static void initRosterListener(GoogleTalkConnection con)
 			throws XMPPException {
 		final Roster roster = con.getRoster();
 		roster.setSubscriptionMode(Roster.SUBSCRIPTION_ACCEPT_ALL);
 
 		roster.addRosterListener(new RosterListener() {
 			public void presenceChanged(String user) {
-				// If the presence is unavailable then "null" will be printed,
-				// which is fine for this example.
-				System.out.println("Presence changed: " + user + " : "
+				log.info("Presence changed: " + user + " : "
 						+ roster.getPresence(user));
-				
-				GlobalContext.getInstance().getUser(user);
+
+				// Cache the user information
+				GlobalContext.getInstance().updateUser(user);
 			}
 
 			public void entriesAdded(Collection userList) {
@@ -81,51 +82,38 @@ public class GTRobot {
 				showMessage(userList, "Entries deleted");
 			}
 
-			/**
-			 * @param userList
-			 */
 			private void showMessage(Collection userList, String message) {
 				if (userList == null)
 					return;
 				Iterator it = userList.iterator();
 				{
 					Object user = it.next();
-					System.out.println(message + " :" + user);
-					
-					GlobalContext.getInstance().getUser((String)user);
+					log.info(message + " :" + user);
+
+					// Cache the user information
+					GlobalContext.getInstance().updateUser((String) user);
 				}
 			}
 		});
 	}
 
 	private static void addPacketListener(GoogleTalkConnection connection) {
-		// Create a packet filter to listen for new messages from a particular
-		// user. We use an AndFilter to combine two other filters.
-		// PacketFilter filter = new AndFilter(
-		// new PacketTypeFilter(Message.class), new FromContainsFilter(
-		// "mary@jivesoftware.com"));
+		// Create the filter for all Message information
 		PacketFilter filter = new PacketTypeFilter(Message.class);
-		// Assume we've created an XMPPConnection name "connection".
 
-		// First, register a packet collector using the filter we created.
-		// PacketCollector myCollector =
-		// connection.createPacketCollector(filter);
-		// Normally, you'd do something with the collector, like wait for new
-		// packets.
-
-		// Next, create a packet listener. We use an anonymous inner class for
-		// brevity.
-		PacketListener myListener = new PacketListener() {
+		// Only Message packet will come here
+		PacketListener listener = new PacketListener() {
 			public void processPacket(Packet packet) {
 				Message message = (Message) packet;
-				
+
+				// Parse the message to command object
 				AbstractCommand command = CommadParser.parser(message);
+				// Process the command
 				CommadProcessor.process(command);
 			}
 		};
 
-		// Register the listener.
-		connection.addPacketListener(myListener, filter);
+		// Register the listener with filter
+		connection.addPacketListener(listener, filter);
 	}
-
 }

@@ -3,6 +3,8 @@ package com.gtrobot.context;
 import java.io.Serializable;
 import java.util.Locale;
 
+import org.jivesoftware.smack.util.StringUtils;
+
 public class UserEntry implements Serializable {
 	private static final long serialVersionUID = -9113870554641563860L;
 
@@ -13,12 +15,12 @@ public class UserEntry implements Serializable {
 	private boolean chattable;
 
 	private boolean echoable;
-	
+
 	private Locale locale;
 
 	public UserEntry(String user) {
 		this.user = user;
-		this.nickName = user;
+		this.nickName = StringUtils.parseName(user);
 		this.chattable = true;
 		echoable = false;
 	}
@@ -62,13 +64,4 @@ public class UserEntry implements Serializable {
 	public void setLocale(Locale locale) {
 		this.locale = locale;
 	}
-	
-	
-
-	// public RosterEntry getRosterEntry() {
-	// return rosterEntry;
-	// }
-	// public void setRosterEntry(RosterEntry rosterEntry) {
-	// this.rosterEntry = rosterEntry;
-	// }
 }

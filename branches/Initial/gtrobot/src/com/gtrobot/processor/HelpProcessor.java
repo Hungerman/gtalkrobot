@@ -8,37 +8,42 @@ import com.gtrobot.exception.CommandMatchedException;
 
 public class HelpProcessor extends AbstractProcessor {
 
-	protected void beforeProcess(AbstractCommand abstractCommand)
-			throws CommandMatchedException {
-		if (!(abstractCommand instanceof HelpCommand)) {
-			throw new CommandMatchedException(abstractCommand, this);
+	protected void beforeProcess(AbstractCommand abCmd)
+			throws CommandMatchedException, XMPPException {
+		if (!(abCmd instanceof HelpCommand)) {
+			throw new CommandMatchedException(abCmd, this);
 		}
-		super.beforeProcess(abstractCommand);
+		super.beforeProcess(abCmd);
 	}
 
-	protected void internalProcess(AbstractCommand abstractCommand)
-			throws XMPPException {
-		HelpCommand command = (HelpCommand) abstractCommand;
+	protected void internalProcess(AbstractCommand abCmd) throws XMPPException {
+		HelpCommand cmd = (HelpCommand) abCmd;
 
-		StringBuffer messageBuffer = new StringBuffer();
-		messageBuffer.append(endl);
-		messageBuffer.append(command.getI18NMessage("help.welcome"));
-		messageBuffer.append(endl);
-		messageBuffer.append(command.getI18NMessage("help.prompt"));
-		messageBuffer.append(endl);
-		messageBuffer.append("|--");
-		messageBuffer.append(command.getI18NMessage("help.command.help"));
-		messageBuffer.append(endl);
-		messageBuffer.append("|--");
-		messageBuffer.append(command.getI18NMessage("help.command.away"));
-		messageBuffer.append(endl);
-		messageBuffer.append("|--");
-		messageBuffer.append(command.getI18NMessage("help.command.available"));
-		messageBuffer.append(endl);
-		messageBuffer.append("|--");
-		messageBuffer.append(command.getI18NMessage("help.command.echo"));
-		messageBuffer.append(endl);
-		sendBackMessage(abstractCommand, messageBuffer.toString());
+		String prefix = "#> ";
+		StringBuffer msgBuf = new StringBuffer();
+		msgBuf.append(cmd.getI18NMessage("help.welcome"));
+		msgBuf.append(endl);
+		msgBuf.append(cmd.getI18NMessage("help.prompt"));
+		msgBuf.append(endl);
+		msgBuf.append(prefix);
+		msgBuf.append(cmd.getI18NMessage("help.command.help"));
+		msgBuf.append(endl);
+		msgBuf.append(prefix);
+		msgBuf.append(cmd.getI18NMessage("help.command.away"));
+		msgBuf.append(endl);
+		msgBuf.append(prefix);
+		msgBuf.append(cmd.getI18NMessage("help.command.available"));
+		msgBuf.append(endl);
+		msgBuf.append(prefix);
+		msgBuf.append(cmd.getI18NMessage("help.command.echo"));
+		msgBuf.append(endl);
+		msgBuf.append(prefix);
+		msgBuf.append(cmd.getI18NMessage("help.command.lang"));
+		msgBuf.append(endl);
+		msgBuf.append(prefix);
+		msgBuf.append(cmd.getI18NMessage("help.command.searchuser"));
+		msgBuf.append(endl);
+		sendBackMessage(cmd, msgBuf.toString());
 	}
 
 }

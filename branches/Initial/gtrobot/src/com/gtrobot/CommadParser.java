@@ -6,6 +6,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.packet.Message;
 
 import com.gtrobot.command.AbstractCommand;
@@ -15,9 +17,13 @@ import com.gtrobot.command.BroadcastMessageCommand;
 import com.gtrobot.command.EchoCommand;
 import com.gtrobot.command.HelpCommand;
 import com.gtrobot.command.InvalidCommand;
-
+import com.gtrobot.command.LangCommand;
+import com.gtrobot.command.SearchUserCommand;
 
 public class CommadParser {
+	protected static final transient Log log = LogFactory
+			.getLog(CommadParser.class);
+
 	private static final String COMMAND_PREFIX_1 = "/";
 
 	private static final String COMMAND_PREFIX_2 = ":";
@@ -30,59 +36,80 @@ public class CommadParser {
 		commandTable.put("chat", AvailableCommand.class);
 		commandTable.put("available", AvailableCommand.class);
 		commandTable.put("echo", EchoCommand.class);
+		commandTable.put("lang", LangCommand.class);
+		commandTable.put("sc", SearchUserCommand.class);
+		commandTable.put("searchuser", SearchUserCommand.class);
 		// TODO
 	}
 
+	/**
+	 * Parse the message and return a command object
+	 * 
+	 * @param message
+	 * @return
+	 */
 	public static AbstractCommand parser(Message message) {
-		System.out.println("Message       from: " + message.getFrom());
-		System.out.println("                to: " + message.getTo());
-		System.out.println("          threadId: " + message.getThread());
-		System.out.println("          packetId: " + message.getPacketID());
-		System.out.println("              type: "
-				+ message.getType().toString());
-		Iterator propertyNames = message.getPropertyNames();
-		while (propertyNames.hasNext()) {
-			String name = (String) propertyNames.next();
-			System.out.println("          property: " + name + " : "
-					+ message.getProperty(name));
+		if (log.isDebugEnabled()) {
+			log.debug("Message       from: " + message.getFrom());
+			log.debug("                to: " + message.getTo());
+			log.debug("          threadId: " + message.getThread());
+			log.debug("          packetId: " + message.getPacketID());
+			log.debug("              type: " + message.getType().toString());
+			Iterator propertyNames = message.getPropertyNames();
+			while (propertyNames.hasNext()) {
+				String name = (String) propertyNames.next();
+				log.debug("          property: " + name + " : "
+						+ message.getProperty(name));
+			}
+			log.debug("             class: " + message.getClass().getName());
+			log.debug("             error: " + message.getError());
+			log.debug("           subject: " + message.getSubject());
+			log.debug("              body: " + message.getBody());
 		}
-		System.out.println("             class: "
-				+ message.getClass().getName());
-		System.out.println("             error: " + message.getError());
-		System.out.println("           subject: " + message.getSubject());
-		System.out.println("              body: " + message.getBody());
 
 		String from = message.getFrom();
 		String body = message.getBody();
+		log.info("Message from <" + from + ">: " + body);
 		AbstractCommand command = parse(from, body);
-		if(command != null)
-		{
+		if (command != null) {
 			command.setOriginMessage(body);
 		}
 		return command;
 	}
 
+	/**
+	 * Parse the command string and contruct comamnd object
+	 * 
+	 * @param user
+	 * @param body
+	 * @return
+	 */
 	private static AbstractCommand parse(String user, String body) {
 		if (body == null) {
-			System.out.println("Warn: message's body is NULL!");
+			log.info("Warn: message's body is NULL!");
 			return null;
 		}
+		// Trim the message body to parse the command prefix
 		body = body.trim();
 		if (!(body.startsWith(COMMAND_PREFIX_1) || body
 				.startsWith(COMMAND_PREFIX_2))) {
+			// Normal broadcast message
 			return new BroadcastMessageCommand(user, body);
 		}
 
+		// Parse the command and parameters
 		List commands = parseCommand(body);
 		if (commands == null || commands.size() < 1) {
 			return new InvalidCommand(user, null);
 		}
+
 		String commandName = ((String) commands.get(0)).toLowerCase();
 		Class commandClass = (Class) commandTable.get(commandName);
 		if (commandClass == null) {
 			return new InvalidCommand(user, null);
 		}
 		try {
+			// Construct a new command object according to the command info
 			Constructor constructor = commandClass.getConstructor(new Class[] {
 					String.class, List.class });
 			return (AbstractCommand) constructor.newInstance(new Object[] {
@@ -93,6 +120,12 @@ public class CommadParser {
 		}
 	}
 
+	/**
+	 * Parse the command message body into String List
+	 * 
+	 * @param body
+	 * @return
+	 */
 	private static List parseCommand(String body) {
 		List results = new ArrayList();
 		StringBuffer tempStr = new StringBuffer();

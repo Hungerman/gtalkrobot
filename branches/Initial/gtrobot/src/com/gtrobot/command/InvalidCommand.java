@@ -11,7 +11,7 @@ public class InvalidCommand extends ProcessableCommand {
 
 	protected void parseArgv(List argv) {
 		this.argv = argv;
-		
+
 		super.parseArgv(argv);
 	}
 
