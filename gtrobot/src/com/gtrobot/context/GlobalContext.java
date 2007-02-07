@@ -40,10 +40,10 @@ public class GlobalContext {
 		return instance;
 	}
 
-	public UserEntry getUser(String user) {
+	public UserEntry getUser(String jid) {
 //		if (log.isDebugEnabled())
 //			log.debug("GlobalContext.getUser: " + user);
-		String resource = StringUtils.parseResource(user);
+		String resource = StringUtils.parseResource(jid);
 		if(!(resource == null || resource.trim().length()==0))
 		{
 			//TODO should be deleted in release version
@@ -51,13 +51,13 @@ public class GlobalContext {
 		}
 
 		final Roster roster = connection.getRoster();
-		RosterEntry rosterEntry = roster.getEntry(user);
+		RosterEntry rosterEntry = roster.getEntry(jid);
 
 		UserEntry userEntry = null;
-		Element element = cacheContext.getUserCache().get(user);
+		Element element = cacheContext.getUserCache().get(jid);
 		if (element == null) {
-			userEntry = new UserEntry(user);
-			cacheContext.getUserCache().put(new Element(user, userEntry));
+			userEntry = new UserEntry(jid);
+			cacheContext.getUserCache().put(new Element(jid, userEntry));
 		} else {
 			userEntry = (UserEntry) element.getValue();
 		}

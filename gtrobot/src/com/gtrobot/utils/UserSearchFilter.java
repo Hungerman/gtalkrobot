@@ -48,12 +48,12 @@ public class UserSearchFilter {
 		Iterator it = sourceUserList.iterator();
 		condition = condition.toLowerCase();
 		while (it.hasNext()) {
-			String user = (String) it.next();
-			UserEntry userEntry = GlobalContext.getInstance().getUser(user);
-			int pos1 = user.toLowerCase().indexOf(condition);
+			String jid = (String) it.next();
+			UserEntry userEntry = GlobalContext.getInstance().getUser(jid);
+			int pos1 = jid.toLowerCase().indexOf(condition);
 			int pos2 = userEntry.getNickName().toLowerCase().indexOf(condition);
 			if (pos1 != -1 || pos2 != -1) {
-				targetUserList.add(user);
+				targetUserList.add(jid);
 			}
 		}
 	}

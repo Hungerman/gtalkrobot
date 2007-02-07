@@ -12,8 +12,8 @@ public class LangCommand extends ProcessableCommand {
 
 	private String operation;
 
-	public LangCommand(String user, List argv) {
-		super(user, argv);
+	public LangCommand(String jid, List argv) {
+		super(jid, argv);
 	}
 
 	protected void parseArgv(List argv) {

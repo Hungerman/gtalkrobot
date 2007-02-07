@@ -8,7 +8,7 @@ import org.jivesoftware.smack.util.StringUtils;
 public class UserEntry implements Serializable {
 	private static final long serialVersionUID = -9113870554641563860L;
 
-	private String user;
+	private String jid;
 
 	private String nickName;
 
@@ -18,9 +18,9 @@ public class UserEntry implements Serializable {
 
 	private Locale locale;
 
-	public UserEntry(String user) {
-		this.user = user;
-		this.nickName = StringUtils.parseName(user);
+	public UserEntry(String jid) {
+		this.jid = jid;
+		this.nickName = StringUtils.parseName(jid);
 		this.chattable = true;
 		echoable = false;
 	}
@@ -34,11 +34,11 @@ public class UserEntry implements Serializable {
 	}
 
 	public String getUser() {
-		return user;
+		return jid;
 	}
 
-	public void setUser(String user) {
-		this.user = user;
+	public void setUser(String jid) {
+		this.jid = jid;
 	}
 
 	public String getNickName() {
