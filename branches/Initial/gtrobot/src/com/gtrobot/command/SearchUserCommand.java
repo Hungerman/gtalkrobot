@@ -5,8 +5,8 @@ import java.util.List;
 public class SearchUserCommand extends ProcessableCommand {
 	private String condition;
 
-	public SearchUserCommand(String user, List argv) {
-		super(user, argv);
+	public SearchUserCommand(String jid, List argv) {
+		super(jid, argv);
 	}
 
 	protected void parseArgv(List argv) {

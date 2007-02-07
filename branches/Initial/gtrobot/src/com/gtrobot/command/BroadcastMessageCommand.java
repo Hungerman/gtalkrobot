@@ -3,8 +3,8 @@ package com.gtrobot.command;
 public class BroadcastMessageCommand extends AbstractCommand {
 	private String messageContent;
 
-	public BroadcastMessageCommand(String user, String messageContent) {
-		super(user);
+	public BroadcastMessageCommand(String jid, String messageContent) {
+		super(jid);
 		this.messageContent = messageContent;
 	}
 

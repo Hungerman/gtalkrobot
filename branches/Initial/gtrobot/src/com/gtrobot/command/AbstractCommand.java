@@ -12,8 +12,8 @@ public class AbstractCommand {
 
 	private String errorMessage;
 
-	public AbstractCommand(String user) {
-		setUserEntry(GlobalContext.getInstance().getUser((String) user));
+	public AbstractCommand(String jid) {
+		setUserEntry(GlobalContext.getInstance().getUser(jid));
 	}
 
 	public String getErrorMessage() {

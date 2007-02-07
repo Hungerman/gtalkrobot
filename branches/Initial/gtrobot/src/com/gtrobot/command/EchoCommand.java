@@ -9,8 +9,8 @@ public class EchoCommand extends ProcessableCommand {
 
 	private String operation;
 
-	public EchoCommand(String user, List argv) {
-		super(user, argv);
+	public EchoCommand(String jid, List argv) {
+		super(jid, argv);
 	}
 
 	protected void parseArgv(List argv) {

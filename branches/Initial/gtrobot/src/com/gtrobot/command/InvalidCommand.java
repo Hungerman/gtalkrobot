@@ -5,8 +5,8 @@ import java.util.List;
 public class InvalidCommand extends ProcessableCommand {
 	private List argv;
 
-	public InvalidCommand(String user, List argv) {
-		super(user, argv);
+	public InvalidCommand(String jid, List argv) {
+		super(jid, argv);
 	}
 
 	protected void parseArgv(List argv) {

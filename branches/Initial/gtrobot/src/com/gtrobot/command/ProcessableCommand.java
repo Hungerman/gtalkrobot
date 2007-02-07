@@ -4,8 +4,8 @@ import java.util.List;
 
 public class ProcessableCommand extends AbstractCommand {
 
-	public ProcessableCommand(String user, List argv) {
-		super(user);
+	public ProcessableCommand(String jid, List argv) {
+		super(jid);
 
 		parseArgv(argv);
 	}

@@ -21,7 +21,6 @@ import com.gtrobot.context.CacheContext;
 import com.gtrobot.context.GlobalContext;
 import com.gtrobot.utils.GTRDataSource;
 import com.gtrobot.utils.GTRobotConfiguration;
-import com.gtrobot.utils.MessageBundle;
 
 public class GTRobot {
 	protected static final transient Log log = LogFactory.getLog(GTRobot.class);
@@ -80,9 +79,9 @@ public class GTRobot {
 	}
 
 	private GoogleTalkConnection createConnection() throws XMPPException {
-		MessageBundle messageUtil = MessageBundle.getInstance();
-		String username = messageUtil.getMessage("gtrobot.username");
-		String password = messageUtil.getMessage("gtrobot.password");
+		GTRobotConfiguration gtrc = GTRobotConfiguration.getInstance();
+		String username = gtrc.getUsername();
+		String password = gtrc.getPassword();
 
 		GoogleTalkConnection con;
 		con = new GoogleTalkConnection();

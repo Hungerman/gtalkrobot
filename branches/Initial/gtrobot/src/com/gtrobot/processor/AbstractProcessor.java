@@ -73,11 +73,11 @@ public abstract class AbstractProcessor implements Processor {
 		Iterator userList = GlobalContext.getInstance().getUserList()
 				.iterator();
 		while (userList.hasNext()) {
-			String user = (String) userList.next();
-			if (user.equals(sender.getUser()) && !sender.isEchoable()) {
+			String jid = (String) userList.next();
+			if (jid.equals(sender.getUser()) && !sender.isEchoable()) {
 				continue;
 			}
-			UserEntry userEntry = GlobalContext.getInstance().getUser(user);
+			UserEntry userEntry = GlobalContext.getInstance().getUser(jid);
 			if (userEntry.isChattable()) {
 				sendMessage(message, userEntry);
 			}
