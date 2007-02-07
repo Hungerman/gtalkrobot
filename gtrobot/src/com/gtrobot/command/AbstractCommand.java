@@ -3,7 +3,7 @@ package com.gtrobot.command;
 
 import com.gtrobot.context.GlobalContext;
 import com.gtrobot.context.UserEntry;
-import com.gtrobot.utils.MessageUtil;
+import com.gtrobot.utils.MessageBundle;
 
 public class AbstractCommand {
 	private UserEntry userEntry;
@@ -41,7 +41,7 @@ public class AbstractCommand {
 	}
 
 	public String getI18NMessage(String key) {
-		return MessageUtil.getInstance().getMessage(key, userEntry.getLocale());
+		return MessageBundle.getInstance().getMessage(key, userEntry.getLocale());
 	}
 
 }

@@ -3,9 +3,10 @@ package com.gtrobot.context;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
@@ -14,10 +15,10 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
 
 public class GlobalContext {
+	protected static final transient Log log = LogFactory
+			.getLog(GlobalContext.class);
 
 	private static final GlobalContext instance = new GlobalContext();
-
-	private CacheManager manager;
 
 	private CacheContext cacheContext;
 
@@ -35,18 +36,21 @@ public class GlobalContext {
 		userList = new TreeSet();
 	}
 
-	protected void finalize() throws Throwable {
-		manager.shutdown();
-		super.finalize();
-	}
-
 	public static GlobalContext getInstance() {
 		return instance;
 	}
 
 	public UserEntry getUser(String user) {
+//		if (log.isDebugEnabled())
+//			log.debug("GlobalContext.getUser: " + user);
+		String resource = StringUtils.parseResource(user);
+		if(!(resource == null || resource.trim().length()==0))
+		{
+			//TODO should be deleted in release version
+			log.error("System design error: resource is NOT null in getUser.");
+		}
+
 		final Roster roster = connection.getRoster();
-		user = StringUtils.parseBareAddress(user);
 		RosterEntry rosterEntry = roster.getEntry(user);
 
 		UserEntry userEntry = null;
@@ -67,7 +71,6 @@ public class GlobalContext {
 	}
 
 	public void updateUser(String user) {
-		user = StringUtils.parseBareAddress(user);
 		UserEntry userEntry = getUser(user);
 
 		final Roster roster = connection.getRoster();

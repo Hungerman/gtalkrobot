@@ -41,8 +41,17 @@ public class CacheContext {
 	}
 
 	protected void finalize() throws Throwable {
-		manager.shutdown();
+		shutdown();
 		super.finalize();
+	}
+	
+	public void shutdown()
+	{
+		if(manager != null)
+		{
+			manager.shutdown();
+			manager = null;
+		}
 	}
 
 	public Cache getChatCache() {

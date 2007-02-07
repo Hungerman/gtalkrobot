@@ -11,21 +11,21 @@ import org.apache.commons.logging.LogFactory;
 
 import com.gtrobot.context.CacheContext;
 
-public class MessageUtil {
+public class MessageBundle {
 	protected static final transient Log log = LogFactory
-			.getLog(MessageUtil.class);
+			.getLog(MessageBundle.class);
 
-	public static final String GTALK_ROBOT_RESOURCE = "gtrobot";
+	public static final String GTALK_ROBOT_RESOURCE = "ResourceMessage";
 
-	private static final MessageUtil instance = new MessageUtil();
+	private static final MessageBundle instance = new MessageBundle();
 
 	private Cache messageCache;
 
-	private MessageUtil() {
+	private MessageBundle() {
 		messageCache = CacheContext.getInstance().getMessageCache();
 	}
 
-	public static MessageUtil getInstance() {
+	public static MessageBundle getInstance() {
 		return instance;
 	}
 

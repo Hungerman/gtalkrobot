@@ -25,7 +25,7 @@ import com.gtrobot.processor.InvalidCommandProcessor;
 import com.gtrobot.processor.LangProcessor;
 import com.gtrobot.processor.Processor;
 import com.gtrobot.processor.SearchUserProcessor;
-import com.gtrobot.utils.MessageUtil;
+import com.gtrobot.utils.MessageBundle;
 
 public class CommadProcessor {
 	protected static final transient Log log = LogFactory
@@ -56,7 +56,7 @@ public class CommadProcessor {
 		Processor processor = (Processor) commandProcessors.get(commandClass);
 		if (processor == null) {
 			processor = errorProcessor;
-			String sysError = MessageUtil.getInstance().getMessage(
+			String sysError = MessageBundle.getInstance().getMessage(
 					"system.error.processor.null");
 			log.warn(sysError + "with command: " + command.getClass().getName()
 					+ " origin message: " + command.getOriginMessage());
