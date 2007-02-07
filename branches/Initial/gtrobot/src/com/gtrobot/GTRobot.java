@@ -14,25 +14,59 @@ import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
-
+import org.jivesoftware.smack.util.StringUtils;
 
 import com.gtrobot.command.AbstractCommand;
+import com.gtrobot.context.CacheContext;
 import com.gtrobot.context.GlobalContext;
-import com.gtrobot.utils.MessageUtil;
+import com.gtrobot.utils.GTRDataSource;
+import com.gtrobot.utils.GTRobotConfiguration;
+import com.gtrobot.utils.MessageBundle;
 
 public class GTRobot {
 	protected static final transient Log log = LogFactory.getLog(GTRobot.class);
 
 	public static void main(String[] args) {
-		GoogleTalkConnection con;
+		GTRobot gtrobot = new GTRobot();
+		boolean success = gtrobot.startup();
+		if (!success) {
+			log.error("GTRobot startup failed!");
+			return;
+		}
+		gtrobot.run();
+	}
+
+	private boolean startup() {
 		try {
+			// Load and check the system paramter
+			GTRobotConfiguration gtrc = GTRobotConfiguration.getInstance();
+			if (!gtrc.isInitialized())
+				return false;
+
+			// Setup cache manager
+			CacheContext.getInstance();
+
+			// Setup and check the data connection pool
+			GTRDataSource ds = GTRDataSource.getInstance();
+			ds.getConnection();
+			ds.printDataSourceStats();
+
+			// Setup the XMPP connection
 			// XMPPConnection.DEBUG_ENABLED = true;
-			con = createConnection();
-			GlobalContext.getInstance().setConnection(con);
+			GoogleTalkConnection gtConnection = createConnection();
+			GlobalContext.getInstance().setConnection(gtConnection);
 
-			initRosterListener(con);
-			addPacketListener(con);
+			initRosterListener(gtConnection);
+			initPacketListener(gtConnection);
+			return true;
+		} catch (Exception e) {
+			log.error("System error!", e);
+			return false;
+		}
+	}
 
+	private void run() {
+		try {
 			while (true) {
 				try {
 					Thread.sleep(1000000);
@@ -40,13 +74,13 @@ public class GTRobot {
 					log.error("InterruptedException!", e);
 				}
 			}
-		} catch (XMPPException e) {
+		} catch (Exception e) {
 			log.error("System error!", e);
 		}
 	}
 
-	private static GoogleTalkConnection createConnection() throws XMPPException {
-		MessageUtil messageUtil = MessageUtil.getInstance();
+	private GoogleTalkConnection createConnection() throws XMPPException {
+		MessageBundle messageUtil = MessageBundle.getInstance();
 		String username = messageUtil.getMessage("gtrobot.username");
 		String password = messageUtil.getMessage("gtrobot.password");
 
@@ -56,13 +90,14 @@ public class GTRobot {
 		return con;
 	}
 
-	private static void initRosterListener(GoogleTalkConnection con)
+	private void initRosterListener(GoogleTalkConnection con)
 			throws XMPPException {
 		final Roster roster = con.getRoster();
 		roster.setSubscriptionMode(Roster.SUBSCRIPTION_ACCEPT_ALL);
 
 		roster.addRosterListener(new RosterListener() {
 			public void presenceChanged(String user) {
+				user = StringUtils.parseBareAddress(user);
 				log.info("Presence changed: " + user + " : "
 						+ roster.getPresence(user));
 
@@ -87,17 +122,18 @@ public class GTRobot {
 					return;
 				Iterator it = userList.iterator();
 				{
-					Object user = it.next();
+					String user = (String) it.next();
+					user = StringUtils.parseBareAddress(user);
 					log.info(message + " :" + user);
 
 					// Cache the user information
-					GlobalContext.getInstance().updateUser((String) user);
+					GlobalContext.getInstance().updateUser(user);
 				}
 			}
 		});
 	}
 
-	private static void addPacketListener(GoogleTalkConnection connection) {
+	private void initPacketListener(GoogleTalkConnection connection) {
 		// Create the filter for all Message information
 		PacketFilter filter = new PacketTypeFilter(Message.class);
 
