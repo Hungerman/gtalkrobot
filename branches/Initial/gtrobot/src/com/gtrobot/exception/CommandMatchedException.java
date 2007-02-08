@@ -21,16 +21,7 @@ public class CommandMatchedException extends Exception {
 		return command;
 	}
 
-	public void setCommand(AbstractCommand command) {
-		this.command = command;
-	}
-
 	public AbstractProcessor getProcessor() {
 		return processor;
 	}
-
-	public void setProcessor(AbstractProcessor processor) {
-		this.processor = processor;
-	}
-
 }
