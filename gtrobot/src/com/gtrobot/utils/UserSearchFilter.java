@@ -8,6 +8,13 @@ import java.util.SortedSet;
 import com.gtrobot.context.GlobalContext;
 import com.gtrobot.context.UserEntry;
 
+/**
+ * Create a local user list copy of all user list.
+ * Also, it can be applied a search condition to filter the user list.
+ * 
+ * @author sunyuxin
+ *
+ */
 public class UserSearchFilter {
 	private List userList;
 

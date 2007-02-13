@@ -7,6 +7,13 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Initialize the datasource and provide the interface to retrive database
+ * connection from the data connection pool.
+ * 
+ * @author sunyuxin
+ * 
+ */
 public class GTRDataSource {
 	protected static final transient Log log = LogFactory
 			.getLog(GTRDataSource.class);

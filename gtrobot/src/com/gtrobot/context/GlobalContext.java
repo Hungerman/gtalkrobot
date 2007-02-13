@@ -14,6 +14,15 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
 
+/**
+ * Manager all user information. Mantenant the activeUserList. When user status
+ * change event coming, this context will be invoked to update the user's
+ * status.
+ * 
+ * 
+ * @author sunyuxin
+ * 
+ */
 public class GlobalContext {
 	protected static final transient Log log = LogFactory
 			.getLog(GlobalContext.class);
@@ -24,7 +33,7 @@ public class GlobalContext {
 
 	private XMPPConnection connection;
 
-	private SortedSet userList;
+	private SortedSet activeUserList;
 
 	private GlobalContext() {
 		initializeCache();
@@ -33,7 +42,7 @@ public class GlobalContext {
 	private void initializeCache() {
 		cacheContext = CacheContext.getInstance();
 
-		userList = new TreeSet();
+		activeUserList = new TreeSet();
 	}
 
 	public static GlobalContext getInstance() {
@@ -41,12 +50,11 @@ public class GlobalContext {
 	}
 
 	public UserEntry getUser(String jid) {
-//		if (log.isDebugEnabled())
-//			log.debug("GlobalContext.getUser: " + user);
+		// if (log.isDebugEnabled())
+		// log.debug("GlobalContext.getUser: " + user);
 		String resource = StringUtils.parseResource(jid);
-		if(!(resource == null || resource.trim().length()==0))
-		{
-			//TODO should be deleted in release version
+		if (!(resource == null || resource.trim().length() == 0)) {
+			// TODO should be deleted in release version
 			log.error("System design error: resource is NOT null in getUser.");
 		}
 
@@ -76,14 +84,14 @@ public class GlobalContext {
 		final Roster roster = connection.getRoster();
 		Presence presence = roster.getPresence(user);
 		if (presence == null || !userEntry.isChattable()) {
-			userList.remove(user);
+			activeUserList.remove(user);
 		} else {
-			userList.add(user);
+			activeUserList.add(user);
 		}
 	}
 
-	public SortedSet getUserList() {
-		return userList;
+	public SortedSet getActiveUserList() {
+		return activeUserList;
 	}
 
 	public Chat getChat(String user) {

@@ -41,7 +41,7 @@ public class SearchUserProcessor extends AbstractProcessor {
 		UserSearchFilter userSearchFilter = (UserSearchFilter) getSession(cmd,
 				sessionKey);
 		if (userSearchFilter == null) {
-			userSearchFilter = new UserSearchFilter(ctx.getUserList(), cmd
+			userSearchFilter = new UserSearchFilter(ctx.getActiveUserList(), cmd
 					.getCondition());
 			putSession(cmd, sessionKey, userSearchFilter);
 		}

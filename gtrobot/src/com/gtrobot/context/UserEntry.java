@@ -5,6 +5,12 @@ import java.util.Locale;
 
 import org.jivesoftware.smack.util.StringUtils;
 
+/**
+ * User entry model.
+ * 
+ * @author sunyuxin
+ *
+ */
 public class UserEntry implements Serializable {
 	private static final long serialVersionUID = -9113870554641563860L;
 
