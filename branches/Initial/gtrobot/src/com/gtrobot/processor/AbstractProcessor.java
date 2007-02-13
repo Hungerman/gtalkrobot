@@ -70,7 +70,7 @@ public abstract class AbstractProcessor implements Processor {
 		msgBuf.append(message);
 		message = msgBuf.toString();
 
-		Iterator userList = GlobalContext.getInstance().getUserList()
+		Iterator userList = GlobalContext.getInstance().getActiveUserList()
 				.iterator();
 		while (userList.hasNext()) {
 			String jid = (String) userList.next();

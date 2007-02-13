@@ -5,6 +5,13 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Load the GTRobot's configuration from property file. Provide the interface to
+ * access these global parameters.
+ * 
+ * @author sunyuxin
+ * 
+ */
 public class GTRobotConfiguration {
 	protected static final transient Log log = LogFactory
 			.getLog(GTRobotConfiguration.class);

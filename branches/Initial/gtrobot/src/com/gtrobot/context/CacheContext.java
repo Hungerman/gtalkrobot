@@ -3,6 +3,13 @@ package com.gtrobot.context;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 
+/**
+ * GTRobot's cache context
+ * Initialize all caches and provide the interface to access these caches.
+ * 
+ * @author sunyuxin
+ *
+ */
 public class CacheContext {
 
 	private static final CacheContext instance = new CacheContext();

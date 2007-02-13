@@ -22,6 +22,15 @@ import com.gtrobot.context.GlobalContext;
 import com.gtrobot.utils.GTRDataSource;
 import com.gtrobot.utils.GTRobotConfiguration;
 
+/**
+ * Main enterance of GTRobot. <br>
+ * Initialize configuration, cache, database connection, XMPPConnection, and
+ * roster listener, packet listener.
+ * 
+ * 
+ * @author sunyuxin
+ * 
+ */
 public class GTRobot {
 	protected static final transient Log log = LogFactory.getLog(GTRobot.class);
 
