@@ -19,6 +19,7 @@ public class LangCommand extends ProcessableCommand {
 	protected void parseArgv(List argv) {
 		if (argv.size() != 2) {
 			setErrorMessage(getI18NMessage("lang.error.parameter"));
+			return;
 		}
 		operation = ((String) argv.get(1)).trim().toLowerCase();
 		if (!(EN.endsWith(operation) || JP.equals(operation) || ZH

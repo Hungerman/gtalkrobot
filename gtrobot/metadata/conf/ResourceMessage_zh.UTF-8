@@ -1,3 +1,70 @@
 ﻿
 help.welcome=欢迎来到 GTRobot!
 
+
+#GTRobot Message Bundle file
+system.error.processor.null=系统错误，找不到处理器!
+error.prompt=错误信息: 
+invalid.command.null=错误的命令，可能命令是NULL!
+invalid.command=不可识别的命令: 
+invalid.command.previous.command.null=没有前一个命令!
+
+help.welcome=欢迎来到 GTRobot!
+help.prompt=请使用以下命令: 
+help.command.broadcast=直接输入消息即可发送给所有在线用户
+help.command.help=/help : 显示帮助信息
+help.command.away=/nochat|away : 设置为离开状态，将接收不到其他人发的消息
+help.command.available=/chat|available : 设置为聊天状态，可以接收到其他人发的消息
+help.command.echo=/echo on|off : 设置是否回送自己发出的消息
+help.command.lang=/lang en|zh|jp : 设置语言环境
+help.command.searchuser=/sc [match string] : 查找用户，部分匹配方式
+help.command.status=/st|status : 显示您的状态信息
+help.command.privatemessage=/pm|privatemessage emailId message: 向其他人发送秘密消息
+
+available.title=欢迎继续使用GTRobot聊天!
+available.prompt=如果您不想继续接收聊天信息，请使用[/nochat]命令。
+
+away.title=您已经设置为离开状态，将收不到其他人的聊天消息。
+away.prompt=如果想继续同其他人聊天，请使用[/chat]命令。
+
+broadcast.error.title=对不起，因为您是离开状态，不可以发送聊天消息。请使用[/chat]命令继续聊天!
+broadcast.error.prompt=您发出的消息是:
+
+echo.error.title=命令格式错误: 
+echo.error.parameter=使用了不合适的命令格式。
+echo.command.format=回显状态的命令格式是: /echo [on|off]
+echo.origin.prompt=您使用的命令是: 
+echo.success.on=您已经*打开*了回显设置！
+echo.success.off=您已经*关闭*了回显设置！
+
+lang.error.title=命令格式错误: 
+lang.error.parameter=使用了不合适的命令格式。
+lang.command.format=设置语言环境的命令格式是: /lang [en|zh|jp]
+lang.origin.prompt=您使用的命令是: 
+lang.success=您的语言环境已经更改为: 
+
+searchuser.error.title=命令格式错误: 
+searchuser.error.parameter=使用了不合适的命令格式。
+searchuser.command.format=查找用户的命令格式是: /sc [condition]
+searchuser.origin.prompt=您使用的命令是: 
+searchuser.result.title=查找到以下用户列表: 
+searchuser.result.prompt.total=总共: 
+searchuser.result.prompt.next=请使用[ // or /n ] 命令继续显示更多用户列表。
+
+status.welcome=您的状态: 
+help.item.jid= 账号邮箱地址: 
+help.item.nickname= 别名: 
+help.item.chattable= 是否聊天: 
+help.item.echoable= 是否回显: 
+help.item.lang= 语言设置: 
+
+privatemessage.error.title=发送秘密消息的格式不正确: 
+privatemessage.error.parameter=使用了不合适的命令格式。
+privatemessage.error.targetusernotfound=您要发送消息的用户不存在，也许他还没有加入到GTRobot聊天系统，赶快给他发个Mail邀请他吧!
+privatemessage.command.format=发送秘密消息的格式是: /pm|privatemessage emailId message
+privatemessage.origin.prompt=您使用的命令是: 
+
+
+
+
+

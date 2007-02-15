@@ -9,10 +9,14 @@ import org.jivesoftware.smack.util.StringUtils;
  * User entry model.
  * 
  * @author sunyuxin
- *
+ * 
  */
 public class UserEntry implements Serializable {
 	private static final long serialVersionUID = -9113870554641563860L;
+	public static final int AVAILABLE = 0;
+	public static final int UNAVAILABLE = 1;
+
+	private long id;
 
 	private String jid;
 
@@ -23,12 +27,24 @@ public class UserEntry implements Serializable {
 	private boolean echoable;
 
 	private Locale locale;
+	
+	private int status;
 
 	public UserEntry(String jid) {
 		this.jid = jid;
 		this.nickName = StringUtils.parseName(jid);
 		this.chattable = true;
 		echoable = false;
+		locale = Locale.CHINESE;
+		status = UNAVAILABLE;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public boolean isChattable() {
@@ -39,11 +55,11 @@ public class UserEntry implements Serializable {
 		this.chattable = chattable;
 	}
 
-	public String getUser() {
+	public String getJid() {
 		return jid;
 	}
 
-	public void setUser(String jid) {
+	public void setJid(String jid) {
 		this.jid = jid;
 	}
 
@@ -69,5 +85,13 @@ public class UserEntry implements Serializable {
 
 	public void setLocale(Locale locale) {
 		this.locale = locale;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 }

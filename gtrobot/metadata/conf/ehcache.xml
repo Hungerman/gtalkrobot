@@ -51,11 +51,11 @@
 
     <cache name="userCache"
         maxElementsInMemory="10"
-        eternal="true"
+        eternal="false"
         overflowToDisk="true"
         timeToIdleSeconds="1800"
         timeToLiveSeconds="1800"
-        diskPersistent="true"
+        diskPersistent="false"
         diskExpiryThreadIntervalSeconds="120"/>
        
     <cache name="chatCache"
@@ -84,6 +84,15 @@
         timeToLiveSeconds="180"
         diskPersistent="false"
         diskExpiryThreadIntervalSeconds="180"/>
+        
+    <cache name="objectCache"
+        maxElementsInMemory="10"
+        eternal="false"
+        overflowToDisk="true"
+        timeToIdleSeconds="18000"
+        timeToLiveSeconds="18000"
+        diskPersistent="false"
+        diskExpiryThreadIntervalSeconds="18000"/>
         
           
     <!-- See http://ehcache.sourceforge.net/documentation/#mozTocId258426 for how to configure caching for your objects -->

@@ -1,6 +1,5 @@
 package com.gtrobot.command;
 
-
 import com.gtrobot.context.GlobalContext;
 import com.gtrobot.context.UserEntry;
 import com.gtrobot.utils.MessageBundle;
@@ -9,6 +8,8 @@ public class AbstractCommand {
 	private UserEntry userEntry;
 
 	private String originMessage;
+
+	private String from;
 
 	private String errorMessage;
 
@@ -40,8 +41,16 @@ public class AbstractCommand {
 		this.userEntry = userEntry;
 	}
 
-	public String getI18NMessage(String key) {
-		return MessageBundle.getInstance().getMessage(key, userEntry.getLocale());
+	public String getFrom() {
+		return from;
 	}
 
+	public void setFrom(String from) {
+		this.from = from;
+	}
+
+	public String getI18NMessage(String key) {
+		return MessageBundle.getInstance().getMessage(key,
+				userEntry.getLocale());
+	}
 }

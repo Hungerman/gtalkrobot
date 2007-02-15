@@ -7,7 +7,7 @@
     <property name="locallib.dir" value="${basedir}/locallib"/>
     <property name="conf.dir" value="${basedir}/metadata/conf"/>
     <property name="data.dir" value="${basedir}/metadata/data"/>
-    <property name="data.sql" value="${basedir}/metadata/sql"/>
+    <property name="sql.dir" value="${basedir}/metadata/sql"/>
 
     <property file="build.properties"/>
     <property file="${conf.dir}/gtrobot.properties"/>

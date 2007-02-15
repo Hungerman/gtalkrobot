@@ -38,9 +38,8 @@ public class LangProcessor extends AbstractProcessor {
 		userEntry.setLocale(cmd.getOperationLocale());
 
 		msgBuf.append(cmd.getI18NMessage("lang.success"));
-		msgBuf.append(cmd.getOperation());
+		msgBuf.append(userEntry.getLocale().getDisplayLanguage(userEntry.getLocale()));
 		msgBuf.append(endl);
-		msgBuf.append(cmd.getI18NMessage("help.welcome"));
 
 		sendBackMessage(abCmd, msgBuf.toString());
 	}

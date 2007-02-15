@@ -23,6 +23,8 @@ public class CacheContext {
 	private Cache messageCache;
 
 	private Cache sessionCache;
+	
+	private Cache objectCache;
 
 	private CacheContext() {
 		initializeCache();
@@ -38,6 +40,7 @@ public class CacheContext {
 		chatCache = manager.getCache("chatCache");
 		messageCache = manager.getCache("messageCache");
 		sessionCache = manager.getCache("sessionCache");
+		objectCache = manager.getCache("objectCache");
 
 		try {
 			chatCache.removeAll();
@@ -75,5 +78,9 @@ public class CacheContext {
 
 	public Cache getUserCache() {
 		return userCache;
+	}
+
+	public Cache getObjectCache() {
+		return objectCache;
 	}
 }

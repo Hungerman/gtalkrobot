@@ -5,7 +5,6 @@ import java.util.Hashtable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-
 import com.gtrobot.command.AbstractCommand;
 import com.gtrobot.command.AvailableCommand;
 import com.gtrobot.command.AwayCommand;
@@ -14,7 +13,9 @@ import com.gtrobot.command.EchoCommand;
 import com.gtrobot.command.HelpCommand;
 import com.gtrobot.command.InvalidCommand;
 import com.gtrobot.command.LangCommand;
+import com.gtrobot.command.PrivateMessageCommand;
 import com.gtrobot.command.SearchUserCommand;
+import com.gtrobot.command.StatusCommand;
 import com.gtrobot.processor.AvailableProcessor;
 import com.gtrobot.processor.AwayProcessor;
 import com.gtrobot.processor.BroadcastMessageProcessor;
@@ -23,8 +24,10 @@ import com.gtrobot.processor.ErrorProcessor;
 import com.gtrobot.processor.HelpProcessor;
 import com.gtrobot.processor.InvalidCommandProcessor;
 import com.gtrobot.processor.LangProcessor;
+import com.gtrobot.processor.PrivateMessageProcessor;
 import com.gtrobot.processor.Processor;
 import com.gtrobot.processor.SearchUserProcessor;
+import com.gtrobot.processor.StatusProcessor;
 import com.gtrobot.utils.MessageBundle;
 
 public class CommadProcessor {
@@ -46,6 +49,10 @@ public class CommadProcessor {
 		commandProcessors.put(LangCommand.class, new LangProcessor());
 		commandProcessors.put(SearchUserCommand.class,
 				new SearchUserProcessor());
+		commandProcessors.put(StatusCommand.class,
+				new StatusProcessor());
+		commandProcessors.put(PrivateMessageCommand.class,
+				new PrivateMessageProcessor());
 		// TODO
 	}
 

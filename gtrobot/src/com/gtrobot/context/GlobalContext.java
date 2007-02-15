@@ -11,8 +11,10 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
+
+import com.gtrobot.dao.DaoFactory;
+import com.gtrobot.dao.UserEntryDao;
 
 /**
  * Manager all user information. Mantenant the activeUserList. When user status
@@ -51,21 +53,24 @@ public class GlobalContext {
 
 	public UserEntry getUser(String jid) {
 		// if (log.isDebugEnabled())
-		// log.debug("GlobalContext.getUser: " + user);
+		// log.debug("GlobalContext.getUser: " + jid);
 		String resource = StringUtils.parseResource(jid);
 		if (!(resource == null || resource.trim().length() == 0)) {
 			// TODO should be deleted in release version
-			log.error("System design error: resource is NOT null in getUser.");
+			log.error("System design error: resource is NOT null in getUser.",
+					new Exception());
 		}
 
 		final Roster roster = connection.getRoster();
 		RosterEntry rosterEntry = roster.getEntry(jid);
+		if (rosterEntry == null) {
+			return null;
+		}
 
 		UserEntry userEntry = null;
 		Element element = cacheContext.getUserCache().get(jid);
 		if (element == null) {
-			userEntry = new UserEntry(jid);
-			cacheContext.getUserCache().put(new Element(jid, userEntry));
+			userEntry = loadUser(jid);
 		} else {
 			userEntry = (UserEntry) element.getValue();
 		}
@@ -78,15 +83,46 @@ public class GlobalContext {
 		return userEntry;
 	}
 
-	public void updateUser(String user) {
-		UserEntry userEntry = getUser(user);
+	private UserEntry loadUser(String jid) {
+		UserEntryDao dao = DaoFactory.getUserEntryDao();
+		UserEntry userEntry = dao.getUserEntry(jid);
+		if (userEntry == null) {
+			userEntry = new UserEntry("" + jid);
+			dao.insertUserEntry(userEntry);
+		}
 
-		final Roster roster = connection.getRoster();
-		Presence presence = roster.getPresence(user);
-		if (presence == null || !userEntry.isChattable()) {
-			activeUserList.remove(user);
+		cacheContext.getUserCache().put(new Element(jid, userEntry));
+		return userEntry;
+	}
+
+	public void updateUser(String jid) {
+		UserEntry userEntry = getUser(jid);
+
+		saveUser(userEntry);
+
+		updateUserStatus(userEntry);
+	}
+
+	public void saveUser(UserEntry userEntry) {
+		UserEntryDao dao = DaoFactory.getUserEntryDao();
+		dao.updateUserEntry(userEntry);
+	}
+
+	public void updateUserStatus(UserEntry userEntry) {
+		if (userEntry.getStatus() == UserEntry.AVAILABLE
+				&& userEntry.isChattable()) {
+			activeUserList.add(userEntry.getJid());
+			if (log.isDebugEnabled()) {
+				log.debug(userEntry.getJid()
+						+ " has been added into active user list.");
+			}
+
 		} else {
-			activeUserList.add(user);
+			activeUserList.remove(userEntry.getJid());
+			if (log.isDebugEnabled()) {
+				log.debug(userEntry.getJid()
+						+ " has been removed into active user list.");
+			}
 		}
 	}
 
@@ -94,15 +130,15 @@ public class GlobalContext {
 		return activeUserList;
 	}
 
-	public Chat getChat(String user) {
-		UserEntry userEntry = getUser(user);
+	public Chat getChat(String jid) {
+		UserEntry userEntry = getUser(jid);
 		return getChat(userEntry);
 	}
 
 	public Chat getChat(UserEntry userEntry) {
 		Element element = cacheContext.getChatCache().get(userEntry);
 		if (element == null) {
-			Chat chat = connection.createChat(userEntry.getUser());
+			Chat chat = connection.createChat(userEntry.getJid());
 			cacheContext.getChatCache().put(new Element(userEntry, chat));
 			return chat;
 		} else {

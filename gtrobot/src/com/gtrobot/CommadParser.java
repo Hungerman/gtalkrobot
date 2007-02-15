@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.util.StringUtils;
 
 import com.gtrobot.command.AbstractCommand;
 import com.gtrobot.command.AvailableCommand;
@@ -18,7 +19,10 @@ import com.gtrobot.command.EchoCommand;
 import com.gtrobot.command.HelpCommand;
 import com.gtrobot.command.InvalidCommand;
 import com.gtrobot.command.LangCommand;
+import com.gtrobot.command.PrivateMessageCommand;
 import com.gtrobot.command.SearchUserCommand;
+import com.gtrobot.command.StatusCommand;
+import com.gtrobot.utils.UserSession;
 
 public class CommadParser {
 	protected static final transient Log log = LogFactory
@@ -39,6 +43,10 @@ public class CommadParser {
 		commandTable.put("lang", LangCommand.class);
 		commandTable.put("sc", SearchUserCommand.class);
 		commandTable.put("searchuser", SearchUserCommand.class);
+		commandTable.put("st", StatusCommand.class);
+		commandTable.put("status", StatusCommand.class);
+		commandTable.put("pm", PrivateMessageCommand.class);
+		commandTable.put("privatemessage", PrivateMessageCommand.class);
 		// TODO
 	}
 
@@ -70,9 +78,11 @@ public class CommadParser {
 		String from = message.getFrom();
 		String body = message.getBody();
 		log.info("Message from <" + from + ">: " + body);
-		AbstractCommand command = parse(from, body);
+		String jid = StringUtils.parseBareAddress(from);
+		AbstractCommand command = parse(jid, body);
 		if (command != null) {
 			command.setOriginMessage(body);
+			command.setFrom(from);
 		}
 		return command;
 	}
@@ -104,6 +114,19 @@ public class CommadParser {
 		}
 
 		String commandName = ((String) commands.get(0)).toLowerCase();
+		//Repeat the previous command
+		if(commandName.equals(COMMAND_PREFIX_1) || commandName.equals(COMMAND_PREFIX_2))
+		{
+			AbstractCommand previousCommand = UserSession.retrievePreviousCommand(user);
+			if(previousCommand == null)
+			{
+				previousCommand = new InvalidCommand(user, null);
+				previousCommand.setErrorMessage(previousCommand.getI18NMessage("invalid.command.previous.command.null"));
+			}
+			return previousCommand;
+		}
+			
+			
 		Class commandClass = (Class) commandTable.get(commandName);
 		if (commandClass == null) {
 			return new InvalidCommand(user, null);

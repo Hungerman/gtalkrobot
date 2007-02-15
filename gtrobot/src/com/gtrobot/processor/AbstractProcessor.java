@@ -2,19 +2,18 @@ package com.gtrobot.processor;
 
 import java.util.Iterator;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.Element;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.AbstractCommand;
-import com.gtrobot.context.CacheContext;
+import com.gtrobot.command.BroadcastMessageCommand;
+import com.gtrobot.command.InvalidCommand;
 import com.gtrobot.context.GlobalContext;
 import com.gtrobot.context.UserEntry;
 import com.gtrobot.exception.CommandMatchedException;
+import com.gtrobot.utils.UserSession;
 
 public abstract class AbstractProcessor implements Processor {
 	protected static final transient Log log = LogFactory
@@ -34,6 +33,10 @@ public abstract class AbstractProcessor implements Processor {
 		if (abCmd.getErrorMessage() == null) {
 			internalProcess(abCmd);
 		}
+
+		if (!(abCmd instanceof InvalidCommand || abCmd instanceof BroadcastMessageCommand)) {
+			UserSession.storePreviousCommand(abCmd);
+		}
 	}
 
 	protected void beforeProcess(AbstractCommand abCmd)
@@ -43,6 +46,12 @@ public abstract class AbstractProcessor implements Processor {
 			log
 					.error("Should not deal the error in AbstractProcessor.beforeProcess: "
 							+ error);
+
+			StringBuffer msgBuf = new StringBuffer();
+			msgBuf.append(abCmd.getI18NMessage("error.prompt"));
+			msgBuf.append(abCmd.getErrorMessage());
+
+			sendBackMessage(abCmd, msgBuf.toString());
 		}
 	}
 
@@ -55,7 +64,7 @@ public abstract class AbstractProcessor implements Processor {
 		sendMessage(message, userEntry);
 	}
 
-	private void sendMessage(String message, UserEntry userEntry)
+	protected void sendMessage(String message, UserEntry userEntry)
 			throws XMPPException {
 		Chat chat = GlobalContext.getInstance().getChat(userEntry);
 		chat.sendMessage(message);
@@ -74,7 +83,7 @@ public abstract class AbstractProcessor implements Processor {
 				.iterator();
 		while (userList.hasNext()) {
 			String jid = (String) userList.next();
-			if (jid.equals(sender.getUser()) && !sender.isEchoable()) {
+			if (jid.equals(sender.getJid()) && !sender.isEchoable()) {
 				continue;
 			}
 			UserEntry userEntry = GlobalContext.getInstance().getUser(jid);
@@ -83,34 +92,4 @@ public abstract class AbstractProcessor implements Processor {
 			}
 		}
 	}
-
-	protected Object getSession(AbstractCommand abCmd, String key) {
-		Cache sessionCache = CacheContext.getInstance().getSessionCache();
-		Element element = sessionCache.get(getSessionKey(abCmd, key));
-		if (element == null)
-			return null;
-		return element.getObjectValue();
-	}
-
-	protected void putSession(AbstractCommand abCmd, String key, Object obj) {
-		Cache sessionCache = CacheContext.getInstance().getSessionCache();
-		String sessionKey = getSessionKey(abCmd, key);
-		Element element = sessionCache.get(sessionKey);
-		if (element != null)
-			sessionCache.remove(sessionKey);
-
-		element = new Element(sessionKey, obj);
-		sessionCache.put(element);
-	}
-
-	protected void removeSession(AbstractCommand abCmd, String key) {
-		Cache sessionCache = CacheContext.getInstance().getSessionCache();
-		String sessionKey = getSessionKey(abCmd, key);
-		sessionCache.remove(sessionKey);
-	}
-
-	private String getSessionKey(AbstractCommand abCmd, String key) {
-		return abCmd.getUserEntry().getUser() + key;
-	}
-
 }
