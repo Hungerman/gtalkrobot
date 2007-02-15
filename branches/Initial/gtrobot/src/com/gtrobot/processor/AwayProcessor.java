@@ -21,8 +21,10 @@ public class AwayProcessor extends AbstractProcessor {
 		AwayCommand cmd = (AwayCommand) abCmd;
 
 		UserEntry userEntry = abCmd.getUserEntry();
-		userEntry.setChattable(false);
-		ctx.updateUser(userEntry.getUser());
+		if (userEntry.isChattable()) {
+			userEntry.setChattable(false);
+			ctx.updateUser(userEntry.getJid());
+		}
 
 		StringBuffer msgBuf = new StringBuffer();
 		msgBuf.append(cmd.getI18NMessage("away.title"));

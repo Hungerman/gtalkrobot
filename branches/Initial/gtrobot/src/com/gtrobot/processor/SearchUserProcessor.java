@@ -2,15 +2,15 @@ package com.gtrobot.processor;
 
 import org.jivesoftware.smack.XMPPException;
 
-
 import com.gtrobot.command.AbstractCommand;
 import com.gtrobot.command.SearchUserCommand;
 import com.gtrobot.context.UserEntry;
 import com.gtrobot.exception.CommandMatchedException;
 import com.gtrobot.utils.UserSearchFilter;
+import com.gtrobot.utils.UserSession;
 
 public class SearchUserProcessor extends AbstractProcessor {
-	private static final int ROWS_IN_PAGE = 1;
+	private static final int ROWS_IN_PAGE = 2;
 
 	protected void beforeProcess(AbstractCommand abCmd)
 			throws CommandMatchedException, XMPPException {
@@ -38,19 +38,21 @@ public class SearchUserProcessor extends AbstractProcessor {
 		StringBuffer msgBuf = new StringBuffer();
 
 		String sessionKey = "-searchuser." + cmd.getCondition();
-		UserSearchFilter userSearchFilter = (UserSearchFilter) getSession(cmd,
-				sessionKey);
+		UserSearchFilter userSearchFilter = (UserSearchFilter) UserSession
+				.getSession(cmd.getUserEntry().getJid(), sessionKey);
 		if (userSearchFilter == null) {
-			userSearchFilter = new UserSearchFilter(ctx.getActiveUserList(), cmd
-					.getCondition());
-			putSession(cmd, sessionKey, userSearchFilter);
+			userSearchFilter = new UserSearchFilter(ctx.getActiveUserList(),
+					cmd.getCondition());
+			UserSession.putSession(abCmd.getUserEntry().getJid(), sessionKey,
+					userSearchFilter);
 		}
 
 		int start = userSearchFilter.getCount();
 		int end = start + ROWS_IN_PAGE;
 		if (end >= userSearchFilter.size()) {
 			end = userSearchFilter.size();
-			removeSession(cmd, sessionKey);
+			UserSession
+					.removeSession(abCmd.getUserEntry().getJid(), sessionKey);
 		}
 
 		msgBuf.append(cmd.getI18NMessage("searchuser.result.title"));

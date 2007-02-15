@@ -9,16 +9,19 @@ import org.jivesoftware.smack.GoogleTalkConnection;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterListener;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
 
 import com.gtrobot.command.AbstractCommand;
 import com.gtrobot.context.CacheContext;
 import com.gtrobot.context.GlobalContext;
+import com.gtrobot.context.UserEntry;
 import com.gtrobot.utils.GTRDataSource;
 import com.gtrobot.utils.GTRobotConfiguration;
 
@@ -60,10 +63,11 @@ public class GTRobot {
 			ds.printDataSourceStats();
 
 			// Setup the XMPP connection
-			// XMPPConnection.DEBUG_ENABLED = true;
+			//XMPPConnection.DEBUG_ENABLED = true;
 			GoogleTalkConnection gtConnection = createConnection();
 			GlobalContext.getInstance().setConnection(gtConnection);
 
+			updatePresence(gtConnection);
 			initRosterListener(gtConnection);
 			initPacketListener(gtConnection);
 			return true;
@@ -98,19 +102,24 @@ public class GTRobot {
 		return con;
 	}
 
+	private void updatePresence(XMPPConnection conn) throws XMPPException {
+		// Create a new presence.
+		Presence presence = new Presence(Presence.Type.AVAILABLE);
+		presence.setMode(Presence.Mode.AVAILABLE);
+		presence.setStatus("Ready for chatting...");
+
+		// Send the packet
+		conn.sendPacket(presence);
+	}
+
 	private void initRosterListener(GoogleTalkConnection con)
 			throws XMPPException {
 		final Roster roster = con.getRoster();
 		roster.setSubscriptionMode(Roster.SUBSCRIPTION_ACCEPT_ALL);
 
 		roster.addRosterListener(new RosterListener() {
-			public void presenceChanged(String user) {
-				user = StringUtils.parseBareAddress(user);
-				log.info("Presence changed: " + user + " : "
-						+ roster.getPresence(user));
-
-				// Cache the user information
-				GlobalContext.getInstance().updateUser(user);
+			public void presenceChanged(String jid) {
+				updateUserStatus(jid, "Presence changed");
 			}
 
 			public void entriesAdded(Collection userList) {
@@ -130,12 +139,32 @@ public class GTRobot {
 					return;
 				Iterator it = userList.iterator();
 				{
-					String user = (String) it.next();
-					user = StringUtils.parseBareAddress(user);
-					log.info(message + " :" + user);
+					String jid = (String) it.next();
+					updateUserStatus(jid, message);
+				}
+			}
 
-					// Cache the user information
-					GlobalContext.getInstance().updateUser(user);
+			private void updateUserStatus(String jid, String message) {
+				jid = StringUtils.parseBareAddress(jid);
+				log.info(message + " :" + jid);
+
+				// Update the user information
+				Presence presence = roster.getPresence(jid);
+				UserEntry userEntry = GlobalContext.getInstance().getUser(jid);
+				if (presence == null
+						|| Presence.Type.UNAVAILABLE.equals(presence.getType())) {
+					// User status: AVAILABLE -> UNAVAILABLE
+					if (userEntry.getStatus() == UserEntry.AVAILABLE) {
+						userEntry.setStatus(UserEntry.UNAVAILABLE);
+						GlobalContext.getInstance().updateUserStatus(userEntry);
+					}
+				} else {
+					// User status: * -> AVAILABLE
+					if (userEntry.getStatus() == UserEntry.UNAVAILABLE) {
+						// User status: UNAVAILABLE -> AVAILABLE
+						userEntry.setStatus(UserEntry.AVAILABLE);
+						GlobalContext.getInstance().updateUserStatus(userEntry);
+					}
 				}
 			}
 		});

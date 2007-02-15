@@ -16,6 +16,7 @@ public class EchoCommand extends ProcessableCommand {
 	protected void parseArgv(List argv) {
 		if (argv.size() != 2) {
 			setErrorMessage(getI18NMessage("echo.error.parameter"));
+			return;
 		}
 		operation = ((String) argv.get(1)).trim().toLowerCase();
 		if (!(ON.endsWith(operation) || OFF.equals(operation))) {

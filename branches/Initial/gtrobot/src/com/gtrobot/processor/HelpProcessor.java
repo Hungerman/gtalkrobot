@@ -19,10 +19,14 @@ public class HelpProcessor extends AbstractProcessor {
 	protected void internalProcess(AbstractCommand abCmd) throws XMPPException {
 		HelpCommand cmd = (HelpCommand) abCmd;
 
-		String prefix = "#> ";
+		String prefix = "";
 		StringBuffer msgBuf = new StringBuffer();
 		msgBuf.append(cmd.getI18NMessage("help.welcome"));
 		msgBuf.append(endl);
+		msgBuf.append(cmd.getI18NMessage("help.command.broadcast"));
+		msgBuf.append(endl);
+		msgBuf.append(endl);
+		msgBuf.append(prefix);
 		msgBuf.append(cmd.getI18NMessage("help.prompt"));
 		msgBuf.append(endl);
 		msgBuf.append(prefix);
@@ -42,6 +46,12 @@ public class HelpProcessor extends AbstractProcessor {
 		msgBuf.append(endl);
 		msgBuf.append(prefix);
 		msgBuf.append(cmd.getI18NMessage("help.command.searchuser"));
+		msgBuf.append(endl);
+		msgBuf.append(prefix);
+		msgBuf.append(cmd.getI18NMessage("help.command.status"));
+		msgBuf.append(endl);
+		msgBuf.append(prefix);
+		msgBuf.append(cmd.getI18NMessage("help.command.privatemessage"));
 		msgBuf.append(endl);
 		sendBackMessage(cmd, msgBuf.toString());
 	}

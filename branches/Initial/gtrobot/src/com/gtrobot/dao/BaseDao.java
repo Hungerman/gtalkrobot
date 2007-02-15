@@ -6,10 +6,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.gtrobot.exception.DataAccessException;
 import com.gtrobot.utils.GTRDataSource;
 
 public class BaseDao {
+	protected static final transient Log log = LogFactory.getLog(BaseDao.class);
+
 	private static ThreadLocal threadLoaclConnection = new ThreadLocal();
 
 	protected Connection getConnection() throws SQLException {
@@ -48,7 +53,8 @@ public class BaseDao {
 	//   
 	// }
 
-	protected PreparedStatement prepareStatement(String sql) throws DataAccessException {
+	protected PreparedStatement prepareStatement(String sql)
+			throws DataAccessException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 
@@ -59,16 +65,12 @@ public class BaseDao {
 		} catch (SQLException e) {
 			closeStatement(stmt);
 			throw new DataAccessException(e);
-		} 
+		}
 	}
 
 	protected void closeStatement(Statement stmt) {
 		try {
 			stmt.close();
-		} catch (Exception e) {
-		}
-		try {
-			closeConnection();
 		} catch (Exception e) {
 		}
 	}
@@ -82,13 +84,13 @@ public class BaseDao {
 			conn = getConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery("");
-//			int numcols = rs.getMetaData().getco.getColumnCount();
-//			while (rs.next()) {
-//				for (int i = 1; i <= numcols; i++) {
-//					System.out.print("\t" + rs.geto.getString(i));
-//				}
-//				System.out.println("");
-//			}
+			// int numcols = rs.getMetaData().getco.getColumnCount();
+			// while (rs.next()) {
+			// for (int i = 1; i <= numcols; i++) {
+			// System.out.print("\t" + rs.geto.getString(i));
+			// }
+			// System.out.println("");
+			// }
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

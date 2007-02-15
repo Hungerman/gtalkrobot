@@ -12,6 +12,7 @@ public class SearchUserCommand extends ProcessableCommand {
 	protected void parseArgv(List argv) {
 		if (argv.size() > 2) {
 			setErrorMessage(getI18NMessage("searchuser.error.parameter"));
+			return;
 		}
 		if (argv.size() == 2) {
 			condition = ((String) argv.get(1)).trim();

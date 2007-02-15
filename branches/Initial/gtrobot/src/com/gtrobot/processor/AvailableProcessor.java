@@ -21,8 +21,10 @@ public class AvailableProcessor extends AbstractProcessor {
 		AvailableCommand cmd = (AvailableCommand) abCmd;
 
 		UserEntry userEntry = cmd.getUserEntry();
-		userEntry.setChattable(true);
-		ctx.updateUser(userEntry.getUser());
+		if (!userEntry.isChattable()) {
+			userEntry.setChattable(true);
+			ctx.updateUser(userEntry.getJid());
+		}
 
 		StringBuffer msgBuf = new StringBuffer();
 		msgBuf.append(cmd.getI18NMessage("available.title"));
