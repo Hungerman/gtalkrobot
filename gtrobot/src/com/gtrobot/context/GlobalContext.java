@@ -14,7 +14,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.util.StringUtils;
 
 import com.gtrobot.dao.DaoFactory;
-import com.gtrobot.dao.UserEntryDao;
+import com.gtrobot.dao.common.UserEntryDao;
 
 /**
  * Manager all user information. Mantenant the activeUserList. When user status

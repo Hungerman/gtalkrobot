@@ -1,12 +1,13 @@
-package com.gtrobot.processor;
+package com.gtrobot.processor.common;
 
 import java.util.List;
 
 import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.AbstractCommand;
-import com.gtrobot.command.InvalidCommand;
+import com.gtrobot.command.common.InvalidCommand;
 import com.gtrobot.exception.CommandMatchedException;
+import com.gtrobot.processor.AbstractProcessor;
 
 public class InvalidCommandProcessor extends AbstractProcessor {
 

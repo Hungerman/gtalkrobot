@@ -11,8 +11,8 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.util.StringUtils;
 
 import com.gtrobot.command.AbstractCommand;
-import com.gtrobot.command.BroadcastMessageCommand;
-import com.gtrobot.command.InvalidCommand;
+import com.gtrobot.command.common.BroadcastMessageCommand;
+import com.gtrobot.command.common.InvalidCommand;
 import com.gtrobot.utils.ParameterTable;
 import com.gtrobot.utils.UserSession;
 
@@ -98,6 +98,9 @@ public class CommadParser {
 				previousCommand
 						.setErrorMessage(previousCommand
 								.getI18NMessage("invalid.command.previous.command.null"));
+			}else
+			{
+				previousCommand.setErrorMessage(null);
 			}
 			return previousCommand;
 		}

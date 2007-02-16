@@ -1,4 +1,4 @@
-package com.gtrobot.dao;
+package com.gtrobot.dao.common;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.gtrobot.context.UserEntry;
+import com.gtrobot.dao.BaseDao;
 import com.gtrobot.exception.DataAccessException;
 
 public class UserEntryDao extends BaseDao {

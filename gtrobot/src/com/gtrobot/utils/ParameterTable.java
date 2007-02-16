@@ -3,27 +3,29 @@ package com.gtrobot.utils;
 import java.util.Hashtable;
 import java.util.Map;
 
-import com.gtrobot.command.AvailableCommand;
-import com.gtrobot.command.AwayCommand;
-import com.gtrobot.command.BroadcastMessageCommand;
-import com.gtrobot.command.EchoCommand;
-import com.gtrobot.command.HelpCommand;
-import com.gtrobot.command.InvalidCommand;
-import com.gtrobot.command.LangCommand;
-import com.gtrobot.command.PrivateMessageCommand;
-import com.gtrobot.command.SearchUserCommand;
-import com.gtrobot.command.StatusCommand;
-import com.gtrobot.processor.AvailableProcessor;
-import com.gtrobot.processor.AwayProcessor;
-import com.gtrobot.processor.BroadcastMessageProcessor;
-import com.gtrobot.processor.EchoProcessor;
-import com.gtrobot.processor.ErrorProcessor;
-import com.gtrobot.processor.HelpProcessor;
-import com.gtrobot.processor.InvalidCommandProcessor;
-import com.gtrobot.processor.LangProcessor;
-import com.gtrobot.processor.PrivateMessageProcessor;
-import com.gtrobot.processor.SearchUserProcessor;
-import com.gtrobot.processor.StatusProcessor;
+import com.gtrobot.command.common.AvailableCommand;
+import com.gtrobot.command.common.AwayCommand;
+import com.gtrobot.command.common.BroadcastMessageCommand;
+import com.gtrobot.command.common.EchoCommand;
+import com.gtrobot.command.common.HelpCommand;
+import com.gtrobot.command.common.InvalidCommand;
+import com.gtrobot.command.common.LangCommand;
+import com.gtrobot.command.common.PrivateMessageCommand;
+import com.gtrobot.command.common.SearchUserCommand;
+import com.gtrobot.command.common.StatusCommand;
+import com.gtrobot.command.word.AddWordEntryCommand;
+import com.gtrobot.processor.common.AvailableProcessor;
+import com.gtrobot.processor.common.AwayProcessor;
+import com.gtrobot.processor.common.BroadcastMessageProcessor;
+import com.gtrobot.processor.common.EchoProcessor;
+import com.gtrobot.processor.common.ErrorProcessor;
+import com.gtrobot.processor.common.HelpProcessor;
+import com.gtrobot.processor.common.InvalidCommandProcessor;
+import com.gtrobot.processor.common.LangProcessor;
+import com.gtrobot.processor.common.PrivateMessageProcessor;
+import com.gtrobot.processor.common.SearchUserProcessor;
+import com.gtrobot.processor.common.StatusProcessor;
+import com.gtrobot.processor.word.AddWordEntryProcessor;
 
 public class ParameterTable {
 	private static final Hashtable commandMappings = new Hashtable();
@@ -41,6 +43,8 @@ public class ParameterTable {
 		commandMappings.put("status", StatusCommand.class);
 		commandMappings.put("pm", PrivateMessageCommand.class);
 		commandMappings.put("privatemessage", PrivateMessageCommand.class);
+		commandMappings.put("aw", AddWordEntryCommand.class);
+		commandMappings.put("addword", AddWordEntryCommand.class);
 		// TODO
 	}
 
@@ -67,6 +71,8 @@ public class ParameterTable {
 				new StatusProcessor());
 		commandProcessorsMappings.put(PrivateMessageCommand.class.getName(),
 				new PrivateMessageProcessor());
+		commandProcessorsMappings.put(AddWordEntryCommand.class.getName(),
+				new AddWordEntryProcessor());
 		// TODO
 	}
 

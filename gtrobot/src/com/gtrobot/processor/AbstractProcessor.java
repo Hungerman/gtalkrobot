@@ -8,8 +8,8 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.AbstractCommand;
-import com.gtrobot.command.BroadcastMessageCommand;
-import com.gtrobot.command.InvalidCommand;
+import com.gtrobot.command.common.BroadcastMessageCommand;
+import com.gtrobot.command.common.InvalidCommand;
 import com.gtrobot.context.GlobalContext;
 import com.gtrobot.context.UserEntry;
 import com.gtrobot.exception.CommandMatchedException;

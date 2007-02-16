@@ -1,4 +1,6 @@
-package com.gtrobot.command;
+package com.gtrobot.command.common;
+
+import com.gtrobot.command.AbstractCommand;
 
 public class BroadcastMessageCommand extends AbstractCommand {
 	private String messageContent;

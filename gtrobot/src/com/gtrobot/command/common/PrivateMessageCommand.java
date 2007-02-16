@@ -1,6 +1,8 @@
-package com.gtrobot.command;
+package com.gtrobot.command.common;
 
 import java.util.List;
+
+import com.gtrobot.command.ProcessableCommand;
 
 public class PrivateMessageCommand extends ProcessableCommand {
 	private String targetJid;
