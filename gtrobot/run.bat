@@ -1,0 +1,1 @@
+java -cp build;metadata\conf;lib\commons-collections.jar;lib\commons-dbcp.jar;lib\commons-logging-1.1.jar;lib\commons-pool.jar;lib\ehcache-1.2.jar;lib\log4j-1.2.11.jar;lib\postgresql-jdbc3-8.1-405.jar;lib\smack.jar;lib\smackx-debug.jar;lib\smackx.jar;  com.gtrobot.GTRobot

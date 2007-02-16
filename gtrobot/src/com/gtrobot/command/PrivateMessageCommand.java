@@ -22,7 +22,8 @@ public class PrivateMessageCommand extends ProcessableCommand {
 	public String getMessageContent() {
 		int pos = getOriginMessage().indexOf(targetJid);
 
-		return getOriginMessage().substring(pos + targetJid.length() + 1).trim();
+		return getOriginMessage().substring(pos + targetJid.length() + 1)
+				.trim();
 	}
 
 	public String getTargetJid() {

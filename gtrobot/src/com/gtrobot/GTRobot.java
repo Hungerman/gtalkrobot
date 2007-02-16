@@ -22,6 +22,7 @@ import com.gtrobot.command.AbstractCommand;
 import com.gtrobot.context.CacheContext;
 import com.gtrobot.context.GlobalContext;
 import com.gtrobot.context.UserEntry;
+import com.gtrobot.thread.CommandProcessor;
 import com.gtrobot.utils.GTRDataSource;
 import com.gtrobot.utils.GTRobotConfiguration;
 
@@ -63,9 +64,12 @@ public class GTRobot {
 			ds.printDataSourceStats();
 
 			// Setup the XMPP connection
-			//XMPPConnection.DEBUG_ENABLED = true;
+			// XMPPConnection.DEBUG_ENABLED = true;
 			GoogleTalkConnection gtConnection = createConnection();
 			GlobalContext.getInstance().setConnection(gtConnection);
+			
+			//TODO
+			CommandProcessor.getInstance();
 
 			updatePresence(gtConnection);
 			initRosterListener(gtConnection);
@@ -79,13 +83,13 @@ public class GTRobot {
 
 	private void run() {
 		try {
-			while (true) {
-				try {
-					Thread.sleep(1000000);
-				} catch (InterruptedException e) {
-					log.error("InterruptedException!", e);
-				}
-			}
+//			while (true) {
+//				try {
+//					Thread.sleep(1000000);
+//				} catch (InterruptedException e) {
+//					log.error("InterruptedException!", e);
+//				}
+//			}
 		} catch (Exception e) {
 			log.error("System error!", e);
 		}
@@ -182,7 +186,7 @@ public class GTRobot {
 				// Parse the message to command object
 				AbstractCommand command = CommadParser.parser(message);
 				// Process the command
-				CommadProcessor.process(command);
+				CommandProcessor.getInstance().triggerCommand(command);
 			}
 		};
 

@@ -13,7 +13,9 @@ import org.jivesoftware.smack.util.StringUtils;
  */
 public class UserEntry implements Serializable {
 	private static final long serialVersionUID = -9113870554641563860L;
+
 	public static final int AVAILABLE = 0;
+
 	public static final int UNAVAILABLE = 1;
 
 	private long id;
@@ -27,7 +29,7 @@ public class UserEntry implements Serializable {
 	private boolean echoable;
 
 	private Locale locale;
-	
+
 	private int status;
 
 	public UserEntry(String jid) {
