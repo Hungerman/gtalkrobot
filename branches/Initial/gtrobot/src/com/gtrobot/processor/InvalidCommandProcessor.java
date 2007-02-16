@@ -29,7 +29,7 @@ public class InvalidCommandProcessor extends AbstractProcessor {
 			msgBuf.append(cmd.getI18NMessage("invalid.command"));
 			msgBuf.append(cmd.getOriginMessage());
 		}
-		
+
 		sendBackMessage(cmd, msgBuf.toString());
 	}
 

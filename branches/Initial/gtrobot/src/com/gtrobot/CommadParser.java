@@ -2,7 +2,6 @@ package com.gtrobot;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,16 +11,9 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.util.StringUtils;
 
 import com.gtrobot.command.AbstractCommand;
-import com.gtrobot.command.AvailableCommand;
-import com.gtrobot.command.AwayCommand;
 import com.gtrobot.command.BroadcastMessageCommand;
-import com.gtrobot.command.EchoCommand;
-import com.gtrobot.command.HelpCommand;
 import com.gtrobot.command.InvalidCommand;
-import com.gtrobot.command.LangCommand;
-import com.gtrobot.command.PrivateMessageCommand;
-import com.gtrobot.command.SearchUserCommand;
-import com.gtrobot.command.StatusCommand;
+import com.gtrobot.utils.ParameterTable;
 import com.gtrobot.utils.UserSession;
 
 public class CommadParser {
@@ -31,24 +23,6 @@ public class CommadParser {
 	private static final String COMMAND_PREFIX_1 = "/";
 
 	private static final String COMMAND_PREFIX_2 = ":";
-
-	private static final Hashtable commandTable = new Hashtable();
-	static {
-		commandTable.put("help", HelpCommand.class);
-		commandTable.put("nochat", AwayCommand.class);
-		commandTable.put("away", AwayCommand.class);
-		commandTable.put("chat", AvailableCommand.class);
-		commandTable.put("available", AvailableCommand.class);
-		commandTable.put("echo", EchoCommand.class);
-		commandTable.put("lang", LangCommand.class);
-		commandTable.put("sc", SearchUserCommand.class);
-		commandTable.put("searchuser", SearchUserCommand.class);
-		commandTable.put("st", StatusCommand.class);
-		commandTable.put("status", StatusCommand.class);
-		commandTable.put("pm", PrivateMessageCommand.class);
-		commandTable.put("privatemessage", PrivateMessageCommand.class);
-		// TODO
-	}
 
 	/**
 	 * Parse the message and return a command object
@@ -114,20 +88,22 @@ public class CommadParser {
 		}
 
 		String commandName = ((String) commands.get(0)).toLowerCase();
-		//Repeat the previous command
-		if(commandName.equals(COMMAND_PREFIX_1) || commandName.equals(COMMAND_PREFIX_2))
-		{
-			AbstractCommand previousCommand = UserSession.retrievePreviousCommand(user);
-			if(previousCommand == null)
-			{
+		// Repeat the previous command
+		if (commandName.equals(COMMAND_PREFIX_1)
+				|| commandName.equals(COMMAND_PREFIX_2)) {
+			AbstractCommand previousCommand = UserSession
+					.retrievePreviousCommand(user);
+			if (previousCommand == null) {
 				previousCommand = new InvalidCommand(user, null);
-				previousCommand.setErrorMessage(previousCommand.getI18NMessage("invalid.command.previous.command.null"));
+				previousCommand
+						.setErrorMessage(previousCommand
+								.getI18NMessage("invalid.command.previous.command.null"));
 			}
 			return previousCommand;
 		}
-			
-			
-		Class commandClass = (Class) commandTable.get(commandName);
+
+		Class commandClass = (Class) ParameterTable.getCommadMappings().get(
+				commandName);
 		if (commandClass == null) {
 			return new InvalidCommand(user, null);
 		}

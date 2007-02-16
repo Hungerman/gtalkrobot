@@ -42,11 +42,11 @@ public class EchoProcessor extends AbstractProcessor {
 			userEntry.setEchoable(cmd.isOperationON());
 			GlobalContext.getInstance().saveUser(userEntry);
 		}
-		if (cmd.isOperationON()) {			
+		if (cmd.isOperationON()) {
 			msgBuf.append(cmd.getI18NMessage("echo.success.on"));
 		} else {
 			msgBuf.append(cmd.getI18NMessage("echo.success.off"));
-		}		
+		}
 		sendBackMessage(abCmd, msgBuf.toString());
 	}
 

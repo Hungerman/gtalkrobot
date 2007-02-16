@@ -4,11 +4,11 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 
 /**
- * GTRobot's cache context
- * Initialize all caches and provide the interface to access these caches.
+ * GTRobot's cache context Initialize all caches and provide the interface to
+ * access these caches.
  * 
  * @author sunyuxin
- *
+ * 
  */
 public class CacheContext {
 
@@ -23,7 +23,7 @@ public class CacheContext {
 	private Cache messageCache;
 
 	private Cache sessionCache;
-	
+
 	private Cache objectCache;
 
 	private CacheContext() {
@@ -54,11 +54,9 @@ public class CacheContext {
 		shutdown();
 		super.finalize();
 	}
-	
-	public void shutdown()
-	{
-		if(manager != null)
-		{
+
+	public void shutdown() {
+		if (manager != null) {
 			manager.shutdown();
 			manager = null;
 		}
