@@ -1,10 +1,11 @@
-package com.gtrobot.processor;
+package com.gtrobot.processor.common;
 
 import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.AbstractCommand;
-import com.gtrobot.command.HelpCommand;
+import com.gtrobot.command.common.HelpCommand;
 import com.gtrobot.exception.CommandMatchedException;
+import com.gtrobot.processor.AbstractProcessor;
 
 public class HelpProcessor extends AbstractProcessor {
 
@@ -53,6 +54,10 @@ public class HelpProcessor extends AbstractProcessor {
 		msgBuf.append(prefix);
 		msgBuf.append(cmd.getI18NMessage("help.command.privatemessage"));
 		msgBuf.append(endl);
+		msgBuf.append(prefix);
+		msgBuf.append(cmd.getI18NMessage("help.command.addword"));
+		msgBuf.append(endl);
+		
 		sendBackMessage(cmd, msgBuf.toString());
 	}
 

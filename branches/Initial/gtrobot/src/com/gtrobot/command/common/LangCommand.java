@@ -1,7 +1,9 @@
-package com.gtrobot.command;
+package com.gtrobot.command.common;
 
 import java.util.List;
 import java.util.Locale;
+
+import com.gtrobot.command.ProcessableCommand;
 
 public class LangCommand extends ProcessableCommand {
 	private static final String EN = "en";

@@ -1,13 +1,14 @@
-package com.gtrobot.processor;
+package com.gtrobot.processor.common;
 
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
 
 import com.gtrobot.command.AbstractCommand;
-import com.gtrobot.command.PrivateMessageCommand;
+import com.gtrobot.command.common.PrivateMessageCommand;
 import com.gtrobot.context.GlobalContext;
 import com.gtrobot.context.UserEntry;
 import com.gtrobot.exception.CommandMatchedException;
+import com.gtrobot.processor.AbstractProcessor;
 
 public class PrivateMessageProcessor extends AbstractProcessor {
 

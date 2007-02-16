@@ -4,6 +4,7 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 
 import com.gtrobot.context.CacheContext;
+import com.gtrobot.dao.common.UserEntryDao;
 
 public class DaoFactory {
 	public static UserEntryDao getUserEntryDao() {

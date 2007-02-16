@@ -1,11 +1,12 @@
-package com.gtrobot.processor;
+package com.gtrobot.processor.common;
 
 import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.AbstractCommand;
-import com.gtrobot.command.BroadcastMessageCommand;
+import com.gtrobot.command.common.BroadcastMessageCommand;
 import com.gtrobot.context.UserEntry;
 import com.gtrobot.exception.CommandMatchedException;
+import com.gtrobot.processor.AbstractProcessor;
 
 public class BroadcastMessageProcessor extends AbstractProcessor {
 
