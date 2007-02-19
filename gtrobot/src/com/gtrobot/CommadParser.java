@@ -13,6 +13,7 @@ import org.jivesoftware.smack.util.StringUtils;
 import com.gtrobot.command.AbstractCommand;
 import com.gtrobot.command.common.BroadcastMessageCommand;
 import com.gtrobot.command.common.InvalidCommand;
+import com.gtrobot.processor.InteractiveProcessor;
 import com.gtrobot.utils.ParameterTable;
 import com.gtrobot.utils.UserSession;
 
@@ -64,11 +65,11 @@ public class CommadParser {
 	/**
 	 * Parse the command string and contruct comamnd object
 	 * 
-	 * @param user
+	 * @param jid
 	 * @param body
 	 * @return
 	 */
-	private static AbstractCommand parse(String user, String body) {
+	private static AbstractCommand parse(String jid, String body) {
 		if (body == null) {
 			log.info("Warn: message's body is NULL!");
 			return null;
@@ -77,49 +78,57 @@ public class CommadParser {
 		body = body.trim();
 		if (!(body.startsWith(COMMAND_PREFIX_1) || body
 				.startsWith(COMMAND_PREFIX_2))) {
-			// Normal broadcast message
-			return new BroadcastMessageCommand(user, body);
+			// Check if the user is in a interactive operations
+			Long step = InteractiveProcessor.getStep(jid);
+			if (step != null) {
+				return getPreviousCommand(jid);
+			} else {
+				// Normal broadcast message
+				return new BroadcastMessageCommand(jid, body);
+			}
 		}
 
 		// Parse the command and parameters
 		List commands = parseCommand(body);
 		if (commands == null || commands.size() < 1) {
-			return new InvalidCommand(user, null);
+			return new InvalidCommand(jid, null);
 		}
 
 		String commandName = ((String) commands.get(0)).toLowerCase();
 		// Repeat the previous command
 		if (commandName.equals(COMMAND_PREFIX_1)
 				|| commandName.equals(COMMAND_PREFIX_2)) {
-			AbstractCommand previousCommand = UserSession
-					.retrievePreviousCommand(user);
-			if (previousCommand == null) {
-				previousCommand = new InvalidCommand(user, null);
-				previousCommand
-						.setErrorMessage(previousCommand
-								.getI18NMessage("invalid.command.previous.command.null"));
-			}else
-			{
-				previousCommand.setErrorMessage(null);
-			}
-			return previousCommand;
+			return getPreviousCommand(jid);
 		}
 
 		Class commandClass = (Class) ParameterTable.getCommadMappings().get(
 				commandName);
 		if (commandClass == null) {
-			return new InvalidCommand(user, null);
+			return new InvalidCommand(jid, null);
 		}
 		try {
 			// Construct a new command object according to the command info
 			Constructor constructor = commandClass.getConstructor(new Class[] {
 					String.class, List.class });
 			return (AbstractCommand) constructor.newInstance(new Object[] {
-					user, commands });
+					jid, commands });
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new InvalidCommand(user, null);
+			return new InvalidCommand(jid, null);
 		}
+	}
+
+	private static AbstractCommand getPreviousCommand(String jid) {
+		AbstractCommand previousCommand = UserSession
+				.retrievePreviousCommand(jid);
+		if (previousCommand == null) {
+			previousCommand = new InvalidCommand(jid, null);
+			previousCommand.setErrorMessage(previousCommand
+					.getI18NMessage("invalid.command.previous.command.null"));
+		} else {
+			previousCommand.setErrorMessage(null);
+		}
+		return previousCommand;
 	}
 
 	/**

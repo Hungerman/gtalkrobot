@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.GoogleTalkConnection;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.Roster;
@@ -63,17 +64,10 @@ public class GTRobot {
 			ds.getConnection();
 			ds.printDataSourceStats();
 
-			// Setup the XMPP connection
-			// XMPPConnection.DEBUG_ENABLED = true;
-			GoogleTalkConnection gtConnection = createConnection();
-			GlobalContext.getInstance().setConnection(gtConnection);
-			
-			//TODO
+			// TODO
 			CommandProcessor.getInstance();
 
-			updatePresence(gtConnection);
-			initRosterListener(gtConnection);
-			initPacketListener(gtConnection);
+			initConnection();
 			return true;
 		} catch (Exception e) {
 			log.error("System error!", e);
@@ -81,15 +75,48 @@ public class GTRobot {
 		}
 	}
 
+	private void initConnection() {
+		long sleepTime = 1000;
+		while (true) {
+			try {
+				// Setup the XMPP connection
+				// XMPPConnection.DEBUG_ENABLED = true;
+				GoogleTalkConnection gtConnection = createConnection();
+				GlobalContext.getInstance().setConnection(gtConnection);
+
+				updatePresence(gtConnection);
+				initConnectionListener(gtConnection);
+				initRosterListener(gtConnection);
+				initPacketListener(gtConnection);
+				try {
+					CacheContext.getInstance().getChatCache().removeAll();
+				} catch (Exception e) {
+				}
+
+				return;
+			} catch (Exception e) {
+				log.error("Create connection failed.", e);
+				try {
+					Thread.sleep(sleepTime);
+					sleepTime = sleepTime + sleepTime;
+					if (sleepTime > 60000) {
+						sleepTime = 60000;
+					}
+				} catch (InterruptedException e1) {
+				}
+			}
+		}
+	}
+
 	private void run() {
 		try {
-//			while (true) {
-//				try {
-//					Thread.sleep(1000000);
-//				} catch (InterruptedException e) {
-//					log.error("InterruptedException!", e);
-//				}
-//			}
+			// while (true) {
+			// try {
+			// Thread.sleep(1000000);
+			// } catch (InterruptedException e) {
+			// log.error("InterruptedException!", e);
+			// }
+			// }
 		} catch (Exception e) {
 			log.error("System error!", e);
 		}
@@ -192,5 +219,22 @@ public class GTRobot {
 
 		// Register the listener with filter
 		connection.addPacketListener(listener, filter);
+	}
+
+	private void initConnectionListener(GoogleTalkConnection connection) {
+		ConnectionListener listener = new ConnectionListener() {
+			public void connectionClosed() {
+				log.error("Connection closed!");
+				initConnection();
+			}
+
+			public void connectionClosedOnError(Exception e) {
+				log.error("Connection closed with error:", e);
+				initConnection();
+			}
+		};
+
+		// Register the listener with filter
+		connection.addConnectionListener(listener);
 	}
 }
