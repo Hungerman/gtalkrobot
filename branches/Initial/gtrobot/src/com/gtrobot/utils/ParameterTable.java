@@ -14,6 +14,7 @@ import com.gtrobot.command.common.PrivateMessageCommand;
 import com.gtrobot.command.common.SearchUserCommand;
 import com.gtrobot.command.common.StatusCommand;
 import com.gtrobot.command.word.AddWordEntryCommand;
+import com.gtrobot.command.word.InteractiveSampleCommand;
 import com.gtrobot.processor.common.AvailableProcessor;
 import com.gtrobot.processor.common.AwayProcessor;
 import com.gtrobot.processor.common.BroadcastMessageProcessor;
@@ -26,6 +27,7 @@ import com.gtrobot.processor.common.PrivateMessageProcessor;
 import com.gtrobot.processor.common.SearchUserProcessor;
 import com.gtrobot.processor.common.StatusProcessor;
 import com.gtrobot.processor.word.AddWordEntryProcessor;
+import com.gtrobot.processor.word.InteractiveProcessorSample;
 
 public class ParameterTable {
 	private static final Hashtable commandMappings = new Hashtable();
@@ -45,6 +47,7 @@ public class ParameterTable {
 		commandMappings.put("privatemessage", PrivateMessageCommand.class);
 		commandMappings.put("aw", AddWordEntryCommand.class);
 		commandMappings.put("addword", AddWordEntryCommand.class);
+		commandMappings.put("ips", InteractiveSampleCommand.class);
 		// TODO
 	}
 
@@ -73,6 +76,8 @@ public class ParameterTable {
 				new PrivateMessageProcessor());
 		commandProcessorsMappings.put(AddWordEntryCommand.class.getName(),
 				new AddWordEntryProcessor());
+		commandProcessorsMappings.put(InteractiveSampleCommand.class.getName(),
+				new InteractiveProcessorSample());
 		// TODO
 	}
 

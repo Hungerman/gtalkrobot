@@ -57,6 +57,9 @@ public class HelpProcessor extends AbstractProcessor {
 		msgBuf.append(prefix);
 		msgBuf.append(cmd.getI18NMessage("help.command.addword"));
 		msgBuf.append(endl);
+		msgBuf.append(prefix);
+		msgBuf.append("/ips: just for test!");
+		msgBuf.append(endl);
 		
 		sendBackMessage(cmd, msgBuf.toString());
 	}
