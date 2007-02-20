@@ -1,110 +1,242 @@
 package com.gtrobot.processor.word;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.word.AddWordEntryCommand;
+import com.gtrobot.dao.DaoFactory;
 import com.gtrobot.model.WordEntry;
+import com.gtrobot.model.WordMeaning;
 import com.gtrobot.processor.InteractiveProcessor;
+import com.gtrobot.utils.LocaleParser;
 
 public class AddWordEntryProcessor extends InteractiveProcessor {
+	private static final int STEP_TO_MENU = 100;
+
+	private static final int STEP_TO_ADD_LOCALIZATION = 1000;
+
+	private static final int STEP_TO_ADD_MEANING = 2000;
 
 	public AddWordEntryProcessor() {
-		super(4, "-wordEntry");
+		super("-wordEntry");
 	}
 
-	protected void interactiveProcess_0(AddWordEntryCommand cmd)
+	// The interactiveProcess_0 are skipped
+
+	protected int interactiveProcessPrompt_1(AddWordEntryCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
 		formartMessageHeader(cmd, msgBuf);
 
 		msgBuf.append("Please input the word entry:");
-		// msgBuf.append(endl);
-		//
-		// // setSession(jid, new Date());
-		// //
+
 		sendBackMessage(cmd, msgBuf.toString());
+		return CONTINUE;
 	}
 
-	protected void interactiveBeforeProcess_1(AddWordEntryCommand cmd)
+	protected int interactiveProcess_1(AddWordEntryCommand cmd)
 			throws XMPPException {
 		WordEntry wordEntry = new WordEntry();
 		wordEntry.setWord(cmd.getOriginMessage().trim());
+		wordEntry.setLocale(cmd.getOperationLocale());
 		setSession(cmd.getUserEntry().getJid(), wordEntry);
+		return STEP_TO_MENU;
 	}
 
-	protected void interactiveProcess_1(AddWordEntryCommand cmd)
+	/**
+	 * Main Menu
+	 */
+	protected int interactiveProcessPrompt_100(AddWordEntryCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
 		formartMessageHeader(cmd, msgBuf);
 
-		WordEntry wordEntry = new WordEntry();
-		wordEntry.setWord(cmd.getOriginMessage());
-		setSession(cmd.getUserEntry().getJid(), wordEntry);
+		msgBuf.append("Operation menu:");
+		msgBuf.append(endl);
+		msgBuf.append(" 1. Input the word localization meaning.");
+		msgBuf.append(endl);
+		msgBuf.append(" 2. Input the word meaning.");
+		msgBuf.append(endl);
+		msgBuf.append(" s. Save and exit.");
+		msgBuf.append(endl);
+		msgBuf.append(" x. Exit.");
+		msgBuf.append(endl);
 
-		msgBuf
-				.append("Good, please enter the word locale[en|zh|jp], default is[jp]:");
 		sendBackMessage(cmd, msgBuf.toString());
+		return CONTINUE;
 	}
 
-	protected void interactiveBeforeProcess_2(AddWordEntryCommand cmd)
+	protected int interactiveProcess_100(AddWordEntryCommand cmd)
 			throws XMPPException {
-		WordEntry wordEntry = (WordEntry) getSession(cmd.getUserEntry()
-				.getJid());
-		Locale locale = new Locale(cmd.getOriginMessage().trim());
-		//TODO
-		wordEntry.setLocale(locale);
+
+		// Check whether the command is exit
+		String opt = cmd.getOriginMessage().trim().toLowerCase();
+		if (opt.equals("1")) {
+			return STEP_TO_ADD_LOCALIZATION;
+		}
+		if (opt.equals("2")) {
+			return STEP_TO_ADD_MEANING;
+		}
+		if (opt.equals("s")) {
+			return saveWordEntry(cmd);
+		}
+		return RETRY_CURRENT_STEP;
 	}
 
-	protected void interactiveProcess_2(AddWordEntryCommand cmd)
+	/**
+	 * STEP_TO_ADD_LOCALIZATION
+	 */
+	protected int interactiveProcessPrompt_1000(AddWordEntryCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
 		formartMessageHeader(cmd, msgBuf);
 
-		WordEntry wordEntry = (WordEntry) getSession(cmd.getUserEntry()
-				.getJid());
+		msgBuf.append("Please input the locale for WordEntry's localization:");
+		sendBackMessage(cmd, msgBuf.toString());
+		return CONTINUE;
+	}
 
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
+	protected int interactiveProcess_1000(AddWordEntryCommand cmd)
+			throws XMPPException {
+		Locale locale = LocaleParser.parseLocale(cmd.getOriginMessage());
+		if (locale == null) {
+			StringBuffer msgBuf = new StringBuffer();
+			formartMessageHeader(cmd, msgBuf);
+
+			msgBuf.append("Your input locale is invalid:");
+			sendBackMessage(cmd, msgBuf.toString());
+			return RETRY_CURRENT_STEP;
 		}
 
-		msgBuf.append(endl);
-		msgBuf.append("wordEntry: ");
-		msgBuf.append(wordEntry.getWord());
-		msgBuf.append(endl);
-		msgBuf.append("wordEntry.locale: ");
-		msgBuf.append(wordEntry.getLocale().getDisplayLanguage(
-				cmd.getUserEntry().getLocale()));
-		msgBuf.append(endl);
+		WordEntry we = new WordEntry();
+		we.setLocale(locale);
+		setTempSession(cmd.getUserEntry().getJid(), we);
+		return CONTINUE;
+	}
+
+	protected int interactiveProcessPrompt_1001(AddWordEntryCommand cmd)
+			throws XMPPException {
+		StringBuffer msgBuf = new StringBuffer();
+		formartMessageHeader(cmd, msgBuf);
+
+		msgBuf.append("Please input the content for WordEntry's localization:");
+		sendBackMessage(cmd, msgBuf.toString());
+		return CONTINUE;
+	}
+
+	protected int interactiveProcess_1001(AddWordEntryCommand cmd)
+			throws XMPPException {
+		WordEntry we = (WordEntry)getTempSession(cmd.getUserEntry().getJid());
+		we.setWord(cmd.getOriginMessage().trim());
+
+		WordEntry wordEntry = (WordEntry) getSession(cmd.getUserEntry()
+				.getJid());
+		List localizations = wordEntry.getLocalizations();
+		if (localizations == null) {
+			localizations = new ArrayList();
+		}
+		localizations.add(we);
+		wordEntry.setLocalizations(localizations);
+
+		return STEP_TO_MENU;
+	}
+	
+	/**
+	 * STEP_TO_ADD_MEANING
+	 */
+	protected int interactiveProcessPrompt_2000(AddWordEntryCommand cmd)
+			throws XMPPException {
+		StringBuffer msgBuf = new StringBuffer();
+		formartMessageHeader(cmd, msgBuf);
+
+		msgBuf.append("Please input the content for WordMeaning's localization:");
+		sendBackMessage(cmd, msgBuf.toString());
+		return CONTINUE;
+	}
+
+	
+	protected int interactiveProcess_2000(AddWordEntryCommand cmd)
+			throws XMPPException {
+		WordEntry wordEntry = (WordEntry) getSession(cmd.getUserEntry()
+				.getJid());
+		
+		WordMeaning wm = new WordMeaning();
+		wm.setLocale(wordEntry.getLocale());
+		wm.setMeaning(cmd.getOriginMessage().trim());
+		
+		List meanings = wordEntry.getMeanings();
+		if (meanings == null) {
+			meanings = new ArrayList();
+		}
+		meanings.add(wm);
+		wordEntry.setMeanings(meanings);
+
+		return STEP_TO_MENU;
+	}
+
+	protected int interactiveProcessPrompt_3(AddWordEntryCommand cmd)
+			throws XMPPException {
+		StringBuffer msgBuf = new StringBuffer();
+		formartMessageHeader(cmd, msgBuf);
+
+		// WordEntry wordEntry = (WordEntry) getSession(cmd.getUserEntry()
+		// .getJid());
+		//
+		// try {
+		// Thread.sleep(100);
+		// } catch (InterruptedException e) {
+		// }
+		//
+		// msgBuf.append(endl);
+		// msgBuf.append("wordEntry: ");
+		// msgBuf.append(wordEntry.getWord());
+		// msgBuf.append(endl);
+		// msgBuf.append("wordEntry.locale: ");
+		// msgBuf.append(wordEntry.getLocale().getDisplayLanguage(
+		// cmd.getUserEntry().getLocale()));
+		// msgBuf.append(endl);
 		msgBuf.append("Do you want to save this word entry?");
 		sendBackMessage(cmd, msgBuf.toString());
+		return CONTINUE;
 	}
 
-	protected void interactiveProcess_3(AddWordEntryCommand cmd)
+	protected int interactiveProcess_3(AddWordEntryCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
 		formartMessageHeader(cmd, msgBuf);
 
+		switch (checkAnswer(cmd)) {
+		case YES:
+			return saveWordEntry(cmd);
+		case NO:
+			msgBuf.append("This word entry has been dropped!");
+			sendBackMessage(cmd, msgBuf.toString());
+			return CONTINUE;
+		default:
+			// BAD_ANSWER:
+			msgBuf.append("Bad answer!");
+			sendBackMessage(cmd, msgBuf.toString());
+			return RETRY_CURRENT_STEP;
+		}
+	}
+
+	private int saveWordEntry(AddWordEntryCommand cmd) throws XMPPException {
+		StringBuffer msgBuf = new StringBuffer();
+		formartMessageHeader(cmd, msgBuf);
 		WordEntry wordEntry = (WordEntry) getSession(cmd.getUserEntry()
 				.getJid());
 
 		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
+			DaoFactory.getWordEntryDao().saveWordEntry(wordEntry);
+		} catch (Exception e) {
+			log.error("Exception while saving word entry: ", e);
+			return RETRY_CURRENT_STEP;
 		}
-
-		msgBuf.append(endl);
-		msgBuf.append("wordEntry: ");
-		msgBuf.append(wordEntry.getWord());
-		msgBuf.append(endl);
-		msgBuf.append("wordEntry.locale: ");
-		msgBuf.append(wordEntry.getLocale().getDisplayLanguage(
-				cmd.getUserEntry().getLocale()));
-		msgBuf.append(endl);
 		msgBuf.append("This word entry has been saved!");
 		sendBackMessage(cmd, msgBuf.toString());
+		return END_STEPS;
 	}
-
 }

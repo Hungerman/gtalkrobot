@@ -5,24 +5,18 @@ import java.util.Locale;
 
 /**
  * Word entry model.
- * <p>
- * WordEntry n --- n WordMeaning <br>
- * WordMeaning n --- n WordSentence <br>
- * WordEntry n --- n WordEntry <br>
  * 
  * @author sunyuxin
  * 
  */
-public class WordEntry extends BaseModel {
-	private static final long serialVersionUID = 8377846979059886101L;
+public class WordSentence extends BaseModel {
+	private static final long serialVersionUID = -7673123201283903495L;
 
 	private Long id;
 
-	private String word;
+	private String sentence;
 
 	private Locale locale;
-
-	private List meanings;
 
 	private List localizations;
 
@@ -34,13 +28,13 @@ public class WordEntry extends BaseModel {
 		this.id = id;
 	}
 
-	public String getWord() {
-		return word;
+	public String getSentence() {
+		return sentence;
 	}
 
-	public void setWord(String word) {
-		this.word = word;
-		
+	public void setSentence(String sentence) {
+		this.sentence = sentence;
+
 		this.setModified(true);
 	}
 
@@ -50,14 +44,6 @@ public class WordEntry extends BaseModel {
 
 	public void setLocale(Locale locale) {
 		this.locale = locale;
-	}
-
-	public List getMeanings() {
-		return meanings;
-	}
-
-	public void setMeanings(List wordMeanings) {
-		this.meanings = wordMeanings;
 	}
 
 	public List getLocalizations() {

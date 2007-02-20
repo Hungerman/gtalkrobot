@@ -1,4 +1,4 @@
-package com.gtrobot;
+package com.gtrobot.commandparser;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;

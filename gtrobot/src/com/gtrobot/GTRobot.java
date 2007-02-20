@@ -20,6 +20,7 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
 
 import com.gtrobot.command.AbstractCommand;
+import com.gtrobot.commandparser.CommadParser;
 import com.gtrobot.context.CacheContext;
 import com.gtrobot.context.GlobalContext;
 import com.gtrobot.context.UserEntry;
