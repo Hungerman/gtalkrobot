@@ -5,10 +5,15 @@ import net.sf.ehcache.Element;
 
 import com.gtrobot.context.CacheContext;
 import com.gtrobot.dao.common.UserEntryDao;
+import com.gtrobot.dao.word.WordEntryDao;
 
 public class DaoFactory {
 	public static UserEntryDao getUserEntryDao() {
 		return (UserEntryDao) getCachedObject(UserEntryDao.class);
+	}
+
+	public static WordEntryDao getWordEntryDao() {
+		return (WordEntryDao) getCachedObject(WordEntryDao.class);
 	}
 
 	private static Object getCachedObject(Class clazz) {

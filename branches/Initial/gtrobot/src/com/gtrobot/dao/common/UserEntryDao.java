@@ -27,7 +27,7 @@ public class UserEntryDao extends BaseDao {
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				userEntry = new UserEntry(jid);
-				userEntry.setId(rs.getLong("ID"));
+				userEntry.setId((Long)rs.getObject("ID"));
 				userEntry.setNickName(rs.getString("NICK_NAME"));
 				userEntry.setChattable(rs.getBoolean("CHATTABLE"));
 				userEntry.setEchoable(rs.getBoolean("ECHOABLE"));
@@ -50,7 +50,7 @@ public class UserEntryDao extends BaseDao {
 		String sql = "insert into USER_ENTRY(JID, NICK_NAME, CHATTABLE, ECHOABLE, LOCALE, CREATE_DATE, LAST_LOGIN_DATE, ID) values(?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
 		try {
-			userEntry.setId(getUserEntryId());
+			userEntry.setId(getNextSequence("SEQ_USER_ENTRY"));
 			pstmt = prepareStatement(sql);
 			pstmt.setString(1, userEntry.getJid());
 			pstmt.setString(2, userEntry.getNickName());
@@ -59,7 +59,7 @@ public class UserEntryDao extends BaseDao {
 			pstmt.setString(5, userEntry.getLocale().getLanguage());
 			pstmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
 			pstmt.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
-			pstmt.setLong(8, userEntry.getId());
+			pstmt.setObject(8, userEntry.getId());
 			int rows = pstmt.executeUpdate();
 			if (log.isDebugEnabled()) {
 				log.debug("Inserted successfully on " + rows + " rows.");
@@ -85,7 +85,7 @@ public class UserEntryDao extends BaseDao {
 			pstmt.setString(5, userEntry.getLocale().getLanguage());
 			pstmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
 			pstmt.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
-			pstmt.setLong(8, userEntry.getId());
+			pstmt.setObject(8, userEntry.getId());
 			int rows = pstmt.executeUpdate();
 			if (log.isDebugEnabled()) {
 				log.debug("Updated successfully on " + rows + " rows.");
@@ -97,18 +97,5 @@ public class UserEntryDao extends BaseDao {
 		}
 		closeStatement(pstmt);
 		closeConnection();
-	}
-
-	private long getUserEntryId() throws DataAccessException, SQLException {
-		long id = -1;
-		String sql = "select nextval('SEQ_USER_ENTRY')";
-		PreparedStatement pstmt = prepareStatement(sql);
-		ResultSet rs = pstmt.executeQuery();
-		if (rs.next()) {
-			id = rs.getLong(1);
-		}
-		closeStatement(pstmt);
-		closeConnection();
-		return id;
 	}
 }

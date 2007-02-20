@@ -11,7 +11,7 @@ import com.gtrobot.processor.InteractiveProcessor;
 public class InteractiveProcessorSample extends InteractiveProcessor {
 
 	public InteractiveProcessorSample() {
-		super(2, "-InteractiveProcessorSample");
+		super("-InteractiveProcessorSample");
 	}
 
 	protected void interactiveBeforeProcess_0(InteractiveSampleCommand cmd)

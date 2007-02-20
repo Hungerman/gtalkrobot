@@ -4,15 +4,12 @@ import java.util.List;
 import java.util.Locale;
 
 import com.gtrobot.command.ProcessableCommand;
+import com.gtrobot.utils.LocaleParser;
 
 public class LangCommand extends ProcessableCommand {
-	private static final String EN = "en";
-
-	private static final String JP = "jp";
-
-	private static final String ZH = "zh";
-
 	private String operation;
+
+	private Locale locale;
 
 	public LangCommand(String jid, List argv) {
 		super(jid, argv);
@@ -24,8 +21,8 @@ public class LangCommand extends ProcessableCommand {
 			return;
 		}
 		operation = ((String) argv.get(1)).trim().toLowerCase();
-		if (!(EN.endsWith(operation) || JP.equals(operation) || ZH
-				.equals(operation))) {
+		locale = LocaleParser.parseLocale(operation);
+		if (locale == null) {
 			setErrorMessage(getI18NMessage("lang.error.parameter"));
 		}
 

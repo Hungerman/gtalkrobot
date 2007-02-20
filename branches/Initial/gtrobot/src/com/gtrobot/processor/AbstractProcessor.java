@@ -44,7 +44,7 @@ public abstract class AbstractProcessor implements Processor {
 		String error = abCmd.getErrorMessage();
 		if (error != null) {
 			log
-					.error("Should not deal the error in AbstractProcessor.beforeProcess: "
+					.error("Error in AbstractProcessor.beforeProcess: "
 							+ error);
 
 			StringBuffer msgBuf = new StringBuffer();
