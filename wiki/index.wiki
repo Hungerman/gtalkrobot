@@ -1,15 +1,15 @@
 #summary GTRobot's summary index page.
 
 = Introduction =
-  Gtrobot is a gtalk robot. It provides some exiciting functions basing on Google Talk. And, we are enhancing more exciting functions basing on the flexible GTRobot's framework. Please join the [http://groups.google.com/group/GTRobot GTRobot's Group] to recieve the following update messages. Also, we are posting our ideas and progress on [http://gtrobot.blogspot.com/ GTRobot's blog], if you have any idea or suggest please post them back directly.
+Gtrobot is a gtalk robot. It provides some exiciting functions basing on Google Talk. And, we are enhancing more exciting functions basing on the flexible GTRobot's framework. Please join the [http://groups.google.com/group/GTRobot GTRobot's Group] to recieve the following update messages. Also, we are posting our ideas and progress on [http://gtrobot.blogspot.com/ GTRobot's blog], if you have any idea or suggest please post them back directly.
 
-  Firstly, please have a view of _*[http://code.google.com/p/gtalkrobot/wiki/usage "How to use GTRobot"]*_ to experience in GTRobot.
+Firstly, please have a view of _*[http://code.google.com/p/gtalkrobot/wiki/usage "How to use GTRobot"]*_ to experience in GTRobot.
 
 = Function =
-  GTRobot providing function list:
+GTRobot providing function list:
   * Group chatting
-		# Public broadcast group chatting
-		#	Private broadcast group chatting (Working...)
+    # Public broadcast group chatting
+    # Private broadcast group chatting (Working...)
     # Away status setting
     # Private message sending
     # Anonymous-chatting (No-lighting-chat)
@@ -28,7 +28,7 @@
   * Account management (Working...)
 
 = Feature =
-  GTRobot is written in java. It was designed as a flexible framework for future customized extension. Key features:
+GTRobot is written in java. It was designed as a flexible framework for future customized extension. Key features:
   * Multi-worker thread pool framework
   * Simple command/processor framework
   * Interactive command/processor framework
@@ -36,7 +36,7 @@
   * Data cache frameworking
 
 == Dependence ==
-  Dependence List:
+Dependence List:
   * [http://www.jivesoftware.org/smack/ Jive Software Smack]
   * [http://ehcache.sourceforge.net/ Ehcache]
   * Log4J
@@ -51,6 +51,7 @@
   * [http://www.customizetalk.com/ Customize Talk]
 
 = How to join this project =
-  If you are interesting in participate in the development of GTRobot, please post in [http://groups.google.com/group/GTRobot GTRobot's Group]  or [http://gtrobot.blogspot.com/ GTRobot's blog]. 
-  We are hoping to make more improvement in GTRobot development, so anyone's help are appreciated. 
+If you are interesting in participate in the development of GTRobot, please post in [http://groups.google.com/group/GTRobot GTRobot's Group]  or [http://gtrobot.blogspot.com/ GTRobot's blog]. 
+
+We are hoping to make more improvement in GTRobot development, so anyone's help are appreciated. 
 
