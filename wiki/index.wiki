@@ -1,15 +1,15 @@
-#summary GTRobot.
+#summary GTRobot's summary index page.
 
 = Introduction =
-  Gtrobot is a gtalk robot. It provides some exiciting functions basing on Google Talk. And, we are enhancing more exciting functions basing on the flexible GTRobot's framework. Please join the [GTRobot's Group] to recieve the following update messages. Also, we are posting our ideas and progress on [GTRobot's blog], if you have any idea or suggest please post them back directly.
+  Gtrobot is a gtalk robot. It provides some exiciting functions basing on Google Talk. And, we are enhancing more exciting functions basing on the flexible GTRobot's framework. Please join the [http://groups.google.com/group/GTRobot GTRobot's Group] to recieve the following update messages. Also, we are posting our ideas and progress on [http://gtrobot.blogspot.com/ GTRobot's blog], if you have any idea or suggest please post them back directly.
 
-  Firstly, please have a view of _*["How to use GTRobot" >]*_ to experience in GTRobot.
+  Firstly, please have a view of _*[http://code.google.com/p/gtalkrobot/wiki/usage "How to use GTRobot"]*_ to experience in GTRobot.
 
-= Functions =
-  Secondly, which supports this following functions:
+= Function =
+  GTRobot providing function list:
   * Group chatting
 		# Public broadcast group chatting
-		#	Private broadcast group chatting
+		#	Private broadcast group chatting (Working...)
     # Away status setting
     # Private message sending
     # Anonymous-chatting (No-lighting-chat)
@@ -18,52 +18,39 @@
     # Chinese
     # Japanese
     # More...
-  * Foreign language leaning
+  * Foreign language leaning (Working...)
     # Word collecting
     # Word seaching
     # Word leanring
-  * Quiz system
+  * Quiz system (Not yet...)
     # Single question
     # Serialized questions
+  * Account management (Working...)
 
-= Features =
-GTRobot is written in java. It was designed as a flexible framework for future customized extension. Key features:
+= Feature =
+  GTRobot is written in java. It was designed as a flexible framework for future customized extension. Key features:
+  * Multi-worker thread pool framework
+  * Simple command/processor framework
+  * Interactive command/processor framework
+  * Data access framework
+  * Data cache frameworking
 
-  Public group chatting
-  Private group chatting(Not starting)
-  Command/Processor framework
-  Data caching framework
-  Data access framework(Not starting...)
-  Multi-worker thread framework(Not starting...)
-  Acount management framework(Not starting...)
-  Learning framework (Not starting...)
-  Quiz framework(Not starting...)
-
-
+== Dependence ==
+  Dependence List:
+  * [http://www.jivesoftware.org/smack/ Jive Software Smack]
+  * [http://ehcache.sourceforge.net/ Ehcache]
+  * Log4J
+  * Apache Commons Pool
+  * Apache Commons Logging
+  * Apache Commons dbcp
+  * Apache Commons collections
 
 = External Links =
   * [http://talk.google.com/ Google talk]
   * [http://coders.meta.net.nz/~perry/jabber/confbot.php Google Talk: Conference Bot]
   * [http://www.customizetalk.com/ Customize Talk]
 
-  Public group chatting
-  Private group chatting(Not starting)
-  Command/Processor framework
-  Data caching framework
-  Data access framework(Not starting...)
-  Multi-worker thread framework(Not starting...)
-  Acount management framework(Not starting...)
-  Learning framework (Not starting...)
-  Quiz framework(Not starting...)
+= How to join this project =
+  If you are interesting in participate in the development of GTRobot, please post in [http://groups.google.com/group/GTRobot GTRobot's Group]  or [http://gtrobot.blogspot.com/ GTRobot's blog]. 
+  We are hoping to make more improvement in GTRobot development, so anyone's help are appreciated. 
 
-Features List:
-  Basic command:
-    help comamnd
-
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
