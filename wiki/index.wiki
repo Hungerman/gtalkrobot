@@ -28,7 +28,9 @@ GTRobot providing function list:
   * Account management (Working...)
 
 = Feature =
-GTRobot is written in java. It was designed as a flexible framework for future customized extension. Key features:
+GTRobot is written in java. It was designed as a flexible framework for future customized extension. 
+
+Key features:
   * Multi-worker thread pool framework
   * Simple command/processor framework
   * Interactive command/processor framework
