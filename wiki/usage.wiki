@@ -1,8 +1,44 @@
-#summary One-sentence summary of this page.
+#summary Hot to use the GTRobot.
 
 = Introduction =
+Gtrobot is a gtalk robot which supports this following functions:
+  * Group chatting
+		# Public broadcast group chatting
+		#	Private broadcast group chatting
+    # Away status setting
+    # Private message sending
+    # Anonymous-chatting (No-lighting-chat)
+  * Multi-language support
+    # English
+    # Chinese
+    # Japanese
+    # More...
+  * Foreign language leaning
+    # Word collecting
+    # Word seaching
+    # Word leanring
+  * Quiz system
+    # Single question
+    # Serialized questions ()
 
-Add your content here.
+
+[http://coders.meta.net.nz/~perry/jabber/confbot.php Google Talk: Conference Bot]
+[http://www.customizetalk.com/ Customize Talk]
+[http://talk.google.com/ Google talk]
+
+  Public group chatting
+  Private group chatting(Not starting)
+  Command/Processor framework
+  Data caching framework
+  Data access framework(Not starting...)
+  Multi-worker thread framework(Not starting...)
+  Acount management framework(Not starting...)
+  Learning framework (Not starting...)
+  Quiz framework(Not starting...)
+
+Features List:
+  Basic command:
+    help comamnd
 
 
 = Details =

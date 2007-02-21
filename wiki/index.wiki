@@ -1,8 +1,64 @@
-#summary One-sentence summary of this page.
+#summary GTRobot.
 
 = Introduction =
+  Gtrobot is a gtalk robot. It provides some exiciting functions basing on Google Talk. And, we are enhancing more exciting functions basing on the flexible GTRobot's framework. Please join the [GTRobot's Group] to recieve the following update messages. Also, we are posting our ideas and progress on [GTRobot's blog], if you have any idea or suggest please post them back directly.
 
-Add your content here.
+  Firstly, please have a view of _*["How to use GTRobot" >]*_ to experience in GTRobot.
+
+= Functions =
+  Secondly, which supports this following functions:
+  * Group chatting
+		# Public broadcast group chatting
+		#	Private broadcast group chatting
+    # Away status setting
+    # Private message sending
+    # Anonymous-chatting (No-lighting-chat)
+  * Multi-language support
+    # English
+    # Chinese
+    # Japanese
+    # More...
+  * Foreign language leaning
+    # Word collecting
+    # Word seaching
+    # Word leanring
+  * Quiz system
+    # Single question
+    # Serialized questions
+
+= Features =
+GTRobot is written in java. It was designed as a flexible framework for future customized extension. Key features:
+
+  Public group chatting
+  Private group chatting(Not starting)
+  Command/Processor framework
+  Data caching framework
+  Data access framework(Not starting...)
+  Multi-worker thread framework(Not starting...)
+  Acount management framework(Not starting...)
+  Learning framework (Not starting...)
+  Quiz framework(Not starting...)
+
+
+
+= External Links =
+  * [http://talk.google.com/ Google talk]
+  * [http://coders.meta.net.nz/~perry/jabber/confbot.php Google Talk: Conference Bot]
+  * [http://www.customizetalk.com/ Customize Talk]
+
+  Public group chatting
+  Private group chatting(Not starting)
+  Command/Processor framework
+  Data caching framework
+  Data access framework(Not starting...)
+  Multi-worker thread framework(Not starting...)
+  Acount management framework(Not starting...)
+  Learning framework (Not starting...)
+  Quiz framework(Not starting...)
+
+Features List:
+  Basic command:
+    help comamnd
 
 
 = Details =
