@@ -11,7 +11,7 @@ import com.gtrobot.dao.DaoFactory;
 import com.gtrobot.model.WordEntry;
 import com.gtrobot.model.WordMeaning;
 import com.gtrobot.processor.InteractiveProcessor;
-import com.gtrobot.utils.LocaleParser;
+import com.gtrobot.utils.CommonUtils;
 
 public class AddWordEntryProcessor extends InteractiveProcessor {
 	private static final int STEP_TO_MENU = 100;
@@ -101,7 +101,7 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 
 	protected int interactiveProcess_1000(AddWordEntryCommand cmd)
 			throws XMPPException {
-		Locale locale = LocaleParser.parseLocale(cmd.getOriginMessage());
+		Locale locale = CommonUtils.parseLocale(cmd.getOriginMessage());
 		if (locale == null) {
 			StringBuffer msgBuf = new StringBuffer();
 			formartMessageHeader(cmd, msgBuf);

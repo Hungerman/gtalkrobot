@@ -1,7 +1,6 @@
 package com.gtrobot.commandparser;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,6 +13,7 @@ import com.gtrobot.command.AbstractCommand;
 import com.gtrobot.command.common.BroadcastMessageCommand;
 import com.gtrobot.command.common.InvalidCommand;
 import com.gtrobot.processor.InteractiveProcessor;
+import com.gtrobot.utils.CommonUtils;
 import com.gtrobot.utils.ParameterTable;
 import com.gtrobot.utils.UserSession;
 
@@ -89,7 +89,7 @@ public class CommadParser {
 		}
 
 		// Parse the command and parameters
-		List commands = parseCommand(body);
+		List commands = CommonUtils.parseCommand(body);
 		if (commands == null || commands.size() < 1) {
 			return new InvalidCommand(jid, null);
 		}
@@ -129,34 +129,5 @@ public class CommadParser {
 			previousCommand.setErrorMessage(null);
 		}
 		return previousCommand;
-	}
-
-	/**
-	 * Parse the command message body into String List
-	 * 
-	 * @param body
-	 * @return
-	 */
-	private static List parseCommand(String body) {
-		List results = new ArrayList();
-		StringBuffer tempStr = new StringBuffer();
-		for (int i = 1; i < body.length(); i++) {
-			char cc = body.charAt(i);
-
-			if (cc == ' ' || cc == '\t' || cc == '\n' || cc == '\r') {
-				if (tempStr.length() == 0) {
-					continue;
-				} else {
-					results.add(tempStr.toString());
-					tempStr = new StringBuffer();
-				}
-			} else {
-				tempStr.append(cc);
-			}
-		}
-		if (tempStr.length() != 0) {
-			results.add(tempStr.toString());
-		}
-		return results;
 	}
 }
