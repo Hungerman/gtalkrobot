@@ -51,8 +51,8 @@ Global command list:
         #> /lang jp
       }}}
   # Search online user
-   * Command format: /sc [match string]
-   * Search the online user. If the _match string_ is blank, all online user will be returned. Otherwise all users will be returned whose name includes the _match string_. The user list will be returned in paging. Each page only shows 10 users. Please use command "//" or "::" to request the following pages.
+   * Command format: /sc _matchString_
+   * Search the online user. If the __matchString__ is blank, all online user will be returned. Otherwise all users will be returned whose name includes the __matchString__. The user list will be returned in paging. Each page only shows 10 users. Please use command "//" or "::" to request the following pages.
    * Sample: 
       {{{
         #> /sc          : Return all users
@@ -77,6 +77,7 @@ Global command list:
   # Repeat command
    * Command format: // or ::
    * Repeat the previous command. It is often used for some repeatable command, like _*"Search online user"*_.
+   
   # *Broadcast message*
    * Command format: message
    * When you are in public chatting group or one of private chatting group, any message without '/' or ':' headed will be broadcasted to the chatting group.
@@ -93,6 +94,7 @@ Under development.
 
 = How to set up GTRobot =
 Under development.
+
 
 If you are interesting in seting up one GTRobot, please post in [http://groups.google.com/group/GTRobot GTRobot's Group]  or [http://gtrobot.blogspot.com/ GTRobot's blog]. We are pleasing to provide you some internal draft documents about setup. 
 Thanks.
