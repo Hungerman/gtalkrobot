@@ -3,19 +3,18 @@ package com.gtrobot.utils;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
 
-import com.gtrobot.command.AbstractCommand;
+import com.gtrobot.command.BaseCommand;
 import com.gtrobot.context.CacheContext;
 
 public class UserSession {
 	private static final String PREVIOUS_COMMAND_KEY = "-preCommand";
 
-	public static final void storePreviousCommand(AbstractCommand abCmd) {
+	public static final void storePreviousCommand(BaseCommand abCmd) {
 		putSession(abCmd.getUserEntry().getJid(), PREVIOUS_COMMAND_KEY, abCmd);
 	}
 
-	public static final AbstractCommand retrievePreviousCommand(String jid) {
-		AbstractCommand result = (AbstractCommand) getSession(jid,
-				PREVIOUS_COMMAND_KEY);
+	public static final BaseCommand retrievePreviousCommand(String jid) {
+		BaseCommand result = (BaseCommand) getSession(jid, PREVIOUS_COMMAND_KEY);
 		return result;
 	}
 

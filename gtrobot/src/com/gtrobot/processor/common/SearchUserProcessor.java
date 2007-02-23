@@ -2,10 +2,9 @@ package com.gtrobot.processor.common;
 
 import org.jivesoftware.smack.XMPPException;
 
-import com.gtrobot.command.AbstractCommand;
+import com.gtrobot.command.BaseCommand;
 import com.gtrobot.command.common.SearchUserCommand;
 import com.gtrobot.context.UserEntry;
-import com.gtrobot.exception.CommandMatchedException;
 import com.gtrobot.processor.AbstractProcessor;
 import com.gtrobot.utils.UserSearchFilter;
 import com.gtrobot.utils.UserSession;
@@ -13,28 +12,7 @@ import com.gtrobot.utils.UserSession;
 public class SearchUserProcessor extends AbstractProcessor {
 	private static final int ROWS_IN_PAGE = 2;
 
-	protected void beforeProcess(AbstractCommand abCmd)
-			throws CommandMatchedException, XMPPException {
-		if (!(abCmd instanceof SearchUserCommand)) {
-			throw new CommandMatchedException(abCmd, this);
-		}
-		StringBuffer msgBuf = new StringBuffer();
-
-		String error = abCmd.getErrorMessage();
-		if (error != null) {
-			msgBuf.append(abCmd.getI18NMessage("searchuser.error.title"));
-			msgBuf.append(error);
-			msgBuf.append(endl);
-			msgBuf.append(abCmd.getI18NMessage("searchuser.command.format"));
-			msgBuf.append(endl);
-			msgBuf.append(abCmd.getI18NMessage("searchuser.origin.prompt"));
-			msgBuf.append(abCmd.getOriginMessage());
-			msgBuf.append(endl);
-			sendBackMessage(abCmd, msgBuf.toString());
-		}
-	}
-
-	protected void internalProcess(AbstractCommand abCmd) throws XMPPException {
+	protected void internalProcess(BaseCommand abCmd) throws XMPPException {
 		SearchUserCommand cmd = (SearchUserCommand) abCmd;
 		StringBuffer msgBuf = new StringBuffer();
 

@@ -8,7 +8,7 @@ import com.gtrobot.context.GlobalContext;
 import com.gtrobot.context.UserEntry;
 import com.gtrobot.processor.AbstractProcessor;
 
-public class EchoProcessor extends AbstractProcessor {
+public class PublicRoomProcessor extends AbstractProcessor {
 
 	protected void internalProcess(BaseCommand abCmd) throws XMPPException {
 		SwitchCommand cmd = (SwitchCommand) abCmd;
@@ -21,9 +21,25 @@ public class EchoProcessor extends AbstractProcessor {
 			GlobalContext.getInstance().saveUser(userEntry);
 		}
 		if (cmd.isOperationON()) {
-			msgBuf.append(cmd.getI18NMessage("echo.success.on"));
+			if (!userEntry.isChattableInPublicRoom()) {
+				userEntry.setChattableInPublicRoom(true);
+				ctx.updateUser(userEntry.getJid());
+			}
+
+			msgBuf.append(cmd.getI18NMessage("publicroom.available.title"));
+			msgBuf.append(endl);
+			msgBuf.append(cmd.getI18NMessage("publicroom.available.prompt"));
+			msgBuf.append(endl);
 		} else {
-			msgBuf.append(cmd.getI18NMessage("echo.success.off"));
+			if (userEntry.isChattableInPublicRoom()) {
+				userEntry.setChattableInPublicRoom(false);
+				ctx.updateUser(userEntry.getJid());
+			}
+
+			msgBuf.append(cmd.getI18NMessage("publicroom.away.title"));
+			msgBuf.append(endl);
+			msgBuf.append(cmd.getI18NMessage("publicroom.away.prompt"));
+			msgBuf.append(endl);
 		}
 		sendBackMessage(abCmd, msgBuf.toString());
 	}

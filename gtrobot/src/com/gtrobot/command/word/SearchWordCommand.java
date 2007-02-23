@@ -1,10 +1,10 @@
-package com.gtrobot.command.common;
+package com.gtrobot.command.word;
 
 import java.util.List;
 
 import com.gtrobot.command.ProcessableCommand;
 
-public class SearchUserCommand extends ProcessableCommand {
+public class SearchWordCommand extends ProcessableCommand {
 	private String condition;
 
 	public void parseArgv(List argv) {

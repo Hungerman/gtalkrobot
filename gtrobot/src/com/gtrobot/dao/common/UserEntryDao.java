@@ -27,9 +27,9 @@ public class UserEntryDao extends BaseDao {
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				userEntry = new UserEntry(jid);
-				userEntry.setId((Long)rs.getObject("ID"));
+				userEntry.setId((Long) rs.getObject("ID"));
 				userEntry.setNickName(rs.getString("NICK_NAME"));
-				userEntry.setChattable(rs.getBoolean("CHATTABLE"));
+				userEntry.setChattableInPublicRoom(rs.getBoolean("CHATTABLE"));
 				userEntry.setEchoable(rs.getBoolean("ECHOABLE"));
 				userEntry.setLocale(new Locale(rs.getString("LOCALE")));
 			}
@@ -54,7 +54,7 @@ public class UserEntryDao extends BaseDao {
 			pstmt = prepareStatement(sql);
 			pstmt.setString(1, userEntry.getJid());
 			pstmt.setString(2, userEntry.getNickName());
-			pstmt.setBoolean(3, userEntry.isChattable());
+			pstmt.setBoolean(3, userEntry.isChattableInPublicRoom());
 			pstmt.setBoolean(4, userEntry.isEchoable());
 			pstmt.setString(5, userEntry.getLocale().getLanguage());
 			pstmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
@@ -80,7 +80,7 @@ public class UserEntryDao extends BaseDao {
 			pstmt = prepareStatement(sql);
 			pstmt.setString(1, userEntry.getJid());
 			pstmt.setString(2, userEntry.getNickName());
-			pstmt.setBoolean(3, userEntry.isChattable());
+			pstmt.setBoolean(3, userEntry.isChattableInPublicRoom());
 			pstmt.setBoolean(4, userEntry.isEchoable());
 			pstmt.setString(5, userEntry.getLocale().getLanguage());
 			pstmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));

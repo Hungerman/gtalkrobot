@@ -11,19 +11,15 @@ public class LangCommand extends ProcessableCommand {
 
 	private Locale locale;
 
-	public LangCommand(String jid, List argv) {
-		super(jid, argv);
-	}
-
-	protected void parseArgv(List argv) {
+	public void parseArgv(List argv) {
 		if (argv.size() != 2) {
-			setErrorMessage(getI18NMessage("lang.error.parameter"));
+			setErrorMessage(getI18NMessage("error.parameter"));
 			return;
 		}
 		operation = ((String) argv.get(1)).trim().toLowerCase();
 		locale = CommonUtils.parseLocale(operation);
 		if (locale == null) {
-			setErrorMessage(getI18NMessage("lang.error.parameter"));
+			setErrorMessage(getI18NMessage("error.parameter"));
 		}
 
 		super.parseArgv(argv);

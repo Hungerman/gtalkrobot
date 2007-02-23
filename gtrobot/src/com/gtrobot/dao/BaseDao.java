@@ -110,16 +110,16 @@ public class BaseDao {
 
 	}
 
-	protected Long getNextSequence(String seqName) throws DataAccessException, SQLException {
+	protected Long getNextSequence(String seqName) throws DataAccessException,
+			SQLException {
 		long id = -1;
-		String sql = "select nextval('" + seqName +"')";
-		PreparedStatement pstmt = prepareStatement(sql);
-		ResultSet rs = pstmt.executeQuery();
+		String sql = "select nextval('" + seqName + "')";
+		Statement stmt = getConnection().createStatement();
+		ResultSet rs = stmt.executeQuery(sql);
 		if (rs.next()) {
 			id = rs.getLong(1);
 		}
-		closeStatement(pstmt);
-		closeConnection();
+		closeStatement(stmt);
 		return new Long(id);
 	}
 

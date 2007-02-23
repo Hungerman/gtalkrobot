@@ -20,6 +20,8 @@ public class WordEntry extends BaseModel {
 
 	private String word;
 
+	private String pronounce;
+
 	private Locale locale;
 
 	private List meanings;
@@ -40,8 +42,16 @@ public class WordEntry extends BaseModel {
 
 	public void setWord(String word) {
 		this.word = word;
-		
+
 		this.setModified(true);
+	}
+
+	public String getPronounce() {
+		return pronounce;
+	}
+
+	public void setPronounce(String pronounce) {
+		this.pronounce = pronounce;
 	}
 
 	public Locale getLocale() {

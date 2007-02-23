@@ -1,0 +1,38 @@
+？？？？ /EDICT, EDICT_SUB(P), EDICT2 Japanese-English Electronic Dictionary Files/Copyright Electronic Dictionary Research & Development Group - 2006/Created: 2007-02-23/
+ヽ [くりかえし] /(n) repetition mark in katakana/
+ヾ [くりかえし] /(n) voiced repetition mark in katakana/
+ゝ [くりかえし] /(n) repetition mark in hiragana/
+ゞ [くりかえし] /(n) voiced repetition mark in hiragana/
+〃 [おなじく] /(n) ditto mark/
+仝 [どうじょう] /(n) "as above" mark/
+々 [くりかえし] /(n) repetition of kanji (sometimes voiced)/
+〆 [しめ] /(n) end or closure mark/
+〇;○(iK) [かんすうじゼロ] /(n) (See 漢数字,ゼロ) "kanji" zero/
+ー [ちょうおん] /(n) long vowel mark (usually only used in katakana)/
+＠ [アットマーク;ナルト] /(n) "at" mark/
+○;〇(iK) [まる] /(n) circle (sometimes used for zero)/
+〒;郵便マーク;郵便記号 [ゆうびんマーク(郵便マーク);ゆうびんきごう(〒;郵便記号)] /(n) (abbr) (Japanese) postal symbol/post office/post/postal service/mail/
+１００円ショップ [ひゃくえんショップ] /(n) hundred-yen store/
+１００均;百均 [ひゃっきん] /(n) 100 yen shop/
+１１０番 [ひゃくとおばん] /(n) police emergency tel. no. (in Japan)/(P)/
+２０００年問題 [にせんねんもんだい] /(n) Y2K bug/year 2000 problem/
+２０００年問題対策済み [にせんねんもんだいたいさくずみ] /(n) Y2K compliant/
+３カードモンテ [スリーカードモンテ] /(n) three-card monte (card game)/
+４ＷＤ [よんダブリューディー] /(n) four-wheel drive (vehicle)/
+８の字;八の字 [はちのじ] /(n) (1) figure eight/figure of eight/(2) (八の字 only) shape of "hachi", the kanji for eight/
+ＡＢＣ順 [エービーシーじゅん;ええびいしいじゅん] /(n) alphabetical order/
+ＡＢＣ順に [ええびいしいじゅんに;エービーシーじゅんに] /(adv) in alphabetical order/
+ＡＬＳ [エーエルエス] /(n) (abbr) amyotrophic lateral sclerosis (ALS)/
+ＡＰ通信社 [エーピーつうしんしゃ] /(n) Associated Press/
+Ａ系;エー系 [エーけい] /(n,adj-no) (See 秋葉系) (abbr) (sl) Akihabara style/nerdy/
+Ｂ系;ビー系 [ビーけい] /(n,adj-no) (sl) hip-hop culture/Black culture (esp. breakdancing culture)/
+Ｂ専;ビー専 [ビーせん] /(n) (See ブス専) (sl) attraction to ugly people/
+Ｃ＋＋言語 [シープラスプラスげんご] /(n) C++/C plus plus/
+ＣＤプレーヤー [シーディープレーヤー] /(n) CD player/
+ＣＦＩＴ [シーフィット] /(n) Controlled Flight Into Terrain (CFIT)/
+ＣＭ [シーエム] /(n) CM/commercial message/(P)/
+ＤＲＳ理論 [でぃーあーるえすりろん] /(n) discourse representation structure theory/
+ＤＶＤビデオ [ディーブイディービデオ] /(n) DVD (Digital Versatile Disc) video/
+ＥＢＭ [イービーエム] /(n) evidence-based medicine (EBM)/
+ＥＳ細胞 [イーエスさいぼう] /(n) (See 胚性幹細胞) (abbr) embryonic stem cell/
+ＥＵ [イーユー] /(n) EU/European Union/

@@ -7,13 +7,9 @@ import com.gtrobot.command.ProcessableCommand;
 public class PrivateMessageCommand extends ProcessableCommand {
 	private String targetJid;
 
-	public PrivateMessageCommand(String jid, List argv) {
-		super(jid, argv);
-	}
-
-	protected void parseArgv(List argv) {
+	public void parseArgv(List argv) {
 		if (argv.size() < 3) {
-			setErrorMessage(getI18NMessage("privatemessage.error.parameter"));
+			setErrorMessage(getI18NMessage("error.parameter"));
 			return;
 		}
 		targetJid = ((String) argv.get(1)).trim().toLowerCase();

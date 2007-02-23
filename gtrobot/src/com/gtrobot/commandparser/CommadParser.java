@@ -1,6 +1,5 @@
 package com.gtrobot.commandparser;
 
-import java.lang.reflect.Constructor;
 import java.util.Iterator;
 import java.util.List;
 
@@ -9,12 +8,11 @@ import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.util.StringUtils;
 
-import com.gtrobot.command.AbstractCommand;
-import com.gtrobot.command.common.BroadcastMessageCommand;
-import com.gtrobot.command.common.InvalidCommand;
+import com.gtrobot.command.BaseCommand;
+import com.gtrobot.command.ProcessableCommand;
 import com.gtrobot.processor.InteractiveProcessor;
+import com.gtrobot.utils.CommandProcessorMapping;
 import com.gtrobot.utils.CommonUtils;
-import com.gtrobot.utils.ParameterTable;
 import com.gtrobot.utils.UserSession;
 
 public class CommadParser {
@@ -31,7 +29,7 @@ public class CommadParser {
 	 * @param message
 	 * @return
 	 */
-	public static AbstractCommand parser(Message message) {
+	public static BaseCommand parser(Message message) {
 		if (log.isDebugEnabled()) {
 			log.debug("Message       from: " + message.getFrom());
 			log.debug("                to: " + message.getTo());
@@ -54,11 +52,9 @@ public class CommadParser {
 		String body = message.getBody();
 		log.info("Message from <" + from + ">: " + body);
 		String jid = StringUtils.parseBareAddress(from);
-		AbstractCommand command = parse(jid, body);
-		if (command != null) {
-			command.setOriginMessage(body);
-			command.setFrom(from);
-		}
+		BaseCommand command = parse(jid, body);
+		command.setFrom(from);
+		command.setOriginMessage(body);
 		return command;
 	}
 
@@ -69,60 +65,74 @@ public class CommadParser {
 	 * @param body
 	 * @return
 	 */
-	private static AbstractCommand parse(String jid, String body) {
-		if (body == null) {
-			log.info("Warn: message's body is NULL!");
-			return null;
-		}
+	private static BaseCommand parse(String jid, String body) {
+		// if (body == null) {
+		// log.info("Warn: message's body is NULL!");
+		// return null;
+		// }
 		// Trim the message body to parse the command prefix
 		body = body.trim();
-		if (!(body.startsWith(COMMAND_PREFIX_1) || body
-				.startsWith(COMMAND_PREFIX_2))) {
-			// Check if the user is in a interactive operations
-			Long step = InteractiveProcessor.getStep(jid);
-			if (step != null) {
-				return getPreviousCommand(jid);
-			} else {
-				// Normal broadcast message
-				return new BroadcastMessageCommand(jid, body);
-			}
+		boolean isCommand = false;
+		if (body.startsWith(COMMAND_PREFIX_1)
+				|| body.startsWith(COMMAND_PREFIX_2)) {
+			isCommand = true;
 		}
 
 		// Parse the command and parameters
-		List commands = CommonUtils.parseCommand(body);
+		List commands = CommonUtils.parseCommand(body, isCommand);
 		if (commands == null || commands.size() < 1) {
-			return new InvalidCommand(jid, null);
+			return CommandProcessorMapping.getInstance()
+					.getInvalidCommandInstance();
 		}
 
-		String commandName = ((String) commands.get(0)).toLowerCase();
-		// Repeat the previous command
-		if (commandName.equals(COMMAND_PREFIX_1)
-				|| commandName.equals(COMMAND_PREFIX_2)) {
-			return getPreviousCommand(jid);
-		}
+		BaseCommand command = null;
+		if (!isCommand) {
+			// Check if the user is in a interactive operations
+			Long step = InteractiveProcessor.getStep(jid);
+			if (step != null) {
+				command = getPreviousCommand(jid);
+			} else {
+				// Normal broadcast message
+				command = CommandProcessorMapping.getInstance()
+						.getBroadcastMessageCommandInstance();
+			}
+		} else {
+			String commandName = ((String) commands.get(0)).toLowerCase();
+			// Repeat the previous command
+			if (commandName.equals(COMMAND_PREFIX_1)
+					|| commandName.equals(COMMAND_PREFIX_2)) {
+				command = getPreviousCommand(jid);
+			} else {
 
-		Class commandClass = (Class) ParameterTable.getCommadMappings().get(
-				commandName);
-		if (commandClass == null) {
-			return new InvalidCommand(jid, null);
+				try {
+					// Construct a new command object according to the command
+					// info
+					command = CommandProcessorMapping.getInstance()
+							.getCommandInstance(commandName);
+					if (command == null) {
+						command = CommandProcessorMapping.getInstance()
+								.getInvalidCommandInstance();
+					}
+				} catch (Exception e) {
+					log.error("Exception in parsing command!", e);
+					command = CommandProcessorMapping.getInstance()
+							.getInvalidCommandInstance();
+				}
+			}
 		}
-		try {
-			// Construct a new command object according to the command info
-			Constructor constructor = commandClass.getConstructor(new Class[] {
-					String.class, List.class });
-			return (AbstractCommand) constructor.newInstance(new Object[] {
-					jid, commands });
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new InvalidCommand(jid, null);
+		command.setArgv(commands);
+		command.setUserEntry(jid);
+		if (command instanceof ProcessableCommand) {
+			((ProcessableCommand) command).parseArgv(commands);
 		}
+		return command;
 	}
 
-	private static AbstractCommand getPreviousCommand(String jid) {
-		AbstractCommand previousCommand = UserSession
-				.retrievePreviousCommand(jid);
+	private static BaseCommand getPreviousCommand(String jid) {
+		BaseCommand previousCommand = UserSession.retrievePreviousCommand(jid);
 		if (previousCommand == null) {
-			previousCommand = new InvalidCommand(jid, null);
+			previousCommand = CommandProcessorMapping.getInstance()
+					.getInvalidCommandInstance();
 			previousCommand.setErrorMessage(previousCommand
 					.getI18NMessage("invalid.command.previous.command.null"));
 		} else {

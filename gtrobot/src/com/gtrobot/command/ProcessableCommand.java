@@ -2,15 +2,9 @@ package com.gtrobot.command;
 
 import java.util.List;
 
-public class ProcessableCommand extends AbstractCommand {
+public class ProcessableCommand extends BaseCommand {
 
-	public ProcessableCommand(String jid, List argv) {
-		super(jid);
-
-		parseArgv(argv);
-	}
-
-	protected void parseArgv(List argv) {
+	public void parseArgv(List argv) {
 		return;
 	}
 }

@@ -9,7 +9,7 @@ invalid.command.null=错误的命令，可能命令是NULL!
 invalid.command=不可识别的命令: 
 invalid.command.previous.command.null=没有前一个命令!
 
-help.welcome=欢迎来到 GTRobot!
+help.welcome=欢迎来到 GTRobot! 请访问：http://code.google.com/p/gtalkrobot/
 help.prompt=请使用以下命令: 
 help.command.broadcast=直接输入消息即可发送给所有在线用户
 help.command.help=/help : 显示帮助信息
