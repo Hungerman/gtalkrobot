@@ -22,7 +22,7 @@ public class WordEntryDao extends BaseDao {
 			.getLog(WordEntryDao.class);
 
 	public WordEntry getWordEntry(long id) {
-		String sql = "select we.WE_ID id, we.WORD word, we.LOCALE locale from WORD_ENTRY we where we.WE_ID = ?";
+		String sql = "select we.WE_ID id, we.WORD word, we.PRONOUNCE pronounce, we.LOCALE locale from WORD_ENTRY we where we.WE_ID = ?";
 
 		WordEntry wordEntry = null;
 		PreparedStatement pstmt = null;
@@ -34,7 +34,34 @@ public class WordEntryDao extends BaseDao {
 				wordEntry = new WordEntry();
 				wordEntry.setId((Long) rs.getObject("id"));
 				wordEntry.setWord(rs.getString("word"));
+				wordEntry.setPronounce(rs.getString("pronounce"));
 				wordEntry.setLocale(new Locale(rs.getString("locale")));
+			}
+		} catch (DataAccessException e) {
+			log.error("WordEntryDao.getWordEntry error!", e);
+		} catch (SQLException e) {
+			log.error("WordEntryDao.getWordEntry error!", e);
+		}
+		closeStatement(pstmt);
+		closeConnection();
+		return wordEntry;
+	}
+	
+	public WordEntry getWordEntry(String condition) {
+		String sql = "select WE_ID, WORD, PRONOUNCE, LOCALE from WORD_ENTRY we where WORD = ?";
+
+		WordEntry wordEntry = null;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = prepareStatement(sql);
+			pstmt.setString(1, condition);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				wordEntry = new WordEntry();
+				wordEntry.setId((Long) rs.getObject("WE_ID"));
+				wordEntry.setWord(rs.getString("WORD"));
+				wordEntry.setPronounce(rs.getString("PRONOUNCE"));
+				wordEntry.setLocale(new Locale(rs.getString("LOCALE")));
 			}
 		} catch (DataAccessException e) {
 			log.error("WordEntryDao.getWordEntry error!", e);
@@ -124,7 +151,7 @@ public class WordEntryDao extends BaseDao {
 	}
 
 	public List getWordMeaningLocalizations(long id) {
-		String sql = "select wm.WM_ID id, wm.MEANING meaning, wm.LOCALE locale from WORD_MEANING_LOCALIZATIONS wml, WORD_MEANING wm where wml.WM_ID = ? and wml.WM_ID_L = wm.WM_ID";
+		String sql = "select wm.WM_ID, wm.MEANING, wm.LOCALE from WORD_MEANING_LOCALIZATIONS wml, WORD_MEANING wm where wml.WM_ID = ? and wml.WM_ID_L = wm.WM_ID";
 
 		List results = new ArrayList();
 		WordMeaning wordMeaning = null;
@@ -135,9 +162,9 @@ public class WordEntryDao extends BaseDao {
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				wordMeaning = new WordMeaning();
-				wordMeaning.setId((Long) rs.getObject("id"));
-				wordMeaning.setMeaning(rs.getString("meaning"));
-				wordMeaning.setLocale(new Locale(rs.getString("locale")));
+				wordMeaning.setId((Long) rs.getObject("WM_ID"));
+				wordMeaning.setMeaning(rs.getString("MEANING"));
+				wordMeaning.setLocale(new Locale(rs.getString("LOCALE")));
 				results.add(wordMeaning);
 			}
 		} catch (DataAccessException e) {
@@ -177,21 +204,21 @@ public class WordEntryDao extends BaseDao {
 		return results;
 	}
 
-	public List getWordEntryMeanings(long id) {
-		String sql = "select wm.WM_ID id, wm.MEANING meaning, wm.LOCALE locale from WORD_ENTRY_MEANINGS wem, WORD_MEANING wm where wem.WE_ID = ? and wem.WM_ID = wm.WM_ID";
+	public List getWordEntryMeanings(long weId) {
+		String sql = "select wm.WM_ID, wm.MEANING, wm.LOCALE from WORD_ENTRY_MEANINGS wem, WORD_MEANING wm where wem.WE_ID = ? and wem.WM_ID = wm.WM_ID";
 
 		List results = new ArrayList();
 		WordMeaning wordMeaning = null;
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = prepareStatement(sql);
-			pstmt.setLong(1, id);
+			pstmt.setLong(1, weId);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				wordMeaning = new WordMeaning();
-				wordMeaning.setId((Long) rs.getObject("id"));
-				wordMeaning.setMeaning(rs.getString("meaning"));
-				wordMeaning.setLocale(new Locale(rs.getString("locale")));
+				wordMeaning.setId((Long) rs.getObject("WM_ID"));
+				wordMeaning.setMeaning(rs.getString("MEANING"));
+				wordMeaning.setLocale(new Locale(rs.getString("LOCALE")));
 				results.add(wordMeaning);
 			}
 		} catch (DataAccessException e) {

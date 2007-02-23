@@ -3,40 +3,15 @@ package com.gtrobot.processor.common;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.util.StringUtils;
 
-import com.gtrobot.command.AbstractCommand;
+import com.gtrobot.command.BaseCommand;
 import com.gtrobot.command.common.PrivateMessageCommand;
 import com.gtrobot.context.GlobalContext;
 import com.gtrobot.context.UserEntry;
-import com.gtrobot.exception.CommandMatchedException;
 import com.gtrobot.processor.AbstractProcessor;
 
 public class PrivateMessageProcessor extends AbstractProcessor {
 
-	protected void beforeProcess(AbstractCommand abCmd)
-			throws CommandMatchedException, XMPPException {
-		if (!(abCmd instanceof PrivateMessageCommand)) {
-			throw new CommandMatchedException(abCmd, this);
-		}
-		StringBuffer msgBuf = new StringBuffer();
-
-		String error = abCmd.getErrorMessage();
-		if (error != null) {
-			msgBuf.append(abCmd.getI18NMessage("privatemessage.error.title"));
-			msgBuf.append(error);
-			msgBuf.append(endl);
-			msgBuf
-					.append(abCmd
-							.getI18NMessage("privatemessage.command.format"));
-			msgBuf.append(endl);
-			msgBuf.append(abCmd.getI18NMessage("privatemessage.origin.prompt"));
-			msgBuf.append(abCmd.getOriginMessage());
-			msgBuf.append(endl);
-
-			sendBackMessage(abCmd, msgBuf.toString());
-		}
-	}
-
-	protected void internalProcess(AbstractCommand abCmd) throws XMPPException {
+	protected void internalProcess(BaseCommand abCmd) throws XMPPException {
 		PrivateMessageCommand cmd = (PrivateMessageCommand) abCmd;
 		StringBuffer msgBuf = new StringBuffer();
 
@@ -47,7 +22,7 @@ public class PrivateMessageProcessor extends AbstractProcessor {
 					.getI18NMessage("privatemessage.error.targetusernotfound"));
 			msgBuf.append(cmd.getTargetJid());
 			msgBuf.append(endl);
-			msgBuf.append(cmd.getI18NMessage("privatemessage.origin.prompt"));
+			msgBuf.append(cmd.getI18NMessage("error.origin.prompt"));
 			msgBuf.append(cmd.getOriginMessage());
 			msgBuf.append(endl);
 

@@ -1,36 +1,17 @@
 package com.gtrobot.processor.common;
 
-import java.util.List;
-
 import org.jivesoftware.smack.XMPPException;
 
-import com.gtrobot.command.AbstractCommand;
-import com.gtrobot.command.common.InvalidCommand;
-import com.gtrobot.exception.CommandMatchedException;
+import com.gtrobot.command.BaseCommand;
 import com.gtrobot.processor.AbstractProcessor;
 
 public class InvalidCommandProcessor extends AbstractProcessor {
 
-	protected void beforeProcess(AbstractCommand abCmd)
-			throws CommandMatchedException, XMPPException {
-		if (!(abCmd instanceof InvalidCommand)) {
-			throw new CommandMatchedException(abCmd, this);
-		}
-		super.beforeProcess(abCmd);
-	}
-
-	protected void internalProcess(AbstractCommand abCmd) throws XMPPException {
-		InvalidCommand cmd = (InvalidCommand) abCmd;
+	protected void internalProcess(BaseCommand cmd) throws XMPPException {
 
 		StringBuffer msgBuf = new StringBuffer();
-		List argv = cmd.getArgv();
-		if (argv == null || argv.size() < 1) {
-			msgBuf.append(cmd.getI18NMessage("invalid.command.null"));
-		} else {
-			msgBuf.append(cmd.getI18NMessage("invalid.command"));
-			msgBuf.append(cmd.getOriginMessage());
-		}
-
+		msgBuf.append(cmd.getI18NMessage("invalid.command"));
+		msgBuf.append(cmd.getOriginMessage());
 		sendBackMessage(cmd, msgBuf.toString());
 	}
 

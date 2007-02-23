@@ -129,7 +129,7 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 
 	protected int interactiveProcess_1001(AddWordEntryCommand cmd)
 			throws XMPPException {
-		WordEntry we = (WordEntry)getTempSession(cmd.getUserEntry().getJid());
+		WordEntry we = (WordEntry) getTempSession(cmd.getUserEntry().getJid());
 		we.setWord(cmd.getOriginMessage().trim());
 
 		WordEntry wordEntry = (WordEntry) getSession(cmd.getUserEntry()
@@ -143,7 +143,7 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 
 		return STEP_TO_MENU;
 	}
-	
+
 	/**
 	 * STEP_TO_ADD_MEANING
 	 */
@@ -152,21 +152,21 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 		StringBuffer msgBuf = new StringBuffer();
 		formartMessageHeader(cmd, msgBuf);
 
-		msgBuf.append("Please input the content for WordMeaning's localization:");
+		msgBuf
+				.append("Please input the content for WordMeaning's localization:");
 		sendBackMessage(cmd, msgBuf.toString());
 		return CONTINUE;
 	}
 
-	
 	protected int interactiveProcess_2000(AddWordEntryCommand cmd)
 			throws XMPPException {
 		WordEntry wordEntry = (WordEntry) getSession(cmd.getUserEntry()
 				.getJid());
-		
+
 		WordMeaning wm = new WordMeaning();
 		wm.setLocale(wordEntry.getLocale());
 		wm.setMeaning(cmd.getOriginMessage().trim());
-		
+
 		List meanings = wordEntry.getMeanings();
 		if (meanings == null) {
 			meanings = new ArrayList();

@@ -3,7 +3,7 @@ package com.gtrobot.thread;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.gtrobot.command.AbstractCommand;
+import com.gtrobot.command.BaseCommand;
 import com.gtrobot.processor.Processor;
 import com.gtrobot.thread.signalqueues.EventQueue;
 
@@ -13,7 +13,7 @@ public class WorkerThread implements Runnable {
 
 	private Processor processor;
 
-	private AbstractCommand command;
+	private BaseCommand command;
 
 	private EventQueue parentThreadPool;
 
@@ -72,7 +72,7 @@ public class WorkerThread implements Runnable {
 		}
 	}
 
-	public void setCommand(AbstractCommand command) {
+	public void setCommand(BaseCommand command) {
 		this.command = command;
 	}
 

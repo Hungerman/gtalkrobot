@@ -3,13 +3,12 @@ package com.gtrobot.thread;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.gtrobot.command.AbstractCommand;
+import com.gtrobot.command.BaseCommand;
 import com.gtrobot.processor.Processor;
 import com.gtrobot.thread.signalqueues.EventQueue;
 import com.gtrobot.thread.signalqueues.EventQueueProxy;
 import com.gtrobot.thread.signalqueues.FIFORingEventQueue;
-import com.gtrobot.utils.MessageBundle;
-import com.gtrobot.utils.ParameterTable;
+import com.gtrobot.utils.CommandProcessorMapping;
 
 public class CommandProcessor extends SpinObjectPool {
 	protected static final transient Log log = LogFactory
@@ -43,7 +42,7 @@ public class CommandProcessor extends SpinObjectPool {
 	 * 
 	 * @param comamnd
 	 */
-	public void triggerCommand(AbstractCommand cmd) {
+	public void triggerCommand(BaseCommand cmd) {
 		if (log.isDebugEnabled()) {
 			log.debug("CommandProcessor is trigger a command...");
 		}
@@ -56,21 +55,20 @@ public class CommandProcessor extends SpinObjectPool {
 	 * @see com.gtrobot.thread.SpinThreadPool#process(java.lang.Object)
 	 */
 	protected void process(Object event) {
-		AbstractCommand cmd = (AbstractCommand) event;
+		BaseCommand cmd = (BaseCommand) event;
 
-		String comamndClassName = cmd.getClass().getName();
-		Processor processor = (Processor) ParameterTable
-				.getCommadProcessorsMappings().get(comamndClassName);
-
-		if (processor == null) {
-			processor = (Processor) ParameterTable
-					.getCommadProcessorsMappings().get("errorProcessor");
-			String sysError = MessageBundle.getInstance().getMessage(
-					"system.error.processor.null");
-			log.warn(sysError + "with command: " + cmd.getClass().getName()
-					+ " origin message: " + cmd.getOriginMessage());
-			cmd.setErrorMessage(sysError);
-		}
+		Processor processor = CommandProcessorMapping.getInstance()
+				.getProcessor(cmd.getCommandType());
+		//
+		// if (processor == null) {
+		// processor =
+		// CommandProcessorMapping.getInstance().getProcessor("errorProcessor");
+		// String sysError = MessageBundle.getInstance().getMessage(
+		// "system.error.processor.null");
+		// log.warn(sysError + "with command: " + cmd.getClass().getName()
+		// + " origin message: " + cmd.getOriginMessage());
+		// cmd.setErrorMessage(sysError);
+		// }
 
 		try {
 			if (log.isDebugEnabled()) {

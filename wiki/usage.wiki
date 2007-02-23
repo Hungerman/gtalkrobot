@@ -83,7 +83,7 @@ Global command list:
    * When you are in public chatting group or one of private chatting group, any message without '/' or ':' headed will be broadcasted to the chatting group.
 
 ==== Public chatting group & Private chatting group ====
-When you status is _*"available"*_, you are not in any private chatting group, and you are not in any interactive operation, then you are in the public chatting group. Public chatting group is the default conference room for all users in GTRobot.
+When your status is _*"available"*_, you are not in any private chatting group, and you are not in any interactive operation, then you are in the public chatting group. Public chatting group is the default conference room for all users in GTRobot.
 
 Private chatting group is under development till now.
 

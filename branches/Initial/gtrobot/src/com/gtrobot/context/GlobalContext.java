@@ -109,8 +109,9 @@ public class GlobalContext {
 	}
 
 	public void updateUserStatus(UserEntry userEntry) {
+		boolean userInActiveList = activeUserList.contains(userEntry.getJid());
 		if (userEntry.getStatus() == UserEntry.AVAILABLE
-				&& userEntry.isChattable()) {
+				&& userEntry.isChattableInPublicRoom() && !userInActiveList) {
 			activeUserList.add(userEntry.getJid());
 			if (log.isDebugEnabled()) {
 				log.debug(userEntry.getJid()

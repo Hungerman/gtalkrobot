@@ -53,7 +53,8 @@ public class InteractiveProcessorSample extends InteractiveProcessor {
 		msgBuf.append(step);
 		msgBuf.append("-step");
 		msgBuf.append(": the previous step set date: ");
-		DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, cmd.getUserEntry().getLocale());
+		DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, cmd
+				.getUserEntry().getLocale());
 		msgBuf.append(df.format(date));
 		msgBuf.append(endl);
 

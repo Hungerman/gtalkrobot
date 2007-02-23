@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 
 import org.jivesoftware.smack.XMPPException;
 
-import com.gtrobot.command.AbstractCommand;
+import com.gtrobot.command.BaseCommand;
 import com.gtrobot.command.word.AddWordEntryCommand;
 import com.gtrobot.utils.UserSession;
 
@@ -41,7 +41,7 @@ public class InteractiveProcessor extends AbstractProcessor {
 		this.sessionKey = sessionKey;
 	}
 
-	protected void internalProcess(AbstractCommand abCmd) throws XMPPException {
+	protected void internalProcess(BaseCommand abCmd) throws XMPPException {
 		String jid = abCmd.getUserEntry().getJid();
 
 		Long step = getStep(jid);
@@ -89,8 +89,8 @@ public class InteractiveProcessor extends AbstractProcessor {
 		removeSession(jid);
 	}
 
-	private int executeMethod(String methodPrefix, Long step,
-			AbstractCommand abCmd) throws XMPPException {
+	private int executeMethod(String methodPrefix, Long step, BaseCommand abCmd)
+			throws XMPPException {
 		Class clazz = this.getClass();
 		String methodName = methodPrefix + step;
 		try {
@@ -182,8 +182,7 @@ public class InteractiveProcessor extends AbstractProcessor {
 		return (Long) UserSession.getSession(jid, STEP_SESSION_KEY);
 	}
 
-	public static void formartMessageHeader(AbstractCommand cmd,
-			StringBuffer msgBuf) {
+	public static void formartMessageHeader(BaseCommand cmd, StringBuffer msgBuf) {
 		String jid = cmd.getUserEntry().getJid();
 		Long step = getStep(jid);
 
@@ -192,7 +191,7 @@ public class InteractiveProcessor extends AbstractProcessor {
 		msgBuf.append(")# ");
 	}
 
-	public static int checkAnswer(AbstractCommand cmd) {
+	public static int checkAnswer(BaseCommand cmd) {
 		String originMessage = cmd.getOriginMessage();
 		originMessage = originMessage.trim().toLowerCase();
 

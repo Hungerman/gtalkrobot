@@ -24,7 +24,7 @@ public class UserEntry implements Serializable {
 
 	private String nickName;
 
-	private boolean chattable;
+	private boolean chattableInPublicRoom;
 
 	private boolean echoable;
 
@@ -35,7 +35,7 @@ public class UserEntry implements Serializable {
 	public UserEntry(String jid) {
 		this.jid = jid;
 		this.nickName = StringUtils.parseName(jid);
-		this.chattable = true;
+		this.chattableInPublicRoom = true;
 		echoable = false;
 		locale = Locale.CHINESE;
 		status = UNAVAILABLE;
@@ -49,12 +49,12 @@ public class UserEntry implements Serializable {
 		this.id = id;
 	}
 
-	public boolean isChattable() {
-		return chattable;
+	public boolean isChattableInPublicRoom() {
+		return chattableInPublicRoom;
 	}
 
-	public void setChattable(boolean chattable) {
-		this.chattable = chattable;
+	public void setChattableInPublicRoom(boolean chattable) {
+		this.chattableInPublicRoom = chattable;
 	}
 
 	public String getJid() {

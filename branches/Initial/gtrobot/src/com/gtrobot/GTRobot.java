@@ -19,14 +19,16 @@ import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
 
-import com.gtrobot.command.AbstractCommand;
+import com.gtrobot.command.BaseCommand;
 import com.gtrobot.commandparser.CommadParser;
 import com.gtrobot.context.CacheContext;
 import com.gtrobot.context.GlobalContext;
 import com.gtrobot.context.UserEntry;
 import com.gtrobot.thread.CommandProcessor;
+import com.gtrobot.utils.CommandProcessorMapping;
 import com.gtrobot.utils.GTRDataSource;
 import com.gtrobot.utils.GTRobotConfiguration;
+import com.gtrobot.utils.MessageBundle;
 
 /**
  * Main enterance of GTRobot. <br>
@@ -47,7 +49,6 @@ public class GTRobot {
 			log.error("GTRobot startup failed!");
 			return;
 		}
-		gtrobot.run();
 	}
 
 	private boolean startup() {
@@ -66,6 +67,7 @@ public class GTRobot {
 			ds.printDataSourceStats();
 
 			// TODO
+			CommandProcessorMapping.getInstance();
 			CommandProcessor.getInstance();
 
 			initConnection();
@@ -109,20 +111,6 @@ public class GTRobot {
 		}
 	}
 
-	private void run() {
-		try {
-			// while (true) {
-			// try {
-			// Thread.sleep(1000000);
-			// } catch (InterruptedException e) {
-			// log.error("InterruptedException!", e);
-			// }
-			// }
-		} catch (Exception e) {
-			log.error("System error!", e);
-		}
-	}
-
 	private GoogleTalkConnection createConnection() throws XMPPException {
 		GTRobotConfiguration gtrc = GTRobotConfiguration.getInstance();
 		String username = gtrc.getUsername();
@@ -138,7 +126,8 @@ public class GTRobot {
 		// Create a new presence.
 		Presence presence = new Presence(Presence.Type.AVAILABLE);
 		presence.setMode(Presence.Mode.AVAILABLE);
-		presence.setStatus("Ready for chatting...");
+		MessageBundle mb = MessageBundle.getInstance();
+		presence.setStatus(mb.getMessage("status.prompt"));
 
 		// Send the packet
 		conn.sendPacket(presence);
@@ -212,7 +201,7 @@ public class GTRobot {
 				Message message = (Message) packet;
 
 				// Parse the message to command object
-				AbstractCommand command = CommadParser.parser(message);
+				BaseCommand command = CommadParser.parser(message);
 				// Process the command
 				CommandProcessor.getInstance().triggerCommand(command);
 			}

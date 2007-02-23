@@ -6,6 +6,7 @@ drop table USER_ENTRY;
 drop table WORD_ENTRY;
 drop table WORD_MEANING;
 drop table WORD_SENTENCE;
+drop table WORD_ENTRY_SYNONYM;
 drop table WORD_ENTRY_LOCALIZATIONS;
 drop table WORD_MEANING_LOCALIZATIONS;
 drop table WORD_SENTENCE_LOCALIZATIONS;
@@ -17,6 +18,8 @@ drop sequence SEQ_USER_ENTRY;
 drop sequence SEQ_WORD_ENTRY;
 drop sequence SEQ_WORD_MEANING;
 drop sequence SEQ_WORD_SENTENCE;
+drop sequence SEQ_WORD_ENTRY_SYNONYM;
+
 
 -- Create table
 create table USER_ENTRY (
@@ -36,8 +39,8 @@ create table USER_ENTRY (
 create table WORD_ENTRY (
 		WE_ID						int8 					not null, 
 		WORD 						VARCHAR(80) 	not null, 
+		PRONOUNCE 		  VARCHAR(80),
 		LOCALE 					VARCHAR(3) 		not null, 
-		UNIQUE(WORD),
 		PRIMARY KEY (WE_ID)
 );
 create table WORD_MEANING (
@@ -51,6 +54,12 @@ create table WORD_SENTENCE (
 		SENTENCE 				VARCHAR(80) 	not null, 
 		LOCALE 					VARCHAR(3) 		not null, 
 		PRIMARY KEY (WS_ID)
+);
+
+create table WORD_ENTRY_SYNONYM (
+    WES_ID					int8 					not null, 
+		WE_ID						int8 					not null, 
+		PRIMARY KEY (WES_ID, WE_ID)
 );
 
 create table WORD_ENTRY_LOCALIZATIONS (
@@ -92,5 +101,7 @@ create sequence SEQ_WORD_MEANING;
 alter SEQUENCE SEQ_WORD_MEANING RESTART with 10000;
 create sequence SEQ_WORD_SENTENCE;
 alter SEQUENCE SEQ_WORD_SENTENCE RESTART with 10000;
+create sequence SEQ_WORD_ENTRY_SYNONYM;
+alter SEQUENCE SEQ_WORD_ENTRY_SYNONYM RESTART with 10000;
 
 
