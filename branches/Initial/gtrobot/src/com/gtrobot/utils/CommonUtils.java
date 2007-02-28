@@ -42,14 +42,14 @@ public class CommonUtils {
 		List results = new ArrayList();
 		StringBuffer tempStr = new StringBuffer();
 		int start = 0;
-		if(isCommand)
-		{
+		if (isCommand) {
 			start = 1;
 		}
 		for (int i = start; i < body.length(); i++) {
 			char cc = body.charAt(i);
 
-			if (cc == ' ' || cc == '\t' || cc == '\n' || cc == '\r') {
+			if (cc == ' ' || cc == '\t' || cc == '\n' || cc == '\r'
+					|| cc == '　') {
 				if (tempStr.length() == 0) {
 					continue;
 				} else {

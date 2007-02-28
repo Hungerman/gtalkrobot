@@ -31,6 +31,17 @@ public class StatusProcessor extends AbstractProcessor {
 				userEntry.getLocale()));
 		msgBuf.append(endl);
 
+		String commandType = userEntry.getCommandType();
+		if (commandType != null) {
+			msgBuf.append(cmd.getI18NMessage("status.item.interactive."
+					+ commandType));
+			msgBuf.append(endl);
+		} else {
+			msgBuf.append(cmd
+					.getI18NMessage("status.item.interactive.mainmenu"));
+			msgBuf.append(endl);
+		}
+
 		sendBackMessage(cmd, msgBuf.toString());
 	}
 }

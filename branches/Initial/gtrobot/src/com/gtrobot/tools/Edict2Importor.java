@@ -64,7 +64,7 @@ public class Edict2Importor extends BaseDao {
 			line = reader.readLine();
 			line = reader.readLine();
 			while (line != null) {
-				if (count > 51000) {
+				if (count > 84000) {
 					processLine(line);
 				}
 				line = reader.readLine();

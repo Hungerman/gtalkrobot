@@ -13,6 +13,10 @@ public class UserSession {
 		putSession(abCmd.getUserEntry().getJid(), PREVIOUS_COMMAND_KEY, abCmd);
 	}
 
+	public static final void removePreviousCommand(BaseCommand abCmd) {
+		removeSession(abCmd.getUserEntry().getJid(), PREVIOUS_COMMAND_KEY);
+	}
+
 	public static final BaseCommand retrievePreviousCommand(String jid) {
 		BaseCommand result = (BaseCommand) getSession(jid, PREVIOUS_COMMAND_KEY);
 		return result;
@@ -34,6 +38,7 @@ public class UserSession {
 			sessionCache.remove(sessionKey);
 
 		element = new Element(sessionKey, obj);
+
 		sessionCache.put(element);
 	}
 

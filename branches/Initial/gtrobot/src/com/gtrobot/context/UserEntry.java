@@ -32,6 +32,8 @@ public class UserEntry implements Serializable {
 
 	private int status;
 
+	private String commandType;
+
 	public UserEntry(String jid) {
 		this.jid = jid;
 		this.nickName = StringUtils.parseName(jid);
@@ -95,5 +97,13 @@ public class UserEntry implements Serializable {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public String getCommandType() {
+		return commandType;
+	}
+
+	public void setCommandType(String commandType) {
+		this.commandType = commandType;
 	}
 }

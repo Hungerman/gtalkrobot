@@ -18,7 +18,7 @@ public class UserEntryDao extends BaseDao {
 			.getLog(UserEntryDao.class);
 
 	public UserEntry getUserEntry(String jid) {
-		String sql = "select ID, JID, NICK_NAME, CHATTABLE, ECHOABLE, LOCALE, CREATE_DATE, LAST_LOGIN_DATE from USER_ENTRY where USER_ENTRY.JID = ?";
+		String sql = "select UE_ID, JID, NICK_NAME, CHATTABLE, ECHOABLE, LOCALE, CREATE_DATE, LAST_LOGIN_DATE from USER_ENTRY where USER_ENTRY.JID = ?";
 		UserEntry userEntry = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -27,7 +27,7 @@ public class UserEntryDao extends BaseDao {
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				userEntry = new UserEntry(jid);
-				userEntry.setId((Long) rs.getObject("ID"));
+				userEntry.setId((Long) rs.getObject("UE_ID"));
 				userEntry.setNickName(rs.getString("NICK_NAME"));
 				userEntry.setChattableInPublicRoom(rs.getBoolean("CHATTABLE"));
 				userEntry.setEchoable(rs.getBoolean("ECHOABLE"));
@@ -47,7 +47,7 @@ public class UserEntryDao extends BaseDao {
 	}
 
 	public void insertUserEntry(UserEntry userEntry) {
-		String sql = "insert into USER_ENTRY(JID, NICK_NAME, CHATTABLE, ECHOABLE, LOCALE, CREATE_DATE, LAST_LOGIN_DATE, ID) values(?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "insert into USER_ENTRY(JID, NICK_NAME, CHATTABLE, ECHOABLE, LOCALE, CREATE_DATE, LAST_LOGIN_DATE, UE_ID) values(?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
 		try {
 			userEntry.setId(getNextSequence("SEQ_USER_ENTRY"));
@@ -74,7 +74,7 @@ public class UserEntryDao extends BaseDao {
 	}
 
 	public void updateUserEntry(UserEntry userEntry) {
-		String sql = "update USER_ENTRY set JID = ?, NICK_NAME = ?, CHATTABLE = ?, ECHOABLE = ?, LOCALE = ?, CREATE_DATE = ?, LAST_LOGIN_DATE = ? where USER_ENTRY.ID = ?";
+		String sql = "update USER_ENTRY set JID = ?, NICK_NAME = ?, CHATTABLE = ?, ECHOABLE = ?, LOCALE = ?, CREATE_DATE = ?, LAST_LOGIN_DATE = ? where USER_ENTRY.UE_ID = ?";
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = prepareStatement(sql);

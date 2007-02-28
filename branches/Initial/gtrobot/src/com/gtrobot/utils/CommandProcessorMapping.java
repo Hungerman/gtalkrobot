@@ -36,56 +36,6 @@ public class CommandProcessorMapping {
 		return instance;
 	}
 
-	static {
-		// commandMappings.put("help", HelpCommand.class);
-		// // commandMappings.put("nochat", AwayCommand.class);
-		// // commandMappings.put("away", AwayCommand.class);
-		// // commandMappings.put("chat", AvailableCommand.class);
-		// // commandMappings.put("available", AvailableCommand.class);
-		// commandMappings.put("echo", EchoCommand.class);
-		// commandMappings.put("lang", LangCommand.class);
-		// commandMappings.put("sc", SearchUserCommand.class);
-		// commandMappings.put("searchuser", SearchUserCommand.class);
-		// commandMappings.put("st", StatusCommand.class);
-		// commandMappings.put("status", StatusCommand.class);
-		// commandMappings.put("pm", PrivateMessageCommand.class);
-		// commandMappings.put("privatemessage", PrivateMessageCommand.class);
-		// commandMappings.put("aw", AddWordEntryCommand.class);
-		// commandMappings.put("addword", AddWordEntryCommand.class);
-		// commandMappings.put("ips", InteractiveSampleCommand.class);
-		// TODO
-	}
-
-	static {
-		// commandProcessorsMappings.put("errorProcessor", new
-		// ErrorProcessor());
-		// commandProcessorsMappings.put(BroadcastMessageCommand.class.getName(),
-		// new BroadcastMessageProcessor());
-		// commandProcessorsMappings.put(InvalidCommand.class.getName(),
-		// new InvalidCommandProcessor());
-		// commandProcessorsMappings.put(HelpCommand.class.getName(),
-		// new HelpProcessor());
-		// commandProcessorsMappings.put(AwayCommand.class.getName(),
-		// new AwayProcessor());
-		// commandProcessorsMappings.put(AvailableCommand.class.getName(),
-		// new AvailableProcessor());
-		// commandProcessorsMappings.put(EchoCommand.class.getName(),
-		// new EchoProcessor());
-		// commandProcessorsMappings.put(LangCommand.class.getName(),
-		// new LangProcessor());
-		// commandProcessorsMappings.put(SearchUserCommand.class.getName(),
-		// new SearchUserProcessor());
-		// commandProcessorsMappings.put(StatusCommand.class.getName(),
-		// new StatusProcessor());
-		// commandProcessorsMappings.put(PrivateMessageCommand.class.getName(),
-		// new PrivateMessageProcessor());
-		// commandProcessorsMappings.put(AddWordEntryCommand.class.getName(),
-		// new AddWordEntryProcessor());
-		// commandProcessorsMappings.put(InteractiveSampleCommand.class.getName(),
-		// new InteractiveProcessorSample());
-		// TODO
-	}
-
 	public BaseCommand getBroadcastMessageCommandInstance() {
 		return getCommandInstance(BROADCAST_COMMAND);
 	}

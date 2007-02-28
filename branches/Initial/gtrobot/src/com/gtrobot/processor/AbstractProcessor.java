@@ -11,14 +11,16 @@ import com.gtrobot.command.BaseCommand;
 import com.gtrobot.context.GlobalContext;
 import com.gtrobot.context.UserEntry;
 import com.gtrobot.exception.CommandMatchedException;
-import com.gtrobot.utils.CommandProcessorMapping;
-import com.gtrobot.utils.UserSession;
 
 public abstract class AbstractProcessor implements Processor {
 	protected static final transient Log log = LogFactory
 			.getLog(AbstractProcessor.class);
 
 	protected static final String endl = "\n";
+
+	protected static final String seperator = "~~~~~~~~~~~~~~~~~~~~~~~~";
+
+	private static ThreadLocal userEntryHolder = new ThreadLocal();
 
 	protected GlobalContext ctx;
 
@@ -28,18 +30,22 @@ public abstract class AbstractProcessor implements Processor {
 
 	public void process(BaseCommand abCmd) throws CommandMatchedException,
 			XMPPException {
+		setUserEntryHolder(abCmd.getUserEntry());
+
 		beforeProcess(abCmd);
 		if (abCmd.getErrorMessage() == null) {
 			internalProcess(abCmd);
 		}
 
-		boolean flag = CommandProcessorMapping.BROADCAST_COMMAND.equals(abCmd
-				.getCommandType())
-				|| CommandProcessorMapping.INVALID_COMMAND.equals(abCmd
-						.getCommandType());
-		if (!flag) {
-			UserSession.storePreviousCommand(abCmd);
-		}
+		// boolean flag = CommandProcessorMapping.BROADCAST_COMMAND.equals(abCmd
+		// .getCommandType())
+		// || CommandProcessorMapping.INVALID_COMMAND.equals(abCmd
+		// .getCommandType());
+		// if (!flag) {
+		// UserSession.storePreviousCommand(abCmd);
+		// }
+
+		clearUserEntryHolder();
 	}
 
 	protected void beforeProcess(BaseCommand abCmd)
@@ -89,10 +95,11 @@ public abstract class AbstractProcessor implements Processor {
 			}
 		}
 	}
-	
-	protected void processInvalidCommandFormat(BaseCommand abCmd) throws XMPPException {
+
+	protected void processInvalidCommandFormat(BaseCommand abCmd)
+			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		
+
 		msgBuf.append(abCmd.getI18NMessage("error.prompt"));
 		msgBuf.append(abCmd.getErrorMessage());
 		msgBuf.append(endl);
@@ -103,6 +110,18 @@ public abstract class AbstractProcessor implements Processor {
 		msgBuf.append(abCmd.getOriginMessage());
 		msgBuf.append(endl);
 
-		sendBackMessage(abCmd, msgBuf.toString());		
+		sendBackMessage(abCmd, msgBuf.toString());
+	}
+
+	protected static void clearUserEntryHolder() {
+		userEntryHolder.set(null);
+	}
+
+	protected static UserEntry getUserEntryHolder() {
+		return (UserEntry) userEntryHolder.get();
+	}
+
+	protected static void setUserEntryHolder(UserEntry userEntry) {
+		userEntryHolder.set(userEntry);
 	}
 }

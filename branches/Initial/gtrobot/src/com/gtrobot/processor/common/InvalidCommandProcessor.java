@@ -3,16 +3,18 @@ package com.gtrobot.processor.common;
 import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.BaseCommand;
-import com.gtrobot.processor.AbstractProcessor;
 
-public class InvalidCommandProcessor extends AbstractProcessor {
+public class InvalidCommandProcessor extends HelpProcessor {
 
 	protected void internalProcess(BaseCommand cmd) throws XMPPException {
 
 		StringBuffer msgBuf = new StringBuffer();
 		msgBuf.append(cmd.getI18NMessage("invalid.command"));
 		msgBuf.append(cmd.getOriginMessage());
+		msgBuf.append(endl);
 		sendBackMessage(cmd, msgBuf.toString());
+
+		super.internalProcess(cmd);
 	}
 
 }

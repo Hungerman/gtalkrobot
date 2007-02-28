@@ -11,7 +11,7 @@ invalid.command.previous.command.null=没有前一个命令!
 
 help.welcome=欢迎来到 GTRobot! 请访问：http://code.google.com/p/gtalkrobot/
 help.prompt=请使用以下命令: 
-help.command.broadcast=直接输入消息即可发送给所有在线用户
+#help.command.broadcast=直接输入消息即可发送给所有在线用户
 help.command.help=/help : 显示帮助信息
 help.command.away=/nochat|away : 设置为离开状态，将接收不到其他人发的消息
 help.command.available=/chat|available : 设置为聊天状态，可以接收到其他人发的消息
@@ -20,6 +20,9 @@ help.command.lang=/lang en|zh|jp : 设置语言环境
 help.command.searchuser=/sc [match string] : 查找用户，部分匹配方式
 help.command.status=/st|status : 显示您的状态信息
 help.command.privatemessage=/pm|privatemessage emailId message: 向其他人发送秘密消息
+help.command.roomchat=/rc|roomchat : 进入公共聊天室
+help.command.studyjpword=/sj|studyjpword : 单词学习，go,go,go
+help.command.exit=/x : 退回到这个主菜单模式。
 
 available.title=欢迎继续使用GTRobot聊天!
 available.prompt=如果您不想继续接收聊天信息，请使用[/nochat]命令。
@@ -52,11 +55,14 @@ searchuser.result.prompt.total=总共:
 searchuser.result.prompt.next=请使用[ // or /n ] 命令继续显示更多用户列表。
 
 status.welcome=您的状态: 
-help.item.jid= 账号邮箱地址: 
-help.item.nickname= 别名: 
-help.item.chattable= 是否聊天: 
-help.item.echoable= 是否回显: 
-help.item.lang= 语言设置: 
+status.item.jid= 账号邮箱地址: 
+status.item.nickname= 别名: 
+status.item.chattable= 是否聊天: 
+status.item.echoable= 是否回显: 
+status.item.lang= 语言设置: 
+status.item.interactive.mainmenu=您正在GTRobot的主菜单。
+status.item.interactive.roomchat=您正在公共聊天室，尽情享受吧!
+status.item.interactive.studyjpword=您正在努力学习，真是个好孩子！！！
 
 privatemessage.error.title=发送秘密消息的格式不正确: 
 privatemessage.error.parameter=使用了不合适的命令格式。
@@ -64,6 +70,25 @@ privatemessage.error.targetusernotfound=您要发送消息的用户不存在，�
 privatemessage.command.format=发送秘密消息的格式是: /pm|privatemessage emailId message
 privatemessage.origin.prompt=您使用的命令是: 
 
+roomchat.welcome=欢迎来到聊天室，这里可以灌水哦！
+roomchat.came.in= 刚刚小腰一扭，晃了进来...
+roomchat.menu.welcome=聊吧...灌吧...别犹豫......
+roomchat.left= 发出一声巨响，“嘭”。 消失了......
+
+studyjpword.menu.welcome=欢迎来到单词学习世界，要每天都坚持哦。
+studyjpword.menu.1=1. 单词记忆
+studyjpword.menu.2=2. 小测试
+studyjpword.menu.901=901. 添加系统新增的单词到您的列表。
+studyjpword.menu.back=/b 退回到本项的菜单。.
+studyjpword.menu.exit=/x 退回到主菜单。
+studyjpword.menu.1.finished=恭喜，你已经完成学习了所有的单词。明天请再来一遍。
+studyjpword.menu.1.enterword.prompt=输入单词才能通过。
+studyjpword.menu.901.prompt=正在添加新单词到你的单词列表....
+studyjpword.menu.901.finished=已完成添加 
+studyjpword.menu.901.finished.prompt= 个单词到您的列表。
+
+InteractiveProcessor.exit.roomchat=你已经离开了聊天室，再回来哦。
+InteractiveProcessor.exit.studyjpword=您已经离开了单词学习世界，记得要每天都坚持哦。
 
 
 
