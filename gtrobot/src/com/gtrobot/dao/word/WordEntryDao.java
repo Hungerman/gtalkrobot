@@ -46,7 +46,7 @@ public class WordEntryDao extends BaseDao {
 		closeConnection();
 		return wordEntry;
 	}
-	
+
 	public WordEntry getWordEntry(String condition) {
 		String sql = "select WE_ID, WORD, PRONOUNCE, LOCALE from WORD_ENTRY we where WORD = ?";
 

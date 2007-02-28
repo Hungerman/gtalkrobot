@@ -77,13 +77,13 @@
         diskExpiryThreadIntervalSeconds="1800"/>
         
     <cache name="sessionCache"
-        maxElementsInMemory="40"
+        maxElementsInMemory="1000"
         eternal="false"
         overflowToDisk="true"
-        timeToIdleSeconds="180"
-        timeToLiveSeconds="180"
+        timeToIdleSeconds="1800"
+        timeToLiveSeconds="1800"
         diskPersistent="false"
-        diskExpiryThreadIntervalSeconds="180"/>
+        diskExpiryThreadIntervalSeconds="1800"/>
         
     <cache name="objectCache"
         maxElementsInMemory="10"
