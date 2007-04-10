@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="GTRobot" basedir="." default="setup">
+
+    <property name="src.dir" value="${basedir}/src"/>
+    <property name="build.dir" value="${basedir}/build"/>
+    <property name="lib.dir" value="${basedir}/lib"/>
+    <property name="locallib.dir" value="${basedir}/locallib"/>
+    <property name="conf.dir" value="${basedir}/metadata/conf"/>
+    <property name="data.dir" value="${basedir}/metadata/data"/>
+    <property name="sql.dir" value="${basedir}/metadata/sql"/>
+
+    <property file="build.properties"/>
+    <property file="${conf.dir}/gtrobot.properties"/>
+    <property environment="env"/>
+
+	  <path id="lib.classpath">
+        <path location="${build.dir}"/>
+        <path location="${conf.dir}"/>
+        <fileset dir="${lib.dir}" includes="*.jar"/>
+    </path>
+    
+    <path id="locallib.classpath">
+    	<path refid="lib.classpath"/>
+      <fileset dir="${locallib.dir}" includes="*.jar"/>
+    </path>
+
+    <target name="init" description="defines custom tasks">
+        <taskdef name="dbunit" classname="org.dbunit.ant.DbUnitTask" classpathref="locallib.classpath"/>
+        
+        <!-- Ensure that Ant 1.6.2+ is being used -->
+        <available classname="org.apache.tools.ant.DynamicAttribute" property="ant-1.6.2"/>
+        <fail unless="ant-1.6.2" message="GTRobot requires Ant 1.6.2 for deployment"/>
+
+        <mkdir dir="logs"/>
+   </target>
+     
+    <!-- =================================================================== -->
+    <!--            Export the data                                          -->
+    <!-- =================================================================== -->
+    <target name="db-export-xml" depends="init"
+        description="Exports the current data in the database">
+        <dbunit driver="${database.jdbc.driver.class}" url="${database.jdbc.url}"
+            userid="${database.jdbc.username}" password="${database.jdbc.password}">
+            <export dest="${data.dir}/db-export.xml" format="xml"/>
+        </dbunit>
+    </target>
+    <target name="db-load-xml" depends="init"
+        description="Loads the database with sample data">
+        <property name="operation" value="CLEAN_INSERT"/>
+        <property name="file" value="${data.dir}/data.xml"/>
+        <dbunit driver="${database.jdbc.driver.class}"
+            supportBatchStatement="false" url="${database.jdbc.url}"
+            userid="${database.jdbc.username}" password="${database.jdbc.password}">
+            <operation type="${operation}" src="${file}" format="xml"/>
+        </dbunit>
+    </target>
+    
+    <target name="db-export" depends="init"
+        description="Exports the current data in the database">
+        <dbunit driver="${database.jdbc.driver.class}" url="${database.jdbc.url}"
+            userid="${database.jdbc.username}" password="${database.jdbc.password}">
+            <export dest="${data.dir}/db-export.xls" format="xls"/>
+        </dbunit>
+    </target>
+    <target name="db-load" depends="init"
+        description="Loads the database with sample data">
+        <property name="operation" value="CLEAN_INSERT"/>
+        <property name="file" value="${data.dir}/data.xls"/>
+        <dbunit driver="${database.jdbc.driver.class}"
+            supportBatchStatement="false" url="${database.jdbc.url}"
+            userid="${database.jdbc.username}" password="${database.jdbc.password}">
+            <operation type="${operation}" src="${file}" format="xls"/>
+        </dbunit>
+        
+        <echo>GTRobot's system data has been loaded into your database!</echo>
+    </target>
+    
+    <!-- =================================================================== -->
+    <!-- The "db-create" target creates a database based on properties       --> 
+    <!-- from the database.properties file                                   -->
+    <!-- =================================================================== -->
+    <target name="db-create" depends="init"
+        description="create database for ${database.type}">
+        <sql
+            driver="${database.jdbc.driver.class}"
+            url="${database.jdbc.url}"
+            userid="${database.jdbc.username}"
+            password="${database.jdbc.password}"
+            onerror="continue"
+            autocommit="true"
+            print="yes" 
+            output="logs/create-tables.log">
+
+            <classpath>
+                <path refid="lib.classpath"/>
+            </classpath>
+
+            <fileset dir="${sql.dir}">
+                <include name="*.sql"/>
+            </fileset>
+        </sql>
+        <echo>Tables have been created in to database("Drop" error infromation is ok for GTRobot)!</echo>
+    </target>
+    
+    <!-- =================================================================== -->
+    <!--            Setup GTRobot                                           -->
+    <!-- =================================================================== -->
+    <target name="setup" depends="init, db-create, db-load"
+        description="creates database and populates by calling other tasks">
+        <echo>GTRobot's database has been setup!</echo>
+    </target>
+
+    <!-- =================================================================== -->
+    <!--            Setup GTRobot                                           -->
+    <!-- =================================================================== -->
+    <target name="native2ascii" depends="init"
+        description="creates database and populates by calling other tasks">
+        <native2ascii encoding="UTF-8" src="${conf.dir}" dest="${conf.dir}"
+   					includes="**/*.UTF-8" ext=".properties"/>
+        <echo>GTRobot's resource files have been converted!</echo>
+    </target>
+    
+    <!-- Compile -->
+    <target name="compile" depends="init" description="Compile the src">
+        <javac srcdir="${src.dir}"
+            destdir="${build.dir}" debug="${compile.debug}"
+            deprecation="${compile.deprecation}" optimize="${compile.optimize}"
+            encoding="${compile.source.encoding}"
+            classpathref="lib.classpath">
+        </javac>
+    </target>
+
+   <target name="run" depends="compile, native2ascii"
+        description="Start GTRobot">
+        <java classname="com.gtrobot.GTRobot" fork="yes">
+            <classpath>
+                <path refid="lib.classpath"/>
+            </classpath>
+        </java>
+    </target>
+        
+</project>
