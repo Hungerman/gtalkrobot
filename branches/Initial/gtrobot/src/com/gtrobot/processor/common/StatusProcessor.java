@@ -3,8 +3,11 @@ package com.gtrobot.processor.common;
 import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.BaseCommand;
-import com.gtrobot.context.UserEntry;
+import com.gtrobot.model.common.UserEntry;
 import com.gtrobot.processor.AbstractProcessor;
+import com.gtrobot.processor.InteractiveProcessor;
+import com.gtrobot.processor.Processor;
+import com.gtrobot.utils.UserSessionUtil;
 
 public class StatusProcessor extends AbstractProcessor {
 
@@ -21,7 +24,7 @@ public class StatusProcessor extends AbstractProcessor {
 		msgBuf.append(userEntry.getNickName());
 		msgBuf.append(endl);
 		msgBuf.append(cmd.getI18NMessage("status.item.chattable"));
-		msgBuf.append(userEntry.isChattableInPublicRoom());
+		msgBuf.append(userEntry.isChattable());
 		msgBuf.append(endl);
 		msgBuf.append(cmd.getI18NMessage("status.item.echoable"));
 		msgBuf.append(userEntry.isEchoable());
@@ -31,7 +34,7 @@ public class StatusProcessor extends AbstractProcessor {
 				userEntry.getLocale()));
 		msgBuf.append(endl);
 
-		String commandType = userEntry.getCommandType();
+		String commandType = isInInteractiveOperation(userEntry.getJid());
 		if (commandType != null) {
 			msgBuf.append(cmd.getI18NMessage("status.item.interactive."
 					+ commandType));
@@ -43,5 +46,22 @@ public class StatusProcessor extends AbstractProcessor {
 		}
 
 		sendBackMessage(cmd, msgBuf.toString());
+	}
+
+	private String isInInteractiveOperation(String jid) {
+		BaseCommand previousCommand = UserSessionUtil
+				.retrievePreviousCommand(jid);
+		if (previousCommand == null) {
+			return null;
+		}
+		Processor processor = previousCommand.getProcessor();
+		if (processor == null) {
+			return null;
+		}
+		if (processor instanceof InteractiveProcessor) {
+			return previousCommand.getCommandType();
+		}
+		return null;
+
 	}
 }

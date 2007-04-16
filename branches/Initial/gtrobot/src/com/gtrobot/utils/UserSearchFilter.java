@@ -1,12 +1,12 @@
 package com.gtrobot.utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.SortedSet;
 
-import com.gtrobot.context.GlobalContext;
-import com.gtrobot.context.UserEntry;
+import com.gtrobot.engine.GTRobotContextHelper;
+import com.gtrobot.model.common.UserEntry;
 
 /**
  * Create a local user list copy of all user list. Also, it can be applied a
@@ -16,12 +16,12 @@ import com.gtrobot.context.UserEntry;
  * 
  */
 public class UserSearchFilter {
-	private List userList;
+	private List<String> userList;
 
 	private int count;
 
-	public UserSearchFilter(SortedSet sourceUserList, String condition) {
-		userList = new ArrayList();
+	public UserSearchFilter(Collection<String> sourceUserList, String condition) {
+		userList = new ArrayList<String>();
 		if (condition == null || condition.trim().length() == 0) {
 			copy(sourceUserList, userList);
 		} else {
@@ -50,13 +50,14 @@ public class UserSearchFilter {
 		this.count = count;
 	}
 
-	private static void filterCopy(SortedSet sourceUserList,
-			List targetUserList, String condition) {
+	private static void filterCopy(Collection<String> sourceUserList,
+			List<String> targetUserList, String condition) {
 		Iterator it = sourceUserList.iterator();
 		condition = condition.toLowerCase();
 		while (it.hasNext()) {
 			String jid = (String) it.next();
-			UserEntry userEntry = GlobalContext.getInstance().getUser(jid);
+			UserEntry userEntry = GTRobotContextHelper.getUserEntryService()
+					.getUserEntry(jid);
 			int pos1 = jid.toLowerCase().indexOf(condition);
 			int pos2 = userEntry.getNickName().toLowerCase().indexOf(condition);
 			if (pos1 != -1 || pos2 != -1) {
@@ -65,10 +66,11 @@ public class UserSearchFilter {
 		}
 	}
 
-	private static void copy(SortedSet sourceUserList, List targetUserList) {
+	private static void copy(Collection<String> sourceUserList,
+			List<String> targetUserList) {
 		Iterator it = sourceUserList.iterator();
 		while (it.hasNext()) {
-			targetUserList.add(it.next());
+			targetUserList.add((String) it.next());
 		}
 	}
 }

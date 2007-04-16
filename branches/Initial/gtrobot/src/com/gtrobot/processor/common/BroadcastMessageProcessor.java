@@ -3,7 +3,7 @@ package com.gtrobot.processor.common;
 import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.BaseCommand;
-import com.gtrobot.context.UserEntry;
+import com.gtrobot.model.common.UserEntry;
 import com.gtrobot.processor.AbstractProcessor;
 
 public class BroadcastMessageProcessor extends AbstractProcessor {
@@ -12,7 +12,7 @@ public class BroadcastMessageProcessor extends AbstractProcessor {
 
 		UserEntry userEntry = cmd.getUserEntry();
 
-		if (!userEntry.isChattableInPublicRoom()) {
+		if (!userEntry.isChattable()) {
 			StringBuffer msgBuf = new StringBuffer();
 
 			msgBuf.append(cmd.getI18NMessage("broadcast.error.title"));

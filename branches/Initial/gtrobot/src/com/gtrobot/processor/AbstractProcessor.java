@@ -8,9 +8,11 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.BaseCommand;
-import com.gtrobot.context.GlobalContext;
-import com.gtrobot.context.UserEntry;
+import com.gtrobot.engine.GTRobotContextHelper;
 import com.gtrobot.exception.CommandMatchedException;
+import com.gtrobot.model.common.UserEntry;
+import com.gtrobot.service.common.UserEntryService;
+import com.gtrobot.utils.UserChatUtil;
 
 public abstract class AbstractProcessor implements Processor {
 	protected static final transient Log log = LogFactory
@@ -20,32 +22,24 @@ public abstract class AbstractProcessor implements Processor {
 
 	protected static final String seperator = "~~~~~~~~~~~~~~~~~~~~~~~~";
 
-	private static ThreadLocal userEntryHolder = new ThreadLocal();
-
-	protected GlobalContext ctx;
+	private static ThreadLocal<UserEntry> userEntryHolder = new ThreadLocal<UserEntry>();
 
 	public AbstractProcessor() {
-		ctx = GlobalContext.getInstance();
+		// ctx = GlobalContext.getInstance();
 	}
 
-	public void process(BaseCommand abCmd) throws CommandMatchedException,
-			XMPPException {
-		setUserEntryHolder(abCmd.getUserEntry());
+	public void process(BaseCommand abCmd) {
+		try {
+			setUserEntryHolder(abCmd.getUserEntry());
 
-		beforeProcess(abCmd);
-		if (abCmd.getErrorMessage() == null) {
-			internalProcess(abCmd);
+			beforeProcess(abCmd);
+			if (abCmd.getErrorMessage() == null) {
+				internalProcess(abCmd);
+			}
+			clearUserEntryHolder();
+		} catch (Exception e) {
+			log.error("Exception in process.", e);
 		}
-
-		// boolean flag = CommandProcessorMapping.BROADCAST_COMMAND.equals(abCmd
-		// .getCommandType())
-		// || CommandProcessorMapping.INVALID_COMMAND.equals(abCmd
-		// .getCommandType());
-		// if (!flag) {
-		// UserSession.storePreviousCommand(abCmd);
-		// }
-
-		clearUserEntryHolder();
 	}
 
 	protected void beforeProcess(BaseCommand abCmd)
@@ -69,7 +63,7 @@ public abstract class AbstractProcessor implements Processor {
 
 	protected void sendMessage(String message, UserEntry userEntry)
 			throws XMPPException {
-		Chat chat = GlobalContext.getInstance().getChat(userEntry);
+		Chat chat = UserChatUtil.getChat(userEntry.getJid());
 		chat.sendMessage(message);
 	}
 
@@ -82,15 +76,16 @@ public abstract class AbstractProcessor implements Processor {
 		msgBuf.append(message);
 		message = msgBuf.toString();
 
-		Iterator userList = GlobalContext.getInstance().getActiveUserList()
-				.iterator();
+		UserEntryService userEntryService = GTRobotContextHelper
+				.getUserEntryService();
+		Iterator userList = userEntryService.getAllActiveUsers().iterator();
 		while (userList.hasNext()) {
 			String jid = (String) userList.next();
 			if (jid.equals(sender.getJid()) && !sender.isEchoable()) {
 				continue;
 			}
-			UserEntry userEntry = GlobalContext.getInstance().getUser(jid);
-			if (userEntry.isChattableInPublicRoom()) {
+			UserEntry userEntry = userEntryService.getUserEntry(jid);
+			if (userEntry.isChattable()) {
 				sendMessage(message, userEntry);
 			}
 		}
@@ -103,12 +98,15 @@ public abstract class AbstractProcessor implements Processor {
 		msgBuf.append(abCmd.getI18NMessage("error.prompt"));
 		msgBuf.append(abCmd.getErrorMessage());
 		msgBuf.append(endl);
-		msgBuf.append(abCmd.getI18NMessage("format.prompt"));
-		msgBuf.append(abCmd.getI18NMessage(abCmd.getCommandType() + ".format"));
-		msgBuf.append(endl);
-		msgBuf.append(abCmd.getI18NMessage("error.origin.prompt"));
-		msgBuf.append(abCmd.getOriginMessage());
-		msgBuf.append(endl);
+		if (BaseCommand.ErrorType.normal.equals(abCmd.getErrorType())) {
+			msgBuf.append(abCmd.getI18NMessage("format.prompt"));
+			msgBuf.append(abCmd.getI18NMessage(abCmd.getCommandType()
+					+ ".format"));
+			msgBuf.append(endl);
+			msgBuf.append(abCmd.getI18NMessage("error.origin.prompt"));
+			msgBuf.append(abCmd.getOriginMessage());
+			msgBuf.append(endl);
+		}
 
 		sendBackMessage(abCmd, msgBuf.toString());
 	}

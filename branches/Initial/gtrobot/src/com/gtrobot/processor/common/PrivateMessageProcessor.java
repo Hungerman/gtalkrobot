@@ -5,8 +5,8 @@ import org.jivesoftware.smack.util.StringUtils;
 
 import com.gtrobot.command.BaseCommand;
 import com.gtrobot.command.common.PrivateMessageCommand;
-import com.gtrobot.context.GlobalContext;
-import com.gtrobot.context.UserEntry;
+import com.gtrobot.engine.GTRobotContextHelper;
+import com.gtrobot.model.common.UserEntry;
 import com.gtrobot.processor.AbstractProcessor;
 
 public class PrivateMessageProcessor extends AbstractProcessor {
@@ -15,8 +15,8 @@ public class PrivateMessageProcessor extends AbstractProcessor {
 		PrivateMessageCommand cmd = (PrivateMessageCommand) abCmd;
 		StringBuffer msgBuf = new StringBuffer();
 
-		UserEntry targetUserEntry = GlobalContext.getInstance().getUser(
-				cmd.getTargetJid());
+		UserEntry targetUserEntry = GTRobotContextHelper.getUserEntryService()
+				.getUserEntry(cmd.getTargetJid());
 		if (targetUserEntry == null) {
 			msgBuf.append(cmd
 					.getI18NMessage("privatemessage.error.targetusernotfound"));

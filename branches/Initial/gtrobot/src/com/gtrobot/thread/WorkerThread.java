@@ -3,17 +3,13 @@ package com.gtrobot.thread;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.gtrobot.command.BaseCommand;
-import com.gtrobot.processor.Processor;
 import com.gtrobot.thread.signalqueues.EventQueue;
 
 public class WorkerThread implements Runnable {
 	protected static final transient Log log = LogFactory
 			.getLog(WorkerThread.class);
 
-	private Processor processor;
-
-	private BaseCommand command;
+	private Object processingData;
 
 	private EventQueue parentThreadPool;
 
@@ -47,37 +43,35 @@ public class WorkerThread implements Runnable {
 	}
 
 	private synchronized void process() {
-		if (command == null && isRunning) {
+		if (processingData == null && isRunning) {
 			try {
 				this.wait();
 			} catch (InterruptedException e) {
 			}
 		}
-
-		internalProcess();
-
-		// Reset the parameters and push self back to ThreadPool
-		processor = null;
-		command = null;
-		parentThreadPool.push(this);
-	}
-
-	private void internalProcess() {
-		if (command == null || !isRunning)
-			return;
 		try {
-			processor.process(command);
+			if (processingData == null || !isRunning)
+				return;
+			internalProcess();
 		} catch (Exception e) {
 			log.error("Error while WorkerThread.process!", e);
 		}
+		// Reset the parameters and push self back to ThreadPool
+		processingData = null;
+		parentThreadPool.push(this);
 	}
 
-	public void setCommand(BaseCommand command) {
-		this.command = command;
+	protected void internalProcess() {
+		if (log.isDebugEnabled()) {
+			log.debug("WorkerThread just finished a dummy process.");
+		}
 	}
 
-	public void setProcessor(Processor processor) {
-		this.processor = processor;
+	public Object getProcessingData() {
+		return processingData;
 	}
 
+	public void setProcessingData(Object processingData) {
+		this.processingData = processingData;
+	}
 }

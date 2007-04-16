@@ -4,10 +4,11 @@ import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.BaseCommand;
 import com.gtrobot.command.common.SearchUserCommand;
-import com.gtrobot.context.UserEntry;
+import com.gtrobot.engine.GTRobotContextHelper;
+import com.gtrobot.model.common.UserEntry;
 import com.gtrobot.processor.AbstractProcessor;
 import com.gtrobot.utils.UserSearchFilter;
-import com.gtrobot.utils.UserSession;
+import com.gtrobot.utils.UserSessionUtil;
 
 public class SearchUserProcessor extends AbstractProcessor {
 	private static final int ROWS_IN_PAGE = 2;
@@ -17,21 +18,22 @@ public class SearchUserProcessor extends AbstractProcessor {
 		StringBuffer msgBuf = new StringBuffer();
 
 		String sessionKey = "-searchuser." + cmd.getCondition();
-		UserSearchFilter userSearchFilter = (UserSearchFilter) UserSession
+		UserSearchFilter userSearchFilter = (UserSearchFilter) UserSessionUtil
 				.getSession(cmd.getUserEntry().getJid(), sessionKey);
 		if (userSearchFilter == null) {
-			userSearchFilter = new UserSearchFilter(ctx.getActiveUserList(),
-					cmd.getCondition());
-			UserSession.putSession(abCmd.getUserEntry().getJid(), sessionKey,
-					userSearchFilter);
+			userSearchFilter = new UserSearchFilter(GTRobotContextHelper
+					.getUserEntryService().getAllActiveUsers(), cmd
+					.getCondition());
+			UserSessionUtil.putSession(abCmd.getUserEntry().getJid(),
+					sessionKey, userSearchFilter);
 		}
 
 		int start = userSearchFilter.getCount();
 		int end = start + ROWS_IN_PAGE;
 		if (end >= userSearchFilter.size()) {
 			end = userSearchFilter.size();
-			UserSession
-					.removeSession(abCmd.getUserEntry().getJid(), sessionKey);
+			UserSessionUtil.removeSession(abCmd.getUserEntry().getJid(),
+					sessionKey);
 		}
 
 		msgBuf.append(cmd.getI18NMessage("searchuser.result.title"));
@@ -41,7 +43,8 @@ public class SearchUserProcessor extends AbstractProcessor {
 			msgBuf.append(i);
 			msgBuf.append("  ");
 			String user = userSearchFilter.getUser(i);
-			UserEntry userEntry = ctx.getUser(user);
+			UserEntry userEntry = GTRobotContextHelper.getUserEntryService()
+					.getUserEntry(user);
 			msgBuf.append(userEntry.getNickName());
 			msgBuf.append("(");
 			msgBuf.append(user);

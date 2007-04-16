@@ -1,15 +1,11 @@
 package com.gtrobot.processor.word;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.word.AddWordEntryCommand;
-import com.gtrobot.dao.DaoFactory;
-import com.gtrobot.model.WordEntry;
-import com.gtrobot.model.WordMeaning;
+import com.gtrobot.model.word.WordEntry;
 import com.gtrobot.processor.InteractiveProcessor;
 import com.gtrobot.utils.CommonUtils;
 
@@ -20,16 +16,12 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 
 	private static final int STEP_TO_ADD_MEANING = 2000;
 
-	public AddWordEntryProcessor() {
-		super("-wordEntry");
-	}
-
 	// The interactiveProcess_0 are skipped
 
 	protected int interactiveProcessPrompt_1(AddWordEntryCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		formartMessageHeader(cmd, msgBuf);
+		// //formartMessageHeader(cmd, msgBuf);
 
 		msgBuf.append("Please input the word entry:");
 
@@ -41,7 +33,7 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 			throws XMPPException {
 		WordEntry wordEntry = new WordEntry();
 		wordEntry.setWord(cmd.getOriginMessage().trim());
-		wordEntry.setLocale(cmd.getOperationLocale());
+		// wordEntry.setLocale(cmd.getOperationLocale());
 		setSession(wordEntry);
 		return STEP_TO_MENU;
 	}
@@ -52,7 +44,7 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 	protected int interactiveProcessPrompt_100(AddWordEntryCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		formartMessageHeader(cmd, msgBuf);
+		// formartMessageHeader(cmd, msgBuf);
 
 		msgBuf.append("Operation menu:");
 		msgBuf.append(endl);
@@ -92,7 +84,7 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 	protected int interactiveProcessPrompt_1000(AddWordEntryCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		formartMessageHeader(cmd, msgBuf);
+		// formartMessageHeader(cmd, msgBuf);
 
 		msgBuf.append("Please input the locale for WordEntry's localization:");
 		sendBackMessage(cmd, msgBuf.toString());
@@ -104,7 +96,7 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 		Locale locale = CommonUtils.parseLocale(cmd.getOriginMessage());
 		if (locale == null) {
 			StringBuffer msgBuf = new StringBuffer();
-			formartMessageHeader(cmd, msgBuf);
+			// formartMessageHeader(cmd, msgBuf);
 
 			msgBuf.append("Your input locale is invalid:");
 			sendBackMessage(cmd, msgBuf.toString());
@@ -112,7 +104,7 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 		}
 
 		WordEntry we = new WordEntry();
-		we.setLocale(locale);
+		// we.setLocale(locale);
 		setTempSession(we);
 		return CONTINUE;
 	}
@@ -120,7 +112,7 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 	protected int interactiveProcessPrompt_1001(AddWordEntryCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		formartMessageHeader(cmd, msgBuf);
+		// formartMessageHeader(cmd, msgBuf);
 
 		msgBuf.append("Please input the content for WordEntry's localization:");
 		sendBackMessage(cmd, msgBuf.toString());
@@ -132,13 +124,13 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 		WordEntry we = (WordEntry) getTempSession();
 		we.setWord(cmd.getOriginMessage().trim());
 
-		WordEntry wordEntry = (WordEntry) getSession();
-		List localizations = wordEntry.getLocalizations();
-		if (localizations == null) {
-			localizations = new ArrayList();
-		}
-		localizations.add(we);
-		wordEntry.setLocalizations(localizations);
+		// WordEntry wordEntry = (WordEntry) getSession();
+		// List localizations = wordEntry.getLocalizations();
+		// if (localizations == null) {
+		// localizations = new ArrayList();
+		// }
+		// localizations.add(we);
+		// wordEntry.setLocalizations(localizations);
 
 		return STEP_TO_MENU;
 	}
@@ -149,7 +141,7 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 	protected int interactiveProcessPrompt_2000(AddWordEntryCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		formartMessageHeader(cmd, msgBuf);
+		// formartMessageHeader(cmd, msgBuf);
 
 		msgBuf
 				.append("Please input the content for WordMeaning's localization:");
@@ -161,16 +153,16 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 			throws XMPPException {
 		WordEntry wordEntry = (WordEntry) getSession();
 
-		WordMeaning wm = new WordMeaning();
-		wm.setLocale(wordEntry.getLocale());
-		wm.setMeaning(cmd.getOriginMessage().trim());
-
-		List meanings = wordEntry.getMeanings();
-		if (meanings == null) {
-			meanings = new ArrayList();
-		}
-		meanings.add(wm);
-		wordEntry.setMeanings(meanings);
+		// WordMeaning wm = new WordMeaning();
+		// // wm.setLocale(wordEntry.getLocale());
+		// wm.setMeaning(cmd.getOriginMessage().trim());
+		//
+		// List meanings = wordEntry.getMeanings();
+		// if (meanings == null) {
+		// meanings = new ArrayList();
+		// }
+		// meanings.add(wm);
+		// wordEntry.setMeanings(meanings);
 
 		return STEP_TO_MENU;
 	}
@@ -178,7 +170,7 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 	protected int interactiveProcessPrompt_3(AddWordEntryCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		formartMessageHeader(cmd, msgBuf);
+		// formartMessageHeader(cmd, msgBuf);
 
 		// WordEntry wordEntry = (WordEntry) getSession(cmd.getUserEntry()
 		// .getJid());
@@ -204,7 +196,7 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 	protected int interactiveProcess_3(AddWordEntryCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		formartMessageHeader(cmd, msgBuf);
+		// formartMessageHeader(cmd, msgBuf);
 
 		switch (checkAnswer(cmd)) {
 		case YES:
@@ -224,11 +216,12 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 
 	private int saveWordEntry(AddWordEntryCommand cmd) throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		formartMessageHeader(cmd, msgBuf);
+		// formartMessageHeader(cmd, msgBuf);
 		WordEntry wordEntry = (WordEntry) getSession();
 
 		try {
-			DaoFactory.getWordEntryDao().saveWordEntry(wordEntry);
+			// TODO
+			// DaoFactory.getWordEntryDao().saveWordEntry(wordEntry);
 		} catch (Exception e) {
 			log.error("Exception while saving word entry: ", e);
 			// return RETRY_CURRENT_STEP;

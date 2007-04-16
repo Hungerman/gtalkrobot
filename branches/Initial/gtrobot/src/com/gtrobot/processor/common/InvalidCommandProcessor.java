@@ -6,7 +6,7 @@ import com.gtrobot.command.BaseCommand;
 
 public class InvalidCommandProcessor extends HelpProcessor {
 
-	protected void internalProcess(BaseCommand cmd) throws XMPPException {
+	public void internalProcess(BaseCommand cmd) throws XMPPException {
 
 		StringBuffer msgBuf = new StringBuffer();
 		msgBuf.append(cmd.getI18NMessage("invalid.command"));

@@ -2,11 +2,14 @@ package com.gtrobot.command;
 
 import java.util.List;
 
-import com.gtrobot.context.GlobalContext;
-import com.gtrobot.context.UserEntry;
-import com.gtrobot.utils.MessageBundle;
+import com.gtrobot.engine.GTRobotContextHelper;
+import com.gtrobot.model.common.UserEntry;
+import com.gtrobot.processor.Processor;
+import com.gtrobot.utils.MessageHelper;
 
 public class BaseCommand {
+	private Processor processor;
+
 	private String commandType;
 
 	private UserEntry userEntry;
@@ -17,7 +20,17 @@ public class BaseCommand {
 
 	private List argv;
 
+	private ErrorType errorType = ErrorType.normal;
+
 	private String errorMessage;
+
+	public Processor getProcessor() {
+		return processor;
+	}
+
+	public void setProcessor(Processor processor) {
+		this.processor = processor;
+	}
 
 	public String getCommandType() {
 		return commandType;
@@ -25,6 +38,14 @@ public class BaseCommand {
 
 	public void setCommandType(String commandType) {
 		this.commandType = commandType;
+	}
+
+	public ErrorType getErrorType() {
+		return errorType;
+	}
+
+	public void setErrorType(ErrorType errorType) {
+		this.errorType = errorType;
 	}
 
 	public String getErrorMessage() {
@@ -60,7 +81,8 @@ public class BaseCommand {
 	}
 
 	public void setUserEntry(String jid) {
-		setUserEntry(GlobalContext.getInstance().getUser(jid));
+		setUserEntry(GTRobotContextHelper.getUserEntryService().getUserEntry(
+				jid));
 	}
 
 	public String getFrom() {
@@ -72,7 +94,18 @@ public class BaseCommand {
 	}
 
 	public String getI18NMessage(String key) {
-		return MessageBundle.getInstance().getMessage(key,
-				userEntry.getLocale());
+		return MessageHelper.getMessage(key, userEntry.getLocale());
+	}
+
+	public enum ErrorType {
+		/**
+		 * Nornal error type. When show the error message, will show the command
+		 * relation information
+		 */
+		normal,
+		/**
+		 * Abnormal error.
+		 */
+		abnormal
 	}
 }

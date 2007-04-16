@@ -8,18 +8,15 @@ import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.BaseCommand;
 import com.gtrobot.command.ProcessableCommand;
-import com.gtrobot.context.GlobalContext;
-import com.gtrobot.context.UserEntry;
+import com.gtrobot.engine.GTRobotContextHelper;
+import com.gtrobot.exception.CommandMatchedException;
+import com.gtrobot.model.common.UserEntry;
 import com.gtrobot.processor.InteractiveProcessor;
 
 public class RoomChatProcessor extends InteractiveProcessor {
 	private static final int STEP_TO_NORMAL_CHAT = 1000;
 
-	private static SortedSet activeUserList = new TreeSet();
-
-	public RoomChatProcessor() {
-		super("-jpWordList");
-	}
+	private static SortedSet<String> activeUserList = new TreeSet<String>();
 
 	// The interactiveProcess_0 are skipped
 	protected int interactiveProcess_0(ProcessableCommand cmd)
@@ -43,7 +40,7 @@ public class RoomChatProcessor extends InteractiveProcessor {
 		return super.interactiveProcess_0(cmd);
 	}
 
-	protected int interactiveProcess_100(ProcessableCommand cmd)
+	protected int interactiveProcess_10(ProcessableCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
 		msgBuf.append(cmd.getI18NMessage("roomchat.menu.welcome"));
@@ -53,7 +50,7 @@ public class RoomChatProcessor extends InteractiveProcessor {
 		return CONTINUE;
 	}
 
-	protected int interactiveProcess_101(ProcessableCommand cmd)
+	protected int interactiveProcess_11(ProcessableCommand cmd)
 			throws XMPPException {
 		return STEP_TO_NORMAL_CHAT;
 	}
@@ -81,8 +78,9 @@ public class RoomChatProcessor extends InteractiveProcessor {
 			if (jid.equals(sender.getJid()) && !sender.isEchoable()) {
 				continue;
 			}
-			UserEntry userEntry = GlobalContext.getInstance().getUser(jid);
-			if (userEntry.isChattableInPublicRoom()) {
+			UserEntry userEntry = GTRobotContextHelper.getUserEntryService()
+					.getUserEntry(jid);
+			if (userEntry.isChattable()) {
 				sendMessage(message, userEntry);
 			}
 		}
@@ -93,7 +91,8 @@ public class RoomChatProcessor extends InteractiveProcessor {
 		return STEP_TO_NORMAL_CHAT;
 	}
 
-	protected int interactiveProcess_9999(BaseCommand cmd) throws XMPPException {
+	protected int interactiveProcess_9999(BaseCommand cmd)
+			throws XMPPException, CommandMatchedException {
 		String jid = cmd.getUserEntry().getJid();
 		activeUserList.remove(jid);
 
