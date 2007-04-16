@@ -48,7 +48,7 @@
         timeToLiveSeconds="1800"
         diskPersistent="false"
         diskExpiryThreadIntervalSeconds="120"/>
-
+<!--
     <cache name="userCache"
         maxElementsInMemory="10"
         eternal="false"
@@ -75,7 +75,7 @@
         timeToLiveSeconds="1800"
         diskPersistent="false"
         diskExpiryThreadIntervalSeconds="1800"/>
-        
+ -->
     <cache name="sessionCache"
         maxElementsInMemory="1000"
         eternal="false"
@@ -84,7 +84,7 @@
         timeToLiveSeconds="1800"
         diskPersistent="false"
         diskExpiryThreadIntervalSeconds="1800"/>
-        
+<!--
     <cache name="objectCache"
         maxElementsInMemory="10"
         eternal="false"
@@ -93,7 +93,6 @@
         timeToLiveSeconds="18000"
         diskPersistent="false"
         diskExpiryThreadIntervalSeconds="18000"/>
-        
-          
+-->
     <!-- See http://ehcache.sourceforge.net/documentation/#mozTocId258426 for how to configure caching for your objects -->
 </ehcache>
