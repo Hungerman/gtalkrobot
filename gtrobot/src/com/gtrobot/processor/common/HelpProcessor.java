@@ -7,7 +7,7 @@ import com.gtrobot.processor.AbstractProcessor;
 
 public class HelpProcessor extends AbstractProcessor {
 
-	protected void internalProcess(BaseCommand cmd) throws XMPPException {
+	public void internalProcess(BaseCommand cmd) throws XMPPException {
 		String prefix = "";
 		StringBuffer msgBuf = new StringBuffer();
 		msgBuf.append(cmd.getI18NMessage("help.welcome"));

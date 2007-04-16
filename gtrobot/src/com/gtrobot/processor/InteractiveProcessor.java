@@ -2,23 +2,32 @@ package com.gtrobot.processor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.BaseCommand;
-import com.gtrobot.commandparser.CommadParser;
-import com.gtrobot.utils.UserSession;
+import com.gtrobot.engine.GTRobotContextHelper;
+import com.gtrobot.engine.GTRobotDispatcher;
+import com.gtrobot.exception.CommandMatchedException;
+import com.gtrobot.utils.UserSessionUtil;
 
 public class InteractiveProcessor extends AbstractProcessor {
+	public static final String INTERACTIVE_PROCESSOR_SESSION_KEY = "_ipSessionKey";
+
 	protected static final int CONTINUE = 0;
 
-	protected static final int END_STEPS = -1;
+	protected static final int REPEAT_THIS_STEP = -1;
 
-	protected static final int STEP_TO_MENU = 100;
+	protected static final int END_STEPS = -9;
 
-	protected static final long EXIT_STEP_NUMBER = 9999;
+	protected static final int STEP_TO_MENU = 10;
+
+	protected static final int EXIT_STEP_NUMBER = 9999;
 
 	protected static final int BAD_ANSWER = -1;
 
@@ -35,43 +44,40 @@ public class InteractiveProcessor extends AbstractProcessor {
 
 	public static final String TEMP_SESSION_KEY = "-temp";
 
-	protected Map methodTable;
+	protected Map<String, Method> methodTable = new Hashtable<String, Method>();
 
-	protected String sessionKey;
+	protected Map<String, Integer> commandToStepMappings = new Hashtable<String, Integer>();
 
-	public InteractiveProcessor(String sessionKey) {
+	public InteractiveProcessor() {
 		super();
-		if (sessionKey == null) {
-			sessionKey = this.getClass().getName();
-		}
-		this.sessionKey = sessionKey;
-		this.methodTable = new Hashtable();
 		initMathodTable(this.getClass());
+		initCommandToStepMappings();
 	}
 
 	protected void internalProcess(BaseCommand abCmd) throws XMPPException {
 		// Check whether the command is exit
 		String commandName = (String) abCmd.getArgv().get(0);
-		if (CommadParser.EXIT_COMMAND.equals(commandName)) {
+		if (GTRobotDispatcher.EXIT_COMMAND.equals(commandName)) {
 			jumpToStep(EXIT_STEP_NUMBER);
 		}
-		if (CommadParser.BACK_MENU_COMMAND.equals(commandName)) {
+		if (GTRobotDispatcher.BACK_MENU_COMMAND.equals(commandName)) {
 			jumpToStep(STEP_TO_MENU);
 		}
 
 		while (true) {
 			int result = executeMethod(INTERACTIVE_PROCESS, getStep(), abCmd);
 			switch (result) {
+			case REPEAT_THIS_STEP:
+				UserSessionUtil.storePreviousCommand(abCmd);
+				return;
 			case CONTINUE: {
 				nextStep();
-				getUserEntryHolder().setCommandType(abCmd.getCommandType());
-				UserSession.storePreviousCommand(abCmd);
+				UserSessionUtil.storePreviousCommand(abCmd);
 				return;
 			}
 			case END_STEPS:
 				clearInteractiveSessionHolder();
-				getUserEntryHolder().setCommandType(null);
-				UserSession.removePreviousCommand(abCmd);
+				UserSessionUtil.removePreviousCommand(abCmd);
 				return;
 			default:
 				if (result > 0) {
@@ -79,22 +85,12 @@ public class InteractiveProcessor extends AbstractProcessor {
 				} else {
 					log.error("Invalid returned step number: " + result);
 				}
-				break;
+				continue;
 			}
 		}
-		// Prompt the next process
-		// if (result != END_STEPS && abCmd.getErrorMessage() == null) {
-		// result = executeMethod(INTERACTIVE_PROCESS_PROMPT, getStep(), abCmd);
-		// if (result != CONTINUE) {
-		// jumpToStep(result);
-		// result = executeMethod(INTERACTIVE_PROCESS_PROMPT, getStep(),
-		// abCmd);
-		// }
-		// }
-		// return;
 	}
 
-	private int executeMethod(String methodPrefix, long step, BaseCommand abCmd)
+	private int executeMethod(String methodPrefix, int step, BaseCommand abCmd)
 			throws XMPPException {
 		Class clazz = this.getClass();
 		String methodName = methodPrefix + "_" + step;
@@ -121,43 +117,76 @@ public class InteractiveProcessor extends AbstractProcessor {
 		return END_STEPS;
 	}
 
-	// protected int interactiveProcessPrompt_9999(BaseCommand cmd)
-	// throws XMPPException {
-	// StringBuffer msgBuf = new StringBuffer();
-	// formartMessageHeader(cmd, msgBuf);
-	//
-	// msgBuf.append("Are you sure to exit current interactive operation?");
-	// sendBackMessage(cmd, msgBuf.toString());
-	// return CONTINUE;
-	// }
-
 	protected int interactiveProcess_0(BaseCommand cmd) throws XMPPException {
 		return STEP_TO_MENU;
 	}
 
-	protected int interactiveProcess_9999(BaseCommand cmd) throws XMPPException {
+	protected int interactiveProcess_9999(BaseCommand cmd)
+			throws XMPPException, CommandMatchedException {
 		StringBuffer msgBuf = new StringBuffer();
-//		formartMessageHeader(cmd, msgBuf);
+		// formartMessageHeader(cmd, msgBuf);
 
-		msgBuf.append(cmd.getI18NMessage("InteractiveProcessor.exit." + cmd.getCommandType()));
+		msgBuf.append(cmd.getI18NMessage("InteractiveProcessor.exit."
+				+ cmd.getCommandType()));
 		sendBackMessage(cmd, msgBuf.toString());
+
+		GTRobotContextHelper.getHelpProcessor().internalProcess(cmd);
 		return END_STEPS;
+	}
+
+	/**
+	 * Menu
+	 */
+	protected int interactiveProcess_10(BaseCommand cmd) throws XMPPException {
+		List<String> menuInfo = null;
+		menuInfo = prepareMenuInfo();
+
+		StringBuffer msgBuf = new StringBuffer();
+		msgBuf.append(seperator);
+		msgBuf.append(endl);
+		for (Iterator<String> it = menuInfo.iterator(); it.hasNext();) {
+			msgBuf.append(cmd.getI18NMessage(it.next()));
+			msgBuf.append(endl);
+		}
+		sendBackMessage(cmd, msgBuf.toString());
+		return CONTINUE;
+	}
+
+	protected List<String> prepareMenuInfo() {
+		List<String> menuInfo = new ArrayList<String>();
+		return menuInfo;
+	}
+
+	protected int interactiveProcess_11(BaseCommand cmd) throws XMPPException {
+		String opt = cmd.getOriginMessage().trim().toLowerCase();
+		Integer step = commandToStepMappings.get(opt);
+		if (step == null) {
+			StringBuffer msgBuf = new StringBuffer();
+			msgBuf.append(endl);
+			msgBuf.append(cmd.getI18NMessage("invalid.command"));
+			msgBuf.append(endl);
+			sendBackMessage(cmd, msgBuf.toString());
+			return STEP_TO_MENU;
+		} else {
+			return step.intValue();
+		}
 	}
 
 	private InteractiveSessionHolder getInteractiveSessionHolder() {
 		String jid = getUserEntryHolder().getJid();
-		InteractiveSessionHolder ish = (InteractiveSessionHolder) UserSession
-				.getSession(jid, sessionKey);
+		InteractiveSessionHolder ish = (InteractiveSessionHolder) UserSessionUtil
+				.getSession(jid, INTERACTIVE_PROCESSOR_SESSION_KEY);
 		if (ish == null) {
 			ish = new InteractiveSessionHolder();
-			UserSession.putSession(jid, sessionKey, ish);
+			UserSessionUtil.putSession(jid, INTERACTIVE_PROCESSOR_SESSION_KEY,
+					ish);
 		}
 		return ish;
 	}
 
 	protected void clearInteractiveSessionHolder() {
 		String jid = getUserEntryHolder().getJid();
-		UserSession.removeSession(jid, sessionKey);
+		UserSessionUtil.removeSession(jid, INTERACTIVE_PROCESSOR_SESSION_KEY);
 	}
 
 	protected Object getSession() {
@@ -176,7 +205,7 @@ public class InteractiveProcessor extends AbstractProcessor {
 		getInteractiveSessionHolder().setTempSession(obj);
 	}
 
-	protected void jumpToStep(long step) {
+	protected void jumpToStep(int step) {
 		getInteractiveSessionHolder().setStep(step);
 	}
 
@@ -184,14 +213,24 @@ public class InteractiveProcessor extends AbstractProcessor {
 		getInteractiveSessionHolder().setStep(getStep() + 1);
 	}
 
-	protected long getStep() {
+	protected int getStep() {
 		return getInteractiveSessionHolder().getStep();
 	}
 
-	protected void formartMessageHeader(BaseCommand cmd, StringBuffer msgBuf) {
-		msgBuf.append("step(");
-		msgBuf.append(getStep());
-		msgBuf.append(")# ");
+	protected void sendBackMessage(BaseCommand abCmd, String message)
+			throws XMPPException {
+		if (log.isDebugEnabled()) {
+			StringBuffer msgBuf = new StringBuffer();
+			msgBuf.append("step(");
+			msgBuf.append(getStep());
+			msgBuf.append(")# ");
+
+			msgBuf.append(message);
+
+			super.sendBackMessage(abCmd, msgBuf.toString());
+		} else {
+			super.sendBackMessage(abCmd, message);
+		}
 	}
 
 	public static int checkAnswer(BaseCommand cmd) {
@@ -225,40 +264,13 @@ public class InteractiveProcessor extends AbstractProcessor {
 			}
 		}
 	}
-}
 
-class InteractiveSessionHolder {
-	private Object session;
-
-	private long step;
-
-	private Object tempSession;
-
-	public InteractiveSessionHolder() {
-		step = 0;
+	protected void initCommandToStepMappings() {
+		addCommandToStepMapping("b", STEP_TO_MENU);
+		addCommandToStepMapping("x", EXIT_STEP_NUMBER);
 	}
 
-	public Object getSession() {
-		return session;
-	}
-
-	public long getStep() {
-		return step;
-	}
-
-	public Object getTempSession() {
-		return tempSession;
-	}
-
-	public void setSession(Object session) {
-		this.session = session;
-	}
-
-	public void setStep(long step) {
-		this.step = step;
-	}
-
-	public void setTempSession(Object tempSession) {
-		this.tempSession = tempSession;
+	protected void addCommandToStepMapping(String cmd, int step) {
+		commandToStepMappings.put(cmd, new Integer(step));
 	}
 }

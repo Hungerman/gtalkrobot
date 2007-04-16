@@ -4,8 +4,8 @@ import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.BaseCommand;
 import com.gtrobot.command.SwitchCommand;
-import com.gtrobot.context.GlobalContext;
-import com.gtrobot.context.UserEntry;
+import com.gtrobot.engine.GTRobotContextHelper;
+import com.gtrobot.model.common.UserEntry;
 import com.gtrobot.processor.AbstractProcessor;
 
 public class EchoProcessor extends AbstractProcessor {
@@ -18,7 +18,7 @@ public class EchoProcessor extends AbstractProcessor {
 
 		if (cmd.isOperationON() != userEntry.isEchoable()) {
 			userEntry.setEchoable(cmd.isOperationON());
-			GlobalContext.getInstance().saveUser(userEntry);
+			GTRobotContextHelper.getUserEntryService().saveUserEntry(userEntry);
 		}
 		if (cmd.isOperationON()) {
 			msgBuf.append(cmd.getI18NMessage("echo.success.on"));

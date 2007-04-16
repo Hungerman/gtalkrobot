@@ -17,7 +17,7 @@ import java.util.Map;
  * 
  */
 public class CommonUtils {
-	private static final Map supportedLocales = new Hashtable();
+	private static final Map<String, Locale> supportedLocales = new Hashtable<String, Locale>();
 	static {
 		Locale[] locales = Locale.getAvailableLocales();
 		for (int i = 0; i < locales.length; i++) {
@@ -38,11 +38,12 @@ public class CommonUtils {
 	 * @param body
 	 * @return
 	 */
-	public static List parseCommand(String body, boolean isCommand) {
-		List results = new ArrayList();
+	public static List<String> parseCommand(String body,
+			boolean isImmediateCommand) {
+		List<String> results = new ArrayList<String>();
 		StringBuffer tempStr = new StringBuffer();
 		int start = 0;
-		if (isCommand) {
+		if (isImmediateCommand) {
 			start = 1;
 		}
 		for (int i = start; i < body.length(); i++) {
