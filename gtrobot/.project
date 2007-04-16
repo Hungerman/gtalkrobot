@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>gtalkbot</name>
+	<name>gtrobot</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>smack source</name>
+			<type>2</type>
+			<location>D:/work/smack_src_3_0_0/source</location>
+		</link>
+	</linkedResources>
 </projectDescription>
