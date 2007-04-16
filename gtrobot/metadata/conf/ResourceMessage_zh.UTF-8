@@ -75,10 +75,21 @@ roomchat.came.in= 刚刚小腰一扭，晃了进来...
 roomchat.menu.welcome=聊吧...灌吧...别犹豫......
 roomchat.left= 发出一声巨响，“嘭”。 消失了......
 
+
+InteractiveProcessor.exit.roomchat=你已经离开了聊天室，再回来哦。
+InteractiveProcessor.exit.studyjpword=您已经离开了单词学习世界，记得要每天都坚持哦。
+
 studyjpword.menu.welcome=欢迎来到单词学习世界，要每天都坚持哦。
-studyjpword.menu.1=1. 单词记忆
-studyjpword.menu.2=2. 小测试
-studyjpword.menu.901=901. 添加系统新增的单词到您的列表。
+studyjpword.menu.conitinue=1. 继续当前的学习
+studyjpword.menu.conntentmanagement=学习内容管理
+studyjpword.menu.conntentmanagement.addunit=21. 添加新的学习单元到我的学习列表
+studyjpword.menu.conntentmanagement.showunit=22. 查看我的学习列表
+studyjpword.menu.conntentmanagement.changeunit=23. 更改当前正在学习的单元
+studyjpword.menu.review=复习
+studyjpword.menu.review.31=31. 此模块尚未开放，请稍等
+studyjpword.menu.review.32=32. 此模块尚未开放，请稍等
+
+studyjpword.menu.1.2=901. 添加系统新增的单词到您的列表。
 studyjpword.menu.back=/b 退回到本项的菜单。.
 studyjpword.menu.exit=/x 退回到主菜单。
 studyjpword.menu.1.finished=恭喜，你已经完成学习了所有的单词。明天请再来一遍。
@@ -86,10 +97,6 @@ studyjpword.menu.1.enterword.prompt=输入单词才能通过。
 studyjpword.menu.901.prompt=正在添加新单词到你的单词列表....
 studyjpword.menu.901.finished=已完成添加 
 studyjpword.menu.901.finished.prompt= 个单词到您的列表。
-
-InteractiveProcessor.exit.roomchat=你已经离开了聊天室，再回来哦。
-InteractiveProcessor.exit.studyjpword=您已经离开了单词学习世界，记得要每天都坚持哦。
-
 
 
 
