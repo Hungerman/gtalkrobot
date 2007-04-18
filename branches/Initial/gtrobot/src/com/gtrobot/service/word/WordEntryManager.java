@@ -9,7 +9,7 @@ public interface WordEntryManager extends Manager {
 	/**
 	 * Retrieves all of the wordEntrys
 	 */
-	public List getWordEntrys(WordEntry wordEntry);
+	public List getWordEntrys();
 
 	/**
 	 * Gets wordEntry's information based on wordEntryId.

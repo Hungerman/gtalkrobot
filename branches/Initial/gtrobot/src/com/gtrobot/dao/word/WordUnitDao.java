@@ -10,7 +10,9 @@ public interface WordUnitDao extends Dao {
 	/**
 	 * Retrieves all of the wordUnits
 	 */
-	public List getWordUnits(WordUnit wordUnit);
+	public List getWordUnits();
+
+	public List getWordUnitsNotInUserList(final Long userEntryId);
 
 	/**
 	 * Gets wordUnit's information based on primary key. An
@@ -41,5 +43,4 @@ public interface WordUnitDao extends Dao {
 	 */
 	public void removeWordUnit(final Long wordUnitId);
 
-	public List getWordUnitsNotInUserList(Long userEntryId);
 }

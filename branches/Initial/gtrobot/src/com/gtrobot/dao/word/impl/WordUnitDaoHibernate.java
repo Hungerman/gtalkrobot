@@ -13,7 +13,7 @@ public class WordUnitDaoHibernate extends BaseDaoHibernate implements
 	 * @see com.gtrobot.dao.word.WordUnitDao#get
 	 *      WordUnits(com.gtrobot.model.word.WordUnit)
 	 */
-	public List getWordUnits(final WordUnit wordUnit) {
+	public List getWordUnits() {
 		return getHibernateTemplate().find("from WordUnit");
 
 		/*
@@ -29,9 +29,10 @@ public class WordUnitDaoHibernate extends BaseDaoHibernate implements
 		 */
 	}
 
-	public List getWordUnitsNotInUserList(Long userEntryId) {
+	public List getWordUnitsNotInUserList(final Long userEntryId) {
 		String hql = " from WordUnit as wordUnit";
-		hql = hql + " where wordUnit.wordUnitId not in( ";
+		hql = hql
+				+ " where wordUnit.owner = null and wordUnit.wordUnitId not in( ";
 		hql = hql
 				+ "  select userUnitInfo.pk.wordUnit.wordUnitId from UserUnitInfo as userUnitInfo where userUnitInfo.pk.userId=? )";
 		return getHibernateTemplate().find(hql, userEntryId);

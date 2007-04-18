@@ -2,8 +2,6 @@ package com.gtrobot.dao.word.impl;
 
 import java.util.List;
 
-import org.springframework.orm.ObjectRetrievalFailureException;
-
 import com.gtrobot.dao.impl.BaseDaoHibernate;
 import com.gtrobot.dao.word.UserUnitInfoDao;
 import com.gtrobot.model.word.UserUnitInfo;
@@ -46,6 +44,12 @@ public class UserUnitInfoDaoHibernate extends BaseDaoHibernate implements
 				"from UserUnitInfo where pk.userId=?", userEntryId);
 	}
 
+	public List getNotFinishedUserUnitInfos(final Long userEntryId) {
+		return getHibernateTemplate().find(
+				"from UserUnitInfo where pk.userId=? and finished = false",
+				userEntryId);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -56,10 +60,22 @@ public class UserUnitInfoDaoHibernate extends BaseDaoHibernate implements
 				UserUnitInfo.class, key);
 		if (userUnitInfo == null) {
 			log.warn("uh oh, UserUnitInfo with id '" + key + "' not found...");
-			throw new ObjectRetrievalFailureException(UserUnitInfo.class, key);
+			return null;
 		}
 
 		return userUnitInfo;
+	}
+
+	public UserUnitInfo getUserUnitInfo(final Long userId, Long wordUnitId) {
+		List ls = getHibernateTemplate()
+				.find(
+						"from UserUnitInfo where pk.userId=? and pk.wordUnit.wordUnitId=?",
+						new Object[] { userId, wordUnitId });
+		if (ls.size() == 0) {
+			return null;
+		} else {
+			return (UserUnitInfo) ls.get(0);
+		}
 	}
 
 	/**

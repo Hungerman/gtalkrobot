@@ -16,15 +16,21 @@ import com.gtrobot.model.BaseObject;
 public class UserWordStudyingInfo extends BaseObject {
 	private static final long serialVersionUID = 6954430467776366044L;
 
+	public static final int ALL_WORDS_BY_UNIT = 1;
+
+	public static final int FAILED_WORDS_BY_UNIT = 2;
+
+	public static final int ALL_FAILED_WORDS = 3;
+
 	private Long userId;
 
-	private WordUnit studyingWordUnit = new WordUnit();
+	private int studyingType = ALL_WORDS_BY_UNIT;
+
+	private Long studyingWordUnitId;
+
+	private Long privateWordUnitId;
 
 	private long finishedUnits;
-
-	private long studiedWordCounts;
-
-	private long failedWordCounts;
 
 	private Date lastStudied;
 
@@ -40,6 +46,17 @@ public class UserWordStudyingInfo extends BaseObject {
 	}
 
 	/**
+	 * @hibernate.property column="STUDYING_TYPE" not-null="true"
+	 */
+	public int getStudyingType() {
+		return studyingType;
+	}
+
+	public void setStudyingType(int studyingType) {
+		this.studyingType = studyingType;
+	}
+
+	/**
 	 * @hibernate.property column="FINISHED_UNITS" not-null="true"
 	 */
 	public long getFinishedUnits() {
@@ -48,28 +65,6 @@ public class UserWordStudyingInfo extends BaseObject {
 
 	public void setFinishedUnits(long finishedUnits) {
 		this.finishedUnits = finishedUnits;
-	}
-
-	/**
-	 * @hibernate.property column="STUDIED_WORDS" not-null="true"
-	 */
-	public long getStudiedWordCounts() {
-		return studiedWordCounts;
-	}
-
-	public void setStudiedWordCounts(long studiedWordCounts) {
-		this.studiedWordCounts = studiedWordCounts;
-	}
-
-	/**
-	 * @hibernate.property column="FAILED_WORD_COUNTS" not-null="true"
-	 */
-	public long getFailedWordCounts() {
-		return failedWordCounts;
-	}
-
-	public void setFailedWordCounts(long failedWordCounts) {
-		this.failedWordCounts = failedWordCounts;
 	}
 
 	/**
@@ -83,16 +78,30 @@ public class UserWordStudyingInfo extends BaseObject {
 		this.lastStudied = lastStudied;
 	}
 
+	// /**
+	// * @hibernate.many-to-one class="com.gtrobot.model.word.WordUnit"
+	// * column="STUDYING_WORD_UNIT_ID" not-null="true"
+	// */
 	/**
-	 * @hibernate.many-to-one class="com.gtrobot.model.word.WordUnit"
-	 *                        column="STUDYING_WORD_UNIT_ID" not-null="true"
+	 * @hibernate.property column="STUDYING_WORD_UNIT_ID"
 	 */
-	public WordUnit getStudyingWordUnit() {
-		return studyingWordUnit;
+	public Long getStudyingWordUnitId() {
+		return studyingWordUnitId;
 	}
 
-	public void setStudyingWordUnit(WordUnit studyingWordUnit) {
-		this.studyingWordUnit = studyingWordUnit;
+	public void setStudyingWordUnitId(Long studyingWordUnit) {
+		this.studyingWordUnitId = studyingWordUnit;
+	}
+
+	/**
+	 * @hibernate.property column="PRIVATE_WORD_UNIT_ID"
+	 */
+	public Long getPrivateWordUnitId() {
+		return privateWordUnitId;
+	}
+
+	public void setPrivateWordUnitId(Long privateWordUnitId) {
+		this.privateWordUnitId = privateWordUnitId;
 	}
 
 	/*

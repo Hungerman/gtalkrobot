@@ -229,6 +229,6 @@ public class AddWordEntryProcessor extends InteractiveProcessor {
 		}
 		msgBuf.append("This word entry has been saved!");
 		sendBackMessage(cmd, msgBuf.toString());
-		return END_STEPS;
+		return STEP_TO_EXIT_MAIN_MENU;
 	}
 }

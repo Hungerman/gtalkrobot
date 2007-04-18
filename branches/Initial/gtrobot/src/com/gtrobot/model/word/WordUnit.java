@@ -25,6 +25,8 @@ public class WordUnit extends BaseObject {
 
 	private long wordCount = 0;
 
+	private Long owner;
+
 	private List wordEntries = new ArrayList();;
 
 	/**
@@ -50,6 +52,17 @@ public class WordUnit extends BaseObject {
 
 	public void setWordUnitId(Long id) {
 		this.wordUnitId = id;
+	}
+
+	/**
+	 * @hibernate.property column="OWNER"
+	 */
+	public Long getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Long owner) {
+		this.owner = owner;
 	}
 
 	/**

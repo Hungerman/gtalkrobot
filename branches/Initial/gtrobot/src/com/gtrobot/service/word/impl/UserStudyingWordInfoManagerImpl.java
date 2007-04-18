@@ -21,33 +21,34 @@ public class UserStudyingWordInfoManagerImpl extends BaseManager implements
 	}
 
 	/**
-	 * @see com.gtrobot.model.service.UserStudyingWordInfoManager#getUserWordInfos(com.gtrobot.model.word.UserWordStudyingInfo)
+	 * @see com.gtrobot.model.service.UserStudyingWordInfoManager#getUserWordStudyingInfos(com.gtrobot.model.word.UserWordStudyingInfo)
 	 */
-	public List getUserWordInfos(final UserWordStudyingInfo userWordStudyingInfo) {
-		return dao.getUserWordInfos(userWordStudyingInfo);
+	public List getUserWordStudyingInfos() {
+		return dao.getUserWordStudyingInfos();
 	}
 
 	/**
-	 * @see com.gtrobot.model.service.UserStudyingWordInfoManager#getUserWordInfo(String
+	 * @see com.gtrobot.model.service.UserStudyingWordInfoManager#getUserWordStudyingInfo(String
 	 *      userId)
 	 */
-	public UserWordStudyingInfo getUserWordInfo(final Long userId) {
-		return dao.getUserWordInfo(userId);
+	public UserWordStudyingInfo getUserWordStudyingInfo(final Long userId) {
+		return dao.getUserWordStudyingInfo(userId);
 	}
 
 	/**
-	 * @see com.gtrobot.model.service.UserStudyingWordInfoManager#saveUserWordInfo(UserWordStudyingInfo
+	 * @see com.gtrobot.model.service.UserStudyingWordInfoManager#saveUserWordStudyingInfo(UserWordStudyingInfo
 	 *      UserWordStudyingInfo)
 	 */
-	public void saveUserWordInfo(UserWordStudyingInfo userWordStudyingInfo) {
-		dao.saveUserWordInfo(userWordStudyingInfo);
+	public void saveUserWordStudyingInfo(
+			UserWordStudyingInfo userWordStudyingInfo) {
+		dao.saveUserWordStudyingInfo(userWordStudyingInfo);
 	}
 
 	/**
-	 * @see com.gtrobot.model.service.UserStudyingWordInfoManager#removeUserWordInfo(String
+	 * @see com.gtrobot.model.service.UserStudyingWordInfoManager#removeUserWordStudyingInfo(String
 	 *      userId)
 	 */
-	public void removeUserWordInfo(final Long userId) {
-		dao.removeUserWordInfo(userId);
+	public void removeUserWordStudyingInfo(final Long userId) {
+		dao.removeUserWordStudyingInfo(userId);
 	}
 }

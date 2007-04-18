@@ -11,7 +11,7 @@ public interface WordUnitEntryDao extends Dao {
 	/**
 	 * Retrieves all of the wordUnitEntrys
 	 */
-	public List getWordUnitEntrys(WordUnitEntry wordUnitEntry);
+	public List getWordUnitEntrys();
 
 	/**
 	 * Gets wordUnitEntry's information based on primary key. An
@@ -23,6 +23,9 @@ public interface WordUnitEntryDao extends Dao {
 	 * @return wordUnitEntry populated wordUnitEntry object
 	 */
 	public WordUnitEntry getWordUnitEntry(final WordUnitEntryKey key);
+
+	public WordUnitEntry getWordUnitEntry(final Long wordEntryId,
+			final Long wordUnitId);
 
 	/**
 	 * Saves a wordUnitEntry's information

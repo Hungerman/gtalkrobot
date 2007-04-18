@@ -66,4 +66,35 @@ public class CommonUtils {
 		}
 		return results;
 	}
+
+	public static List<String> parseSimpleCommand(String body) {
+		List<String> results = new ArrayList<String>();
+		StringBuffer tempStr = new StringBuffer();
+		int i = 0;
+		if (body == null) {
+			results.add("");
+			return results;
+		}
+		// parse the first command
+		for (; i < body.length(); i++) {
+			char cc = body.charAt(i);
+
+			if (cc == ' ' || cc == '\t' || cc == '\n' || cc == '\r'
+					|| cc == '　') {
+				if (tempStr.length() == 0) {
+					continue;
+				} else {
+					break;
+				}
+			} else {
+				tempStr.append(cc);
+			}
+		}
+		results.add(tempStr.toString().toLowerCase());
+
+		if (i <= body.length()) {
+			results.add(body.substring(i).trim());
+		}
+		return results;
+	}
 }

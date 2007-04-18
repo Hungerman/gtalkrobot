@@ -23,11 +23,11 @@ public class WordUnitManagerImpl extends BaseManager implements WordUnitManager 
 	 * @see com.gtrobot.model.service.WordUnitManager#get
 	 *      WordUnits(com.gtrobot.model.word.WordUnit)
 	 */
-	public List getWordUnits(final WordUnit wordUnit) {
-		return dao.getWordUnits(wordUnit);
+	public List getWordUnits() {
+		return dao.getWordUnits();
 	}
 
-	public List getWordUnitsNotInUserList(Long userEntryId) {
+	public List getWordUnitsNotInUserList(final Long userEntryId) {
 		return dao.getWordUnitsNotInUserList(userEntryId);
 	}
 

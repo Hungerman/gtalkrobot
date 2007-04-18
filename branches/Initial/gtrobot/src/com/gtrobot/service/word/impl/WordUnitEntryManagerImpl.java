@@ -25,8 +25,8 @@ public class WordUnitEntryManagerImpl extends BaseManager implements
 	 * @see com.gtrobot.model.service.WordUnitEntryManager#get
 	 *      WordUnitEntrys(com.gtrobot.model.word.WordUnitEntry)
 	 */
-	public List getWordUnitEntrys(final WordUnitEntry wordUnitEntry) {
-		return dao.getWordUnitEntrys(wordUnitEntry);
+	public List getWordUnitEntrys() {
+		return dao.getWordUnitEntrys();
 	}
 
 	/**
@@ -35,6 +35,11 @@ public class WordUnitEntryManagerImpl extends BaseManager implements
 	 */
 	public WordUnitEntry getWordUnitEntry(final WordUnitEntryKey key) {
 		return dao.getWordUnitEntry(key);
+	}
+
+	public WordUnitEntry getWordUnitEntry(final Long wordEntryId,
+			final Long wordUnitId) {
+		return dao.getWordUnitEntry(wordEntryId, wordUnitId);
 	}
 
 	/**

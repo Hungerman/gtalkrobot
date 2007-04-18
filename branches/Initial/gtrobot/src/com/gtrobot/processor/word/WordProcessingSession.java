@@ -35,7 +35,7 @@ public class WordProcessingSession {
 
 	public boolean next() {
 		curCount++;
-		if (curCount == wordEntries.size())
+		if (curCount >= wordEntries.size())
 			return false;
 		return true;
 	}

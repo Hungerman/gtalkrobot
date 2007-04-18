@@ -1,7 +1,6 @@
 package com.gtrobot.engine;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -60,24 +59,24 @@ public class GTRobotDispatcher {
 	 * @return
 	 */
 	private BaseCommand parse(Message message) {
-		if (log.isDebugEnabled()) {
-			log.debug("Message       from: " + message.getFrom());
-			log.debug("                to: " + message.getTo());
-			log.debug("          threadId: " + message.getThread());
-			log.debug("          packetId: " + message.getPacketID());
-			log.debug("              type: " + message.getType().toString());
-			Iterator<String> propertyNames = message.getPropertyNames()
-					.iterator();
-			while (propertyNames.hasNext()) {
-				String name = propertyNames.next();
-				log.debug("          property: " + name + " : "
-						+ message.getProperty(name));
-			}
-			log.debug("             class: " + message.getClass().getName());
-			log.debug("             error: " + message.getError());
-			log.debug("           subject: " + message.getSubject());
-			log.debug("              body: " + message.getBody());
-		}
+		// if (log.isDebugEnabled()) {
+		// log.debug("Message from: " + message.getFrom());
+		// log.debug(" to: " + message.getTo());
+		// log.debug(" threadId: " + message.getThread());
+		// log.debug(" packetId: " + message.getPacketID());
+		// log.debug(" type: " + message.getType().toString());
+		// Iterator<String> propertyNames = message.getPropertyNames()
+		// .iterator();
+		// while (propertyNames.hasNext()) {
+		// String name = propertyNames.next();
+		// log.debug(" property: " + name + " : "
+		// + message.getProperty(name));
+		// }
+		// log.debug(" class: " + message.getClass().getName());
+		// log.debug(" error: " + message.getError());
+		// log.debug(" subject: " + message.getSubject());
+		// log.debug(" body: " + message.getBody());
+		// }
 
 		String from = message.getFrom();
 		String body = message.getBody();

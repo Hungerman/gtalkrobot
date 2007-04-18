@@ -9,9 +9,9 @@ public interface WordUnitManager extends Manager {
 	/**
 	 * Retrieves all of the wordUnits
 	 */
-	public List getWordUnits(WordUnit wordUnit);
+	public List getWordUnits();
 
-	public List getWordUnitsNotInUserList(Long userEntryId);
+	public List getWordUnitsNotInUserList(final Long userEntryId);
 
 	/**
 	 * Gets wordUnit's information based on wordUnitId.

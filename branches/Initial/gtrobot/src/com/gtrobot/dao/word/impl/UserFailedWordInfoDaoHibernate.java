@@ -17,6 +17,36 @@ public class UserFailedWordInfoDaoHibernate extends BaseDaoHibernate implements
 		return getHibernateTemplate().find("from UserFailedWordInfo");
 	}
 
+	public List getUserFailedWordInfos(Long userId) {
+		return getHibernateTemplate().find(
+				"from UserFailedWordInfo where pk.userId=?", userId);
+	}
+
+	public List getUserFailedWordInfos(Long userId, Long wordUnitId) {
+		return getHibernateTemplate()
+				.find(
+						"from UserFailedWordInfo where pk.userId=? and pk.wordUnit.wordUnitId=?",
+						new Object[] { userId, wordUnitId });
+	}
+
+	public List getUserFailedWordInfosByWord(final Long userId,
+			final Long wordEntryId) {
+		return getHibernateTemplate()
+				.find(
+						"from UserFailedWordInfo where pk.userId=? and pk.wordEntry.wordEntryId=?",
+						new Object[] { userId, wordEntryId });
+	}
+
+	public long getFailedWordCount(final Long userId, final Long wordUnitId) {
+		String strHQL = "Select count(*) From UserFailedWordInfo where pk.userId="
+				+ userId + " and pk.wordUnit.wordUnitId=" + wordUnitId;
+		Long count = (Long) getSession().createQuery(strHQL).uniqueResult();
+		if (count == null) {
+			return 0;
+		}
+		return count.longValue();
+	}
+
 	/**
 	 * @see com.gtrobot.dao.word.UserFailedWordInfoDao#getUserFailedWordInfo(Long
 	 *      id)
@@ -32,6 +62,19 @@ public class UserFailedWordInfoDaoHibernate extends BaseDaoHibernate implements
 		}
 
 		return userFailedWordInfo;
+	}
+
+	public UserFailedWordInfo getUserFailedWordInfos(Long userId,
+			Long wordUnitId, Long wordEntryId) {
+		List ls = getHibernateTemplate()
+				.find(
+						"from UserFailedWordInfo where pk.userId=? and pk.wordUnit.wordUnitId=? and pk.wordEntry.wordEntryId=?",
+						new Object[] { userId, wordUnitId, wordEntryId });
+		if (ls.size() == 0) {
+			return null;
+		} else {
+			return (UserFailedWordInfo) ls.get(0);
+		}
 	}
 
 	/**

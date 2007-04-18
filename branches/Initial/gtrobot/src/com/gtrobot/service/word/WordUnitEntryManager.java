@@ -10,7 +10,7 @@ public interface WordUnitEntryManager extends Manager {
 	/**
 	 * Retrieves all of the wordUnitEntrys
 	 */
-	public List getWordUnitEntrys(WordUnitEntry wordUnitEntry);
+	public List getWordUnitEntrys();
 
 	/**
 	 * Gets wordUnitEntry's information based on key.
@@ -20,6 +20,9 @@ public interface WordUnitEntryManager extends Manager {
 	 * @return wordUnitEntry populated wordUnitEntry object
 	 */
 	public WordUnitEntry getWordUnitEntry(final WordUnitEntryKey key);
+
+	public WordUnitEntry getWordUnitEntry(final Long wordEntryId,
+			final Long wordUnitId);
 
 	/**
 	 * Saves a wordUnitEntry's information
