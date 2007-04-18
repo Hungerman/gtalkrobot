@@ -17,6 +17,7 @@ import com.gtrobot.service.word.UserStudyingWordInfoManager;
 import com.gtrobot.service.word.UserUnitInfoManager;
 import com.gtrobot.service.word.WordEntryManager;
 import com.gtrobot.service.word.WordUnitManager;
+import com.gtrobot.utils.CommonUtils;
 
 public class WordManagementProcessor extends InteractiveProcessor {
 	private static final int STEP_TO_WORD_MANAGEMENT = 1000;
@@ -76,9 +77,11 @@ public class WordManagementProcessor extends InteractiveProcessor {
 		StringBuffer msgBuf = new StringBuffer();
 		Long wordUnitId = null;
 
-		String cmdMsg = cmd.getOriginMessage().trim();
+		List<String> cmds = CommonUtils.parseSimpleCommand(cmd
+				.getOriginMessage());
+		String cmdMsg = cmds.get(0);
 		if ("?".equals(cmdMsg)) {// List all wordUnits
-			List results = wordUnitManager.getWordUnits(null);
+			List results = wordUnitManager.getWordUnits();
 
 			msgBuf.append("Totaly, there are : " + results.size() + " units.");
 			msgBuf.append(endl);
@@ -180,7 +183,9 @@ public class WordManagementProcessor extends InteractiveProcessor {
 		StringBuffer msgBuf = new StringBuffer();
 		// formartMessageHeader(cmd, msgBuf);
 
-		String cmdMsg = cmd.getOriginMessage().trim();
+		List<String> cmds = CommonUtils.parseSimpleCommand(cmd
+				.getOriginMessage());
+		String cmdMsg = cmds.get(0);
 		if ("s".equalsIgnoreCase(cmdMsg)) {
 			return STEP_TO_SUB_LOOP_WORDS;
 		}

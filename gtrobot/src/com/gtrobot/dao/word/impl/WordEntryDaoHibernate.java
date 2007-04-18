@@ -2,8 +2,6 @@ package com.gtrobot.dao.word.impl;
 
 import java.util.List;
 
-import org.springframework.orm.ObjectRetrievalFailureException;
-
 import com.gtrobot.dao.impl.BaseDaoHibernate;
 import com.gtrobot.dao.word.WordEntryDao;
 import com.gtrobot.model.word.WordEntry;
@@ -15,7 +13,7 @@ public class WordEntryDaoHibernate extends BaseDaoHibernate implements
 	 * @see com.gtrobot.dao.word.WordEntryDao#get
 	 *      WordEntrys(com.gtrobot.model.word.WordEntry)
 	 */
-	public List getWordEntrys(final WordEntry wordEntry) {
+	public List getWordEntrys() {
 		return getHibernateTemplate().find("from WordEntry");
 
 		/*
@@ -40,8 +38,7 @@ public class WordEntryDaoHibernate extends BaseDaoHibernate implements
 		if (wordEntry == null) {
 			log.warn("uh oh, wordEntry with wordEntryId '" + wordEntryId
 					+ "' not found...");
-			throw new ObjectRetrievalFailureException(WordEntry.class,
-					wordEntryId);
+			return null;
 		}
 
 		return wordEntry;

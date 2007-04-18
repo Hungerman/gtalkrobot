@@ -18,11 +18,9 @@ public class UserUnitInfo extends BaseObject {
 
 	private UserUnitInfoKey pk = new UserUnitInfoKey();
 
-	private long studiedWordCounts = 0;
+	private long studiedTimes = 0;
 
-	private long failedWordCounts = 0;
-
-	private long reviewTimes = 0;
+	private boolean finished = false;
 
 	private Date lastStudied = new Date();
 
@@ -38,36 +36,25 @@ public class UserUnitInfo extends BaseObject {
 	}
 
 	/**
-	 * @hibernate.property column="STUDIED_WORDS"
+	 * @hibernate.property column="STUDIED_TIMES"
 	 */
-	public long getStudiedWordCounts() {
-		return studiedWordCounts;
+	public long getStudiedTimes() {
+		return studiedTimes;
 	}
 
-	public void setStudiedWordCounts(long studiedWordCounts) {
-		this.studiedWordCounts = studiedWordCounts;
+	public void setStudiedTimes(long finishedUnits) {
+		this.studiedTimes = finishedUnits;
 	}
 
 	/**
-	 * @hibernate.property column="FAILED_WORD_COUNTS"
+	 * @hibernate.property column="FINISHED"
 	 */
-	public long getFailedWordCounts() {
-		return failedWordCounts;
+	public boolean isFinished() {
+		return finished;
 	}
 
-	public void setFailedWordCounts(long failedWordCounts) {
-		this.failedWordCounts = failedWordCounts;
-	}
-
-	/**
-	 * @hibernate.property column="REVIEW_TIMES"
-	 */
-	public long getReviewTimes() {
-		return reviewTimes;
-	}
-
-	public void setReviewTimes(long finishedUnits) {
-		this.reviewTimes = finishedUnits;
+	public void setFinished(boolean finished) {
+		this.finished = finished;
 	}
 
 	/**

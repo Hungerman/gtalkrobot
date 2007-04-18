@@ -104,6 +104,7 @@
 			<property name="userStudyingWordInfoManager" ref="userStudyingWordInfoManager"/>
 			<property name="wordEntryManager" ref="wordEntryManager"/>
 			<property name="userFailedWordInfoManager" ref="userFailedWordInfoManager"/>
+			<property name="wordUnitEntryManager" ref="wordUnitEntryManager"/>
 			
 	</bean>
 	

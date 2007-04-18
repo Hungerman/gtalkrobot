@@ -25,6 +25,10 @@ public class UserUnitInfoManagerImpl extends BaseManager implements
 		return dao.getUserUnitInfos(userEntryId);
 	}
 
+	public List getNotFinishedUserUnitInfos(final Long userEntryId) {
+		return dao.getNotFinishedUserUnitInfos(userEntryId);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -32,6 +36,10 @@ public class UserUnitInfoManagerImpl extends BaseManager implements
 	 */
 	public UserUnitInfo getUserUnitInfo(final UserUnitInfoKey key) {
 		return dao.getUserUnitInfo(key);
+	}
+
+	public UserUnitInfo getUserUnitInfo(final Long userId, final Long wordUnitId) {
+		return dao.getUserUnitInfo(userId, wordUnitId);
 	}
 
 	/**

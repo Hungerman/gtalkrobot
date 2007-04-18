@@ -12,6 +12,8 @@ public interface UserUnitInfoManager extends Manager {
 	 */
 	public List getUserUnitInfos(final Long userEntryId);
 
+	public List getNotFinishedUserUnitInfos(final Long userEntryId);
+
 	/**
 	 * Gets UserUnitInfo's information based on id.
 	 * 
@@ -20,6 +22,8 @@ public interface UserUnitInfoManager extends Manager {
 	 * @return UserUnitInfo populated UserUnitInfo object
 	 */
 	public UserUnitInfo getUserUnitInfo(final UserUnitInfoKey key);
+
+	public UserUnitInfo getUserUnitInfo(final Long userId, final Long wordUnitId);
 
 	/**
 	 * Saves a UserUnitInfo's information

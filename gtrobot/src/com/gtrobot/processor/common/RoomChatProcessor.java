@@ -37,7 +37,7 @@ public class RoomChatProcessor extends InteractiveProcessor {
 		msgBuf.append(cmd.getUserEntry().getNickName());
 		msgBuf.append(cmd.getI18NMessage("roomchat.came.in"));
 		broadcastMessage(cmd.getUserEntry(), msgBuf.toString());
-		return super.interactiveProcess_0(cmd);
+		return super.interactiveProcess(cmd);
 	}
 
 	protected int interactiveProcess_10(ProcessableCommand cmd)

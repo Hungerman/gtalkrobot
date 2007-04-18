@@ -85,9 +85,7 @@ studyjpword.menu.conntentmanagement=学习内容管理
 studyjpword.menu.conntentmanagement.addunit=21. 添加新的学习单元到我的学习列表
 studyjpword.menu.conntentmanagement.showunit=22. 查看我的学习列表
 studyjpword.menu.conntentmanagement.changeunit=23. 更改当前正在学习的单元
-studyjpword.menu.review=复习
-studyjpword.menu.review.31=31. 此模块尚未开放，请稍等
-studyjpword.menu.review.32=32. 此模块尚未开放，请稍等
+studyjpword.menu.conntentmanagement.changestudytype=24. 更改当前的学习模式
 
 studyjpword.menu.1.2=901. 添加系统新增的单词到您的列表。
 studyjpword.menu.back=/b 退回到本项的菜单。.

@@ -12,6 +12,15 @@ public interface UserFailedWordInfoManager extends Manager {
 	 */
 	public List getUserFailedWordInfos();
 
+	public List getUserFailedWordInfos(final Long userId);
+
+	public List getUserFailedWordInfos(final Long userId, final Long wordUnitId);
+
+	public List getUserFailedWordInfosByWord(final Long userId,
+			final Long wordEntryId);
+
+	public long getFailedWordCount(final Long userId, final Long wordUnitId);
+
 	/**
 	 * Gets UserFailedWordInfos's information based on primary key. An
 	 * ObjectRetrievalFailureException Runtime Exception is thrown if nothing is
@@ -23,6 +32,9 @@ public interface UserFailedWordInfoManager extends Manager {
 	 */
 	public UserFailedWordInfo getUserFailedWordInfo(
 			final UserFailedWordInfoKey userFailedWordInfoKey);
+
+	public UserFailedWordInfo getUserFailedWordInfos(final Long userId,
+			final Long wordUnitId, final Long wordEntryId);
 
 	/**
 	 * Saves a UserFailedWordInfos's information

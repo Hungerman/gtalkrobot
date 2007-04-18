@@ -10,9 +10,9 @@ public class UserStudyingWordInfoDaoHibernate extends BaseDaoHibernate
 		implements UserStudyingWordInfoDao {
 
 	/**
-	 * @see com.gtrobot.dao.word.UserStudyingWordInfoDao#getUserWordInfos(com.gtrobot.model.word.UserWordStudyingInfo)
+	 * @see com.gtrobot.dao.word.UserStudyingWordInfoDao#getUserWordStudyingInfos(com.gtrobot.model.word.UserWordStudyingInfo)
 	 */
-	public List getUserWordInfos(final UserWordStudyingInfo userWordStudyingInfo) {
+	public List getUserWordStudyingInfos() {
 		return getHibernateTemplate().find("from UserWordStudyingInfo");
 
 		/*
@@ -31,10 +31,10 @@ public class UserStudyingWordInfoDaoHibernate extends BaseDaoHibernate
 	}
 
 	/**
-	 * @see com.gtrobot.dao.word.UserStudyingWordInfoDao#getUserWordInfo(Long
+	 * @see com.gtrobot.dao.word.UserStudyingWordInfoDao#getUserWordStudyingInfo(Long
 	 *      userId)
 	 */
-	public UserWordStudyingInfo getUserWordInfo(final Long userId) {
+	public UserWordStudyingInfo getUserWordStudyingInfo(final Long userId) {
 		UserWordStudyingInfo userWordStudyingInfo = (UserWordStudyingInfo) getHibernateTemplate()
 				.get(UserWordStudyingInfo.class, userId);
 		if (userWordStudyingInfo == null) {
@@ -50,18 +50,19 @@ public class UserStudyingWordInfoDaoHibernate extends BaseDaoHibernate
 	}
 
 	/**
-	 * @see com.gtrobot.dao.word.UserStudyingWordInfoDao#saveUserWordInfo(UserWordStudyingInfo
+	 * @see com.gtrobot.dao.word.UserStudyingWordInfoDao#saveUserWordStudyingInfo(UserWordStudyingInfo
 	 *      UserWordStudyingInfo)
 	 */
-	public void saveUserWordInfo(final UserWordStudyingInfo userWordStudyingInfo) {
+	public void saveUserWordStudyingInfo(
+			final UserWordStudyingInfo userWordStudyingInfo) {
 		getHibernateTemplate().saveOrUpdate(userWordStudyingInfo);
 	}
 
 	/**
-	 * @see com.gtrobot.dao.word.UserStudyingWordInfoDao#removeUserWordInfo(Long
+	 * @see com.gtrobot.dao.word.UserStudyingWordInfoDao#removeUserWordStudyingInfo(Long
 	 *      userId)
 	 */
-	public void removeUserWordInfo(final Long userId) {
-		getHibernateTemplate().delete(getUserWordInfo(userId));
+	public void removeUserWordStudyingInfo(final Long userId) {
+		getHibernateTemplate().delete(getUserWordStudyingInfo(userId));
 	}
 }

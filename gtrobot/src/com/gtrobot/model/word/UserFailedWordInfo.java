@@ -20,7 +20,7 @@ public class UserFailedWordInfo extends BaseObject {
 
 	private long failedCounts = 0;
 
-	private long reviewTimes = 0;
+	private long studiedTimes = 0;
 
 	private Date lastStudied = new Date();
 
@@ -47,14 +47,14 @@ public class UserFailedWordInfo extends BaseObject {
 	}
 
 	/**
-	 * @hibernate.property column="REVIEW_TIMES" not-null="true"
+	 * @hibernate.property column="STUDIED_TIMES" not-null="true"
 	 */
-	public long getReviewTimes() {
-		return reviewTimes;
+	public long getStudiedTimes() {
+		return studiedTimes;
 	}
 
-	public void setReviewTimes(long finishedUnits) {
-		this.reviewTimes = finishedUnits;
+	public void setStudiedTimes(long finishedUnits) {
+		this.studiedTimes = finishedUnits;
 	}
 
 	/**

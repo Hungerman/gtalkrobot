@@ -12,8 +12,8 @@ import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.BaseCommand;
 import com.gtrobot.engine.GTRobotContextHelper;
-import com.gtrobot.engine.GTRobotDispatcher;
 import com.gtrobot.exception.CommandMatchedException;
+import com.gtrobot.utils.CommonUtils;
 import com.gtrobot.utils.UserSessionUtil;
 
 public class InteractiveProcessor extends AbstractProcessor {
@@ -23,11 +23,11 @@ public class InteractiveProcessor extends AbstractProcessor {
 
 	protected static final int REPEAT_THIS_STEP = -1;
 
-	protected static final int END_STEPS = -9;
+	protected static final int END_BY_INTERNAL_EXCEPTION = -9999;
 
 	protected static final int STEP_TO_MENU = 10;
 
-	protected static final int EXIT_STEP_NUMBER = 9999;
+	protected static final int STEP_TO_EXIT_MAIN_MENU = 9999;
 
 	protected static final int BAD_ANSWER = -1;
 
@@ -38,7 +38,13 @@ public class InteractiveProcessor extends AbstractProcessor {
 	// private static final String INTERACTIVE_PROCESS_PROMPT =
 	// "interactiveProcessPrompt";
 
+	private static final String INTERACTIVE_SURFIX = "interactive";
+
 	private static final String INTERACTIVE_PROCESS = "interactiveProcess";
+
+	private static final String INTERACTIVE_ONLINE_PROCESS = "interactiveOnlineProcess";
+
+	private static final String INTERACTIVE_ONLINE_HELPER = "interactiveOnlineHelper";
 
 	public static final String STEP_SESSION_KEY = "-step";
 
@@ -56,16 +62,24 @@ public class InteractiveProcessor extends AbstractProcessor {
 
 	protected void internalProcess(BaseCommand abCmd) throws XMPPException {
 		// Check whether the command is exit
-		String commandName = (String) abCmd.getArgv().get(0);
-		if (GTRobotDispatcher.EXIT_COMMAND.equals(commandName)) {
-			jumpToStep(EXIT_STEP_NUMBER);
-		}
-		if (GTRobotDispatcher.BACK_MENU_COMMAND.equals(commandName)) {
-			jumpToStep(STEP_TO_MENU);
-		}
+		// String commandName = (String) abCmd.getArgv().get(0);
+		// if (GTRobotDispatcher.EXIT_COMMAND.equals(commandName)) {
+		// jumpToStep(STEP_TO_EXIT_MAIN_MENU);
+		// }
+		// if (GTRobotDispatcher.BACK_MENU_COMMAND.equals(commandName)) {
+		// jumpToStep(STEP_TO_MENU);
+		// }
 
 		while (true) {
-			int result = executeMethod(INTERACTIVE_PROCESS, getStep(), abCmd);
+			int result = executeOnlineProcess(abCmd);
+			if (result >= CONTINUE) {
+				if (result > CONTINUE) {
+					jumpToStep(result);
+				}
+				result = executeProcess(abCmd);
+			} else {
+				abCmd.setOriginMessage(null);
+			}
 			switch (result) {
 			case REPEAT_THIS_STEP:
 				UserSessionUtil.storePreviousCommand(abCmd);
@@ -75,12 +89,12 @@ public class InteractiveProcessor extends AbstractProcessor {
 				UserSessionUtil.storePreviousCommand(abCmd);
 				return;
 			}
-			case END_STEPS:
+			case STEP_TO_EXIT_MAIN_MENU:
 				clearInteractiveSessionHolder();
 				UserSessionUtil.removePreviousCommand(abCmd);
 				return;
 			default:
-				if (result > 0) {
+				if (result > CONTINUE) {
 					jumpToStep(result);
 				} else {
 					log.error("Invalid returned step number: " + result);
@@ -90,34 +104,42 @@ public class InteractiveProcessor extends AbstractProcessor {
 		}
 	}
 
-	private int executeMethod(String methodPrefix, int step, BaseCommand abCmd)
+	protected int interactiveOnlineProcess(BaseCommand cmd)
 			throws XMPPException {
-		Class clazz = this.getClass();
-		String methodName = methodPrefix + "_" + step;
-		try {
-			Method method = (Method) methodTable.get(methodName);
-			if (method == null) {
-				log.warn("Skipped! Not found: " + clazz.getName() + "."
-						+ methodName);
-				return CONTINUE;
-			} else {
-				Integer result = (Integer) method.invoke(this,
-						new Object[] { abCmd });
-				return result.intValue();
-			}
-		} catch (InvocationTargetException e) {
-			Throwable targetException = e.getTargetException();
-			if (targetException instanceof XMPPException)
-				throw (XMPPException) targetException;
-			else
-				log.error("Exception in executeMethod: " + methodName, e);
-		} catch (Exception e) {
-			log.error("Exception in executeMethod: " + methodName, e);
+		StringBuffer msgBuf = new StringBuffer();
+		List<String> cmds = CommonUtils.parseSimpleCommand(cmd
+				.getOriginMessage());
+		String cmdMsg = cmds.get(0);
+
+		if (".".equalsIgnoreCase(cmdMsg)) {
+			msgBuf = executeStepOnlineHelp(cmd);
+
+			sendBackMessage(cmd, msgBuf.toString());
+			return REPEAT_THIS_STEP;
 		}
-		return END_STEPS;
+		if (".b".equalsIgnoreCase(cmdMsg)) {
+			return STEP_TO_MENU;
+		}
+		if (".x".equalsIgnoreCase(cmdMsg)) {
+			return STEP_TO_EXIT_MAIN_MENU;
+		}
+		return CONTINUE;
 	}
 
-	protected int interactiveProcess_0(BaseCommand cmd) throws XMPPException {
+	protected StringBuffer interactiveOnlineHelper(BaseCommand cmd) {
+		StringBuffer msgBuf = new StringBuffer();
+		msgBuf.append("Online command help:").append(endl);
+		msgBuf.append("> .  Show this online help.").append(endl);
+		msgBuf.append("> .b Back to menu.").append(endl);
+		msgBuf.append("> .x Back to main menu.").append(endl);
+
+		return msgBuf;
+	}
+
+	protected void initCommandToStepMappings() {
+	}
+
+	protected int interactiveProcess(BaseCommand cmd) throws XMPPException {
 		return STEP_TO_MENU;
 	}
 
@@ -131,15 +153,15 @@ public class InteractiveProcessor extends AbstractProcessor {
 		sendBackMessage(cmd, msgBuf.toString());
 
 		GTRobotContextHelper.getHelpProcessor().internalProcess(cmd);
-		return END_STEPS;
+		return STEP_TO_EXIT_MAIN_MENU;
 	}
 
 	/**
 	 * Menu
 	 */
 	protected int interactiveProcess_10(BaseCommand cmd) throws XMPPException {
-		List<String> menuInfo = null;
-		menuInfo = prepareMenuInfo();
+		List<String> menuInfo = new ArrayList<String>();
+		prepareMenuInfo(menuInfo);
 
 		StringBuffer msgBuf = new StringBuffer();
 		msgBuf.append(seperator);
@@ -152,14 +174,15 @@ public class InteractiveProcessor extends AbstractProcessor {
 		return CONTINUE;
 	}
 
-	protected List<String> prepareMenuInfo() {
-		List<String> menuInfo = new ArrayList<String>();
-		return menuInfo;
+	protected void prepareMenuInfo(List<String> menuInfo) {
 	}
 
 	protected int interactiveProcess_11(BaseCommand cmd) throws XMPPException {
-		String opt = cmd.getOriginMessage().trim().toLowerCase();
-		Integer step = commandToStepMappings.get(opt);
+		List<String> cmds = CommonUtils.parseSimpleCommand(cmd
+				.getOriginMessage());
+		String cmdMsg = cmds.get(0);
+
+		Integer step = commandToStepMappings.get(cmdMsg);
 		if (step == null) {
 			StringBuffer msgBuf = new StringBuffer();
 			msgBuf.append(endl);
@@ -258,19 +281,91 @@ public class InteractiveProcessor extends AbstractProcessor {
 		Method[] methods = clazz.getDeclaredMethods();
 		for (int i = 0; i < methods.length; i++) {
 			Method method = methods[i];
-			if (method.getName().startsWith(INTERACTIVE_PROCESS)) {
+			if (method.getName().startsWith(INTERACTIVE_SURFIX)) {
 				method.setAccessible(true);
 				methodTable.put(method.getName(), method);
 			}
 		}
 	}
 
-	protected void initCommandToStepMappings() {
-		addCommandToStepMapping("b", STEP_TO_MENU);
-		addCommandToStepMapping("x", EXIT_STEP_NUMBER);
-	}
-
 	protected void addCommandToStepMapping(String cmd, int step) {
 		commandToStepMappings.put(cmd, new Integer(step));
+	}
+
+	private StringBuffer executeStepOnlineHelp(BaseCommand cmd)
+			throws XMPPException {
+		// Excute to get the default online helper
+		Object result = executeMethod(cmd, INTERACTIVE_ONLINE_HELPER, -1, false);
+		StringBuffer buf = (StringBuffer) result;
+
+		result = executeMethod(cmd, INTERACTIVE_ONLINE_HELPER, getStep(), false);
+
+		if (result != null && result instanceof StringBuffer) {
+			buf.append(result);
+			return buf;
+		}
+		return buf;
+	}
+
+	private int executeOnlineProcess(BaseCommand cmd) throws XMPPException {
+		// Excute the default online process
+		Object result = executeMethod(cmd, INTERACTIVE_ONLINE_PROCESS, -1,
+				false);
+		int intResult = ((Integer) result).intValue();
+		if (intResult != CONTINUE) {
+			return intResult;
+		}
+
+		result = executeMethod(cmd, INTERACTIVE_ONLINE_PROCESS, getStep(),
+				false);
+		if (result == null) {
+			return STEP_TO_EXIT_MAIN_MENU;
+		} else {
+			intResult = ((Integer) result).intValue();
+			if (intResult == END_BY_INTERNAL_EXCEPTION)
+				return CONTINUE;
+			return intResult;
+		}
+	}
+
+	private int executeProcess(BaseCommand cmd) throws XMPPException {
+		Object result = executeMethod(cmd, INTERACTIVE_PROCESS, getStep(), true);
+		if (result == null) {
+			return STEP_TO_EXIT_MAIN_MENU;
+		} else {
+			return ((Integer) result).intValue();
+		}
+	}
+
+	private Object executeMethod(BaseCommand cmd, String methodPrefix,
+			int step, boolean defaultProcessEnable) throws XMPPException {
+		Object result = null;
+		String methodName = methodPrefix;
+		if (step != -1) {
+			methodName = methodName + "_" + step;
+		}
+		try {
+			Method method = (Method) methodTable.get(methodName);
+			if (method == null) {
+				if (defaultProcessEnable) {
+					log.warn("Invoking the default method! Not found: "
+							+ this.getClass().getName() + "." + methodName);
+					method = (Method) methodTable.get(methodPrefix);
+				} else {
+					return END_BY_INTERNAL_EXCEPTION;
+				}
+			}
+			log.debug("Invoking: " + method.getName());
+			result = method.invoke(this, new Object[] { cmd });
+		} catch (InvocationTargetException e) {
+			Throwable targetException = e.getTargetException();
+			if (targetException instanceof XMPPException)
+				throw (XMPPException) targetException;
+			else
+				log.error("Exception in executeMethod: " + methodName, e);
+		} catch (Exception e) {
+			log.error("Exception in executeMethod: " + methodName, e);
+		}
+		return result;
 	}
 }

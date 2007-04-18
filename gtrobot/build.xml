@@ -191,7 +191,7 @@
 
    <target name="run" depends="compile, native2ascii"
         description="Start GTRobot">
-        <java classname="com.gtrobot.GTRobot" fork="yes">
+        <java classname="com.gtrobot.GTRobotStarter" fork="yes">
             <classpath>
                 <path refid="lib.classpath"/>
             </classpath>

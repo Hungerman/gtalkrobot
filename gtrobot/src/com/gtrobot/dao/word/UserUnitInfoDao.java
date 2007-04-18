@@ -13,6 +13,8 @@ public interface UserUnitInfoDao extends Dao {
 	 */
 	public List getUserUnitInfos(final Long userEntryId);
 
+	public List getNotFinishedUserUnitInfos(final Long userEntryId);
+
 	/**
 	 * Gets user UnitInfo's information based on primary key. An
 	 * ObjectRetrievalFailureException Runtime Exception is thrown if nothing is
@@ -23,6 +25,8 @@ public interface UserUnitInfoDao extends Dao {
 	 * @return user UnitInfo populated user UnitInfo object
 	 */
 	public UserUnitInfo getUserUnitInfo(final UserUnitInfoKey key);
+
+	public UserUnitInfo getUserUnitInfo(final Long userId, final Long wordUnitId);
 
 	/**
 	 * Saves a user UnitInfo's information

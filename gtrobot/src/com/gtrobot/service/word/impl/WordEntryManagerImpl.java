@@ -24,8 +24,8 @@ public class WordEntryManagerImpl extends BaseManager implements
 	 * @see com.gtrobot.model.service.WordEntryManager#get
 	 *      WordEntrys(com.gtrobot.model.word.WordEntry)
 	 */
-	public List getWordEntrys(final WordEntry wordEntry) {
-		return dao.getWordEntrys(wordEntry);
+	public List getWordEntrys() {
+		return dao.getWordEntrys();
 	}
 
 	/**

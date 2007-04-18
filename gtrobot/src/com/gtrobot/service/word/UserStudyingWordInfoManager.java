@@ -9,7 +9,7 @@ public interface UserStudyingWordInfoManager extends Manager {
 	/**
 	 * Retrieves all of the UserWordInfos
 	 */
-	public List getUserWordInfos(UserWordStudyingInfo userWordStudyingInfo);
+	public List getUserWordStudyingInfos();
 
 	/**
 	 * Gets UserWordStudyingInfo's information based on userId.
@@ -18,7 +18,7 @@ public interface UserStudyingWordInfoManager extends Manager {
 	 *            the UserWordStudyingInfo's userId
 	 * @return UserWordStudyingInfo populated UserWordStudyingInfo object
 	 */
-	public UserWordStudyingInfo getUserWordInfo(final Long userId);
+	public UserWordStudyingInfo getUserWordStudyingInfo(final Long userId);
 
 	/**
 	 * Saves a UserWordStudyingInfo's information
@@ -26,7 +26,8 @@ public interface UserStudyingWordInfoManager extends Manager {
 	 * @param userWordStudyingInfo
 	 *            the object to be saved
 	 */
-	public void saveUserWordInfo(UserWordStudyingInfo userWordStudyingInfo);
+	public void saveUserWordStudyingInfo(
+			UserWordStudyingInfo userWordStudyingInfo);
 
 	/**
 	 * Removes a UserWordStudyingInfo from the database by userId
@@ -34,5 +35,5 @@ public interface UserStudyingWordInfoManager extends Manager {
 	 * @param userId
 	 *            the UserWordStudyingInfo's userId
 	 */
-	public void removeUserWordInfo(final Long userId);
+	public void removeUserWordStudyingInfo(final Long userId);
 }

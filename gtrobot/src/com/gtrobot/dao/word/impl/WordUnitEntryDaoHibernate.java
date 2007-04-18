@@ -2,8 +2,6 @@ package com.gtrobot.dao.word.impl;
 
 import java.util.List;
 
-import org.springframework.orm.ObjectRetrievalFailureException;
-
 import com.gtrobot.dao.impl.BaseDaoHibernate;
 import com.gtrobot.dao.word.WordUnitEntryDao;
 import com.gtrobot.model.word.WordUnitEntry;
@@ -15,7 +13,7 @@ public class WordUnitEntryDaoHibernate extends BaseDaoHibernate implements
 	/**
 	 * @see com.gtrobot.model.dao.WordUnitEntryDao#getWordUnitEntrys(com.gtrobot.model.word.WordUnitEntry)
 	 */
-	public List getWordUnitEntrys(final WordUnitEntry wordUnitEntry) {
+	public List getWordUnitEntrys() {
 		return getHibernateTemplate().find("from WordUnitEntry");
 
 		/*
@@ -42,10 +40,22 @@ public class WordUnitEntryDaoHibernate extends BaseDaoHibernate implements
 			log
 					.warn("uh oh, wordUnitEntry with key '" + key
 							+ "' not found...");
-			throw new ObjectRetrievalFailureException(WordUnitEntry.class, key);
+			return null;
 		}
 
 		return wordUnitEntry;
+	}
+
+	public WordUnitEntry getWordUnitEntry(final Long wordEntryId,
+			final Long wordUnitId) {
+		List ls = getHibernateTemplate().find(
+				"from WordUnitEntry where pk.wordEntryId=? and pk.wordUnitId",
+				new Object[] { wordEntryId, wordUnitId });
+		if (ls.size() == 0) {
+			return null;
+		} else {
+			return (WordUnitEntry) ls.get(0);
+		}
 	}
 
 	/**
