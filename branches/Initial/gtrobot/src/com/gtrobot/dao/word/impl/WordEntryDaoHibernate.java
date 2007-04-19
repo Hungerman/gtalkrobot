@@ -2,6 +2,8 @@ package com.gtrobot.dao.word.impl;
 
 import java.util.List;
 
+import org.hibernate.Query;
+
 import com.gtrobot.dao.impl.BaseDaoHibernate;
 import com.gtrobot.dao.word.WordEntryDao;
 import com.gtrobot.model.word.WordEntry;
@@ -13,7 +15,7 @@ public class WordEntryDaoHibernate extends BaseDaoHibernate implements
 	 * @see com.gtrobot.dao.word.WordEntryDao#get
 	 *      WordEntrys(com.gtrobot.model.word.WordEntry)
 	 */
-	public List getWordEntrys() {
+	public List getWordEntries() {
 		return getHibernateTemplate().find("from WordEntry");
 
 		/*
@@ -29,6 +31,15 @@ public class WordEntryDaoHibernate extends BaseDaoHibernate implements
 		 */
 	}
 
+	public List searchWordEntries(final String keyword, final int maxResults) {
+		String hql = "from WordEntry where word like '" + keyword
+				+ "' or pronounce like '" + keyword + "'";
+		Query q = getSession().createQuery(hql);
+		q.setFirstResult(0);
+		q.setMaxResults(maxResults);
+		return q.list();
+	}
+
 	/**
 	 * @see com.gtrobot.dao.word.WordEntryDao#get WordEntry(Long wordEntryId)
 	 */
@@ -36,7 +47,7 @@ public class WordEntryDaoHibernate extends BaseDaoHibernate implements
 		WordEntry wordEntry = (WordEntry) getHibernateTemplate().get(
 				WordEntry.class, wordEntryId);
 		if (wordEntry == null) {
-			log.warn("uh oh, wordEntry with wordEntryId '" + wordEntryId
+			log.debug("uh oh, wordEntry with wordEntryId '" + wordEntryId
 					+ "' not found...");
 			return null;
 		}

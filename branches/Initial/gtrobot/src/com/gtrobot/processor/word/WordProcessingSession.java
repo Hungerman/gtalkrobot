@@ -50,4 +50,8 @@ public class WordProcessingSession {
 			curCount = START;
 		}
 	}
+
+	public void remove(Long wordEntryId) {
+		wordEntries.remove(wordEntryId);
+	}
 }

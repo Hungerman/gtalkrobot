@@ -59,7 +59,7 @@ public class UserUnitInfoDaoHibernate extends BaseDaoHibernate implements
 		UserUnitInfo userUnitInfo = (UserUnitInfo) getHibernateTemplate().get(
 				UserUnitInfo.class, key);
 		if (userUnitInfo == null) {
-			log.warn("uh oh, UserUnitInfo with id '" + key + "' not found...");
+			log.debug("uh oh, UserUnitInfo with id '" + key + "' not found...");
 			return null;
 		}
 

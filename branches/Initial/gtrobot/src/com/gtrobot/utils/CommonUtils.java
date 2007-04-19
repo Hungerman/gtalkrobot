@@ -67,13 +67,11 @@ public class CommonUtils {
 		return results;
 	}
 
-	public static List<String> parseSimpleCommand(String body) {
-		List<String> results = new ArrayList<String>();
+	public static List<String> parseInteractiveCommand(String body) {
 		StringBuffer tempStr = new StringBuffer();
 		int i = 0;
 		if (body == null) {
-			results.add("");
-			return results;
+			return null;
 		}
 		// parse the first command
 		for (; i < body.length(); i++) {
@@ -90,10 +88,31 @@ public class CommonUtils {
 				tempStr.append(cc);
 			}
 		}
+		// Check whether the input is an interactive command
+		if (tempStr.charAt(0) != '.') {
+			return null;
+		}
+		List<String> results = new ArrayList<String>();
 		results.add(tempStr.toString().toLowerCase());
 
-		if (i <= body.length()) {
-			results.add(body.substring(i).trim());
+		tempStr = new StringBuffer();
+		// parse the first command
+		for (; i < body.length(); i++) {
+			char cc = body.charAt(i);
+
+			if (cc == ' ' || cc == '\t' || cc == '\n' || cc == '\r'
+					|| cc == '　') {
+				if (tempStr.length() == 0) {
+					continue;
+				} else {
+					break;
+				}
+			} else {
+				tempStr.append(cc);
+			}
+		}
+		if (tempStr.length() > 0) {
+			results.add(tempStr.toString());
 		}
 		return results;
 	}

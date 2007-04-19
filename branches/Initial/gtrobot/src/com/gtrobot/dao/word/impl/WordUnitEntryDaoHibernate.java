@@ -37,9 +37,8 @@ public class WordUnitEntryDaoHibernate extends BaseDaoHibernate implements
 		WordUnitEntry wordUnitEntry = (WordUnitEntry) getHibernateTemplate()
 				.get(WordUnitEntry.class, key);
 		if (wordUnitEntry == null) {
-			log
-					.warn("uh oh, wordUnitEntry with key '" + key
-							+ "' not found...");
+			log.debug("uh oh, wordUnitEntry with key '" + key
+					+ "' not found...");
 			return null;
 		}
 

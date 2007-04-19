@@ -45,7 +45,7 @@ public class WordUnitDaoHibernate extends BaseDaoHibernate implements
 		WordUnit wordUnit = (WordUnit) getHibernateTemplate().get(
 				WordUnit.class, wordUnitId);
 		if (wordUnit == null) {
-			log.warn("uh oh, wordUnit with wordUnitId '" + wordUnitId
+			log.debug("uh oh, wordUnit with wordUnitId '" + wordUnitId
 					+ "' not found...");
 			// throw new ObjectRetrievalFailureException(WordUnit.class,
 			// wordUnitId);
