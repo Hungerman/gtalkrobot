@@ -10,7 +10,9 @@ public interface WordEntryDao extends Dao {
 	/**
 	 * Retrieves all of the wordEntrys
 	 */
-	public List getWordEntrys();
+	public List getWordEntries();
+
+	public List searchWordEntries(final String keyword, final int maxResults);
 
 	/**
 	 * Gets wordEntry's information based on primary key. An

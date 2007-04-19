@@ -38,7 +38,7 @@ public class UserStudyingWordInfoDaoHibernate extends BaseDaoHibernate
 		UserWordStudyingInfo userWordStudyingInfo = (UserWordStudyingInfo) getHibernateTemplate()
 				.get(UserWordStudyingInfo.class, userId);
 		if (userWordStudyingInfo == null) {
-			log.warn("uh oh, UserWordStudyingInfo with userId '" + userId
+			log.debug("uh oh, UserWordStudyingInfo with userId '" + userId
 					+ "' not found...");
 			// throw new
 			// ObjectRetrievalFailureException(UserWordStudyingInfo.class,

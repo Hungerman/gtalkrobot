@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.XMPPException;
 
+import com.gtrobot.command.BaseCommand;
 import com.gtrobot.command.ProcessableCommand;
 import com.gtrobot.model.word.UserFailedWordInfo;
 import com.gtrobot.model.word.UserFailedWordInfoKey;
@@ -104,14 +105,56 @@ public class StudyWordProcessor extends InteractiveProcessor {
 		menuInfo.add("studyjpword.menu.conntentmanagement.changestudytype");
 	}
 
+	protected int interactiveOnlineProcess(BaseCommand cmd)
+			throws XMPPException {
+		int result = super.interactiveOnlineProcess(cmd);
+		if (result != CONTINUE) {
+			return result;
+		}
+
+		StringBuffer msgBuf = new StringBuffer();
+		List<String> cmds = cmd.getInteractiveCommands();
+		if (cmds == null) {
+			return CONTINUE;
+		}
+		String cmdMsg = cmds.get(0);
+		if (cmds.size() == 2) {
+			String content = cmds.get(1);
+			if (".g".equalsIgnoreCase(cmdMsg)
+					|| ".google".equalsIgnoreCase(cmdMsg)) {
+				int maxResults = 20;
+				if (".google".equalsIgnoreCase(cmdMsg)) {
+					maxResults = 1000;
+				}
+				List ls = wordEntryManager.searchWordEntries(content,
+						maxResults);
+				Iterator it = ls.iterator();
+				msgBuf.append("Search result: ").append(ls.size());
+				msgBuf.append(endl);
+				while (it.hasNext()) {
+					showWord(msgBuf, (WordEntry) it.next());
+				}
+				sendBackMessage(cmd, msgBuf.toString());
+				return REPEAT_THIS_STEP;
+			}
+		}
+		return CONTINUE;
+	}
+
+	protected StringBuffer interactiveOnlineHelper(BaseCommand cmd) {
+		StringBuffer msgBuf = super.interactiveOnlineHelper(cmd);
+		msgBuf.append("> .g <keyword> Google word.").append(endl);
+		return msgBuf;
+	}
+
 	/**
 	 * STEP_TO_CONTINUE_STUDY = 1000
 	 */
 	protected int interactiveProcess_1000(ProcessableCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		// formartMessageHeader(cmd, msgBuf);
 		WordProcessingSession studyingSession = null;
+
 		try {
 			studyingSession = getWordProcessingSession(cmd);
 		} catch (Exception e) {
@@ -135,6 +178,16 @@ public class StudyWordProcessor extends InteractiveProcessor {
 			msgBuf.append(studyingSession.getCurCount() + 1);
 			msgBuf.append("/");
 			msgBuf.append(total);
+
+			Long userId = cmd.getUserEntry().getUserId();
+			UserWordStudyingInfo userWordStudyingInfo = userStudyingWordInfoManager
+					.getUserWordStudyingInfo(userId);
+			if (userWordStudyingInfo.getStudyingType() == UserWordStudyingInfo.ALL_FAILED_WORDS) {
+				msgBuf.append("@Failed");
+			} else {
+				msgBuf.append("@Unit.").append(
+						userWordStudyingInfo.getStudyingWordUnitId());
+			}
 			msgBuf.append("):  ");
 			msgBuf.append(wordEntry.getWord());
 			sendBackMessage(cmd, msgBuf.toString());
@@ -148,10 +201,23 @@ public class StudyWordProcessor extends InteractiveProcessor {
 	protected StringBuffer interactiveOnlineHelper_1001(ProcessableCommand cmd) {
 		StringBuffer msgBuf = new StringBuffer();
 		msgBuf.append("> .p Back to previous word.").append(endl);
+		msgBuf.append("> .s Skip this word.").append(endl);
+
+		Long userId = cmd.getUserEntry().getUserId();
+		UserWordStudyingInfo userWordStudyingInfo = userStudyingWordInfoManager
+				.getUserWordStudyingInfo(userId);
+		if (userWordStudyingInfo.getStudyingType() != UserWordStudyingInfo.ALL_FAILED_WORDS
+				&& userWordStudyingInfo.getStudyingWordUnitId().equals(
+						userWordStudyingInfo.getPrivateWordUnitId())) {
+			msgBuf.append("> .d Delete this word from my private list.")
+					.append(endl);
+		}
+
 		msgBuf.append("> .f Mark this word as finished.").append(endl);
 		msgBuf.append("> .m Add this word into my private unit.").append(endl);
-		msgBuf.append("> .as content Append sentence as sample.").append(endl);
-		msgBuf.append("> .an notes Append note as conments.").append(endl);
+		msgBuf.append("> .as <content> Append sentence as sample.")
+				.append(endl);
+		msgBuf.append("> .an <comments> Append note as conments.").append(endl);
 
 		return msgBuf;
 	}
@@ -159,102 +225,106 @@ public class StudyWordProcessor extends InteractiveProcessor {
 	protected int interactiveOnlineProcess_1001(ProcessableCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		List<String> cmds = CommonUtils.parseSimpleCommand(cmd
-				.getOriginMessage());
+		List<String> cmds = cmd.getInteractiveCommands();
+		if (cmds == null) {
+			return CONTINUE;
+		}
 		String cmdMsg = cmds.get(0);
 
 		WordProcessingSession studyingSession = getWordProcessingSession(cmd);
 		Long wordEntryId = studyingSession.getCurrentWord();
+		WordEntry wordEntry = wordEntryManager.getWordEntry(wordEntryId);
 
-		if (".p".equalsIgnoreCase(cmdMsg)) {
-			studyingSession.backOne();
-			studyingSession.backOne();
-			return STEP_TO_CONTINUE_STUDY;
-		}
-		if (".m".equalsIgnoreCase(cmdMsg)) {
-			Long userId = cmd.getUserEntry().getUserId();
-			addWordToUserPrivateUnit(userId, wordEntryId);
-			return REPEAT_THIS_STEP;
-		}
-		if (".f".equalsIgnoreCase(cmdMsg)) {
-			Long userId = cmd.getUserEntry().getUserId();
-			addWordToUserPrivateUnit(userId, wordEntryId);
-			removeUserFailedWord(wordEntryId, userId);
-
-			return REPEAT_THIS_STEP;
-		}
-		// Process the command with parameter
-		if (cmds.size() < 2) {
-			cmd.setOriginMessage(".");
-			return this.getStep();
-		}
-		String content = cmds.get(1);
-		if (".as".equalsIgnoreCase(cmdMsg)) {
-			WordEntry wordEntry = wordEntryManager.getWordEntry(wordEntryId);
-			if (wordEntry.getSentence() != null) {
-				msgBuf.append(wordEntry.getSentence());
-				msgBuf.append(endl);
+		if (cmds.size() == 1) {
+			if (".p".equalsIgnoreCase(cmdMsg)) {
+				studyingSession.backOne();
+				studyingSession.backOne();
+				return STEP_TO_CONTINUE_STUDY;
 			}
-
-			msgBuf.append(content.trim());
-			wordEntry.setSentence(msgBuf.toString());
-			wordEntryManager.saveWordEntry(wordEntry);
-			return REPEAT_THIS_STEP;
-		}
-		if (".an".equalsIgnoreCase(cmdMsg)) {
-			WordEntry wordEntry = wordEntryManager.getWordEntry(wordEntryId);
-			if (wordEntry.getComments() != null) {
-				msgBuf.append(wordEntry.getComments());
-				msgBuf.append(endl);
+			if (".s".equalsIgnoreCase(cmdMsg)) {
+				showWord(msgBuf, wordEntry);
+				sendBackMessage(cmd, msgBuf.toString());
+				return STEP_TO_CONTINUE_STUDY;
 			}
-			msgBuf.append(content.trim());
-			wordEntry.setComments(msgBuf.toString());
-			wordEntryManager.saveWordEntry(wordEntry);
-			return REPEAT_THIS_STEP;
-		}
-		return CONTINUE;
-	}
+			if (".d".equalsIgnoreCase(cmdMsg)) {
+				Long userId = cmd.getUserEntry().getUserId();
+				UserWordStudyingInfo userWordStudyingInfo = userStudyingWordInfoManager
+						.getUserWordStudyingInfo(userId);
+				if (userWordStudyingInfo.getStudyingType() != UserWordStudyingInfo.ALL_FAILED_WORDS
+						&& userWordStudyingInfo.getStudyingWordUnitId().equals(
+								userWordStudyingInfo.getPrivateWordUnitId())) {
+					deleteWordFromPrivateUnit(studyingSession,
+							userWordStudyingInfo, wordEntry);
+				}
+				showWord(msgBuf, wordEntry);
+				msgBuf.append(
+						"This word has been deleted from your private list.")
+						.append(endl);
+				sendBackMessage(cmd, msgBuf.toString());
+				return STEP_TO_CONTINUE_STUDY;
+			}
+			if (".m".equalsIgnoreCase(cmdMsg)) {
+				Long userId = cmd.getUserEntry().getUserId();
+				addWordToUserPrivateUnit(userId, wordEntryId);
 
-	private void removeUserFailedWord(Long wordEntryId, Long userId) {
-		List ls = userFailedWordInfoManager.getUserFailedWordInfosByWord(
-				userId, wordEntryId);
-		for (Iterator it = ls.iterator(); it.hasNext();) {
-			userFailedWordInfoManager
-					.removeUserFailedWordInfo((UserFailedWordInfo) it.next());
-		}
-	}
+				showWord(msgBuf, wordEntry);
+				msgBuf.append("This word has been added to your private list.")
+						.append(endl);
+				sendBackMessage(cmd, msgBuf.toString());
+				return STEP_TO_CONTINUE_STUDY;
+			}
+			if (".f".equalsIgnoreCase(cmdMsg)) {
+				Long userId = cmd.getUserEntry().getUserId();
+				addWordToUserPrivateUnit(userId, wordEntryId);
+				removeUserFailedWord(wordEntryId, userId);
 
-	private void addWordToUserPrivateUnit(Long userId, Long wordEntryId) {
-		UserWordStudyingInfo userWordStudyingInfo = userStudyingWordInfoManager
-				.getUserWordStudyingInfo(userId);
-		Long wordUnitId = userWordStudyingInfo.getPrivateWordUnitId();
-		if (userWordStudyingInfo.getPrivateWordUnitId() == null) {
-			WordUnit wordUnit = new WordUnit();
-			wordUnit.setLevel(99);
-			wordUnit.setName(userId + " user's word unit");
-			wordUnit.setOwner(userId);
-			wordUnitManager.saveWordUnit(wordUnit);
-			wordUnitId = wordUnit.getWordUnitId();
-
-			UserUnitInfo userUnitInfo = new UserUnitInfo();
-			userUnitInfo.getPk().setUserId(userId);
-			userUnitInfo.getPk().setWordUnit(wordUnit);
-			userUnitInfoManager.saveUserUnitInfo(userUnitInfo);
-
-			userWordStudyingInfo.setPrivateWordUnitId(wordUnitId);
-			userStudyingWordInfoManager
-					.saveUserWordStudyingInfo(userWordStudyingInfo);
+				showWord(msgBuf, wordEntry);
+				msgBuf
+						.append(
+								"This word has been moved from failed list to your private list.")
+						.append(endl);
+				sendBackMessage(cmd, msgBuf.toString());
+				return STEP_TO_CONTINUE_STUDY;
+			}
 		}
-		WordUnitEntryKey key = new WordUnitEntryKey();
-		key.setWordEntryId(wordEntryId);
-		key.setWordUnitId(wordUnitId);
-		WordUnitEntry wordUnitEntry = wordUnitEntryManager
-				.getWordUnitEntry(key);
-		if (wordUnitEntry == null) {
-			wordUnitEntry = new WordUnitEntry();
-			wordUnitEntry.setPk(key);
-			wordUnitEntryManager.saveWordUnitEntry(wordUnitEntry);
+		if (cmds.size() == 2) {
+			// Process the command with parameter
+			String content = cmds.get(1);
+			if (".as".equalsIgnoreCase(cmdMsg)) {
+				if (wordEntry.getSentence() != null) {
+					msgBuf.append(wordEntry.getSentence());
+					msgBuf.append(endl);
+				}
+				msgBuf.append(content.trim());
+				wordEntry.setSentence(msgBuf.toString());
+				wordEntryManager.saveWordEntry(wordEntry);
+
+				msgBuf = new StringBuffer();
+				showWord(msgBuf, wordEntry);
+				msgBuf.append("Your entered sentence has been added.").append(
+						endl);
+				sendBackMessage(cmd, msgBuf.toString());
+				return STEP_TO_CONTINUE_STUDY;
+			}
+			if (".an".equalsIgnoreCase(cmdMsg)) {
+				if (wordEntry.getComments() != null) {
+					msgBuf.append(wordEntry.getComments());
+					msgBuf.append(endl);
+				}
+				msgBuf.append(content.trim());
+				wordEntry.setComments(msgBuf.toString());
+				wordEntryManager.saveWordEntry(wordEntry);
+
+				msgBuf = new StringBuffer();
+				showWord(msgBuf, wordEntry);
+				msgBuf.append("Your entered comments has been added.").append(
+						endl);
+				sendBackMessage(cmd, msgBuf.toString());
+				return STEP_TO_CONTINUE_STUDY;
+			}
 		}
+		cmd.setOriginMessage(".");
+		return this.getStep();
 	}
 
 	protected int interactiveProcess_1001(ProcessableCommand cmd)
@@ -265,9 +335,7 @@ public class StudyWordProcessor extends InteractiveProcessor {
 		Long wordEntryId = studyingSession.getCurrentWord();
 		WordEntry wordEntry = wordEntryManager.getWordEntry(wordEntryId);
 
-		List<String> cmds = CommonUtils.parseSimpleCommand(cmd
-				.getOriginMessage());
-		String cmdMsg = cmds.get(0);
+		String cmdMsg = cmd.getOriginMessage();
 		if (wordEntry.getWord().equals(cmdMsg)) {
 			showWord(msgBuf, wordEntry);
 			sendBackMessage(cmd, msgBuf.toString());
@@ -361,6 +429,60 @@ public class StudyWordProcessor extends InteractiveProcessor {
 		return STEP_TO_CONTINUE_STUDY_EXIT;
 	}
 
+	private void deleteWordFromPrivateUnit(
+			WordProcessingSession studyingSession,
+			UserWordStudyingInfo userWordStudyingInfo, WordEntry wordEntry) {
+		WordUnitEntry wordUnitEntry = wordUnitEntryManager.getWordUnitEntry(
+				wordEntry.getWordEntryId(), userWordStudyingInfo
+						.getPrivateWordUnitId());
+		wordUnitEntryManager.removeWordUnitEntry(wordUnitEntry.getPk());
+
+		studyingSession.remove(wordEntry.getWordEntryId());
+	}
+
+	private void removeUserFailedWord(Long wordEntryId, Long userId) {
+		List ls = userFailedWordInfoManager.getUserFailedWordInfosByWord(
+				userId, wordEntryId);
+		for (Iterator it = ls.iterator(); it.hasNext();) {
+			userFailedWordInfoManager
+					.removeUserFailedWordInfo((UserFailedWordInfo) it.next());
+		}
+	}
+
+	private void addWordToUserPrivateUnit(Long userId, Long wordEntryId)
+			throws XMPPException {
+		UserWordStudyingInfo userWordStudyingInfo = userStudyingWordInfoManager
+				.getUserWordStudyingInfo(userId);
+		Long wordUnitId = userWordStudyingInfo.getPrivateWordUnitId();
+		if (userWordStudyingInfo.getPrivateWordUnitId() == null) {
+			WordUnit wordUnit = new WordUnit();
+			wordUnit.setLevel(99);
+			wordUnit.setName(userId + " user's word unit");
+			wordUnit.setOwner(userId);
+			wordUnitManager.saveWordUnit(wordUnit);
+			wordUnitId = wordUnit.getWordUnitId();
+
+			UserUnitInfo userUnitInfo = new UserUnitInfo();
+			userUnitInfo.getPk().setUserId(userId);
+			userUnitInfo.getPk().setWordUnit(wordUnit);
+			userUnitInfoManager.saveUserUnitInfo(userUnitInfo);
+
+			userWordStudyingInfo.setPrivateWordUnitId(wordUnitId);
+			userStudyingWordInfoManager
+					.saveUserWordStudyingInfo(userWordStudyingInfo);
+		}
+		WordUnitEntryKey key = new WordUnitEntryKey();
+		key.setWordEntryId(wordEntryId);
+		key.setWordUnitId(wordUnitId);
+		WordUnitEntry wordUnitEntry = wordUnitEntryManager
+				.getWordUnitEntry(key);
+		if (wordUnitEntry == null) {
+			wordUnitEntry = new WordUnitEntry();
+			wordUnitEntry.setPk(key);
+			wordUnitEntryManager.saveWordUnitEntry(wordUnitEntry);
+		}
+	}
+
 	@SuppressWarnings("unused")
 	private void updateUserUnitInfo(ProcessableCommand cmd,
 			WordProcessingSession studyingSession) {
@@ -406,30 +528,32 @@ public class StudyWordProcessor extends InteractiveProcessor {
 	private void showWord(StringBuffer msgBuf, WordEntry wordEntry) {
 		msgBuf.append(wordEntry.getWord());
 		if (wordEntry.getPronounce() != null) {
-			msgBuf.append(" /");
+			msgBuf.append("　/");
 			msgBuf.append(wordEntry.getPronounce());
-			msgBuf.append("/ ");
+			msgBuf.append("/");
+			msgBuf.append(wordEntry.getPronounceType());
+			msgBuf.append("/　");
 		}
 
 		if (wordEntry.getWordType() != null) {
-			msgBuf.append("  (");
+			msgBuf.append("　(");
 			msgBuf.append(wordEntry.getWordType());
-			msgBuf.append(")  ");
+			msgBuf.append(")　");
 		}
 		msgBuf.append(wordEntry.getMeaning());
 		msgBuf.append(endl);
 
-		msgBuf.append("用例>").append(endl);
 		if (wordEntry.getSentence() != null) {
+			msgBuf.append("<用例>").append(endl);
 			msgBuf.append(wordEntry.getSentence());
+			msgBuf.append(endl);
 		}
-		msgBuf.append(endl);
 
-		msgBuf.append("注釈>").append(endl);
 		if (wordEntry.getComments() != null) {
+			msgBuf.append("<注釈>").append(endl);
 			msgBuf.append(wordEntry.getComments());
+			msgBuf.append(endl);
 		}
-		msgBuf.append(endl);
 	}
 
 	/**
@@ -599,6 +723,16 @@ public class StudyWordProcessor extends InteractiveProcessor {
 			msgBuf.append(endl);
 		}
 
+		Long userId = cmd.getUserEntry().getUserId();
+		UserWordStudyingInfo userWordStudyingInfo = userStudyingWordInfoManager
+				.getUserWordStudyingInfo(userId);
+		msgBuf.append(endl);
+		msgBuf.append("Now, you are studing unit: ").append(
+				userWordStudyingInfo.getStudyingWordUnitId()).append(
+				". Your private list is unit: ").append(
+				userWordStudyingInfo.getPrivateWordUnitId()).append(".");
+		msgBuf.append(endl);
+		msgBuf.append("Please input one unit number to study it.").append(endl);
 		sendBackMessage(cmd, msgBuf.toString());
 		return CONTINUE;
 	}
@@ -609,9 +743,7 @@ public class StudyWordProcessor extends InteractiveProcessor {
 		msgBuf.append("WordUnit: ");
 		Long wordUnitId = null;
 		try {
-			List<String> cmds = CommonUtils.parseSimpleCommand(cmd
-					.getOriginMessage());
-			String cmdMsg = cmds.get(0);
+			String cmdMsg = cmd.getOriginMessage();
 
 			wordUnitId = new Long(cmdMsg);
 			WordUnit wordUnit = wordUnitManager.getWordUnit(wordUnitId);
@@ -634,6 +766,9 @@ public class StudyWordProcessor extends InteractiveProcessor {
 						userWordStudyingInfo.setUserId(userId);
 					}
 					userWordStudyingInfo.setStudyingWordUnitId(wordUnitId);
+					// TODO need confirm whether this is ok
+					userWordStudyingInfo
+							.setStudyingType(UserWordStudyingInfo.ALL_WORDS_BY_UNIT);
 					userWordStudyingInfo.setLastStudied(new Date());
 					userStudyingWordInfoManager
 							.saveUserWordStudyingInfo(userWordStudyingInfo);
@@ -667,9 +802,15 @@ public class StudyWordProcessor extends InteractiveProcessor {
 		msgBuf.append("2): Study failed words in selected unit.").append(endl);
 		msgBuf.append("3): Study all failed words.").append(endl);
 
-		// 考虑实现个人关联的单词单元
-		// 用户所有标注为成功的单词，转移到这个单元来
-		// 用户也可以自己添加单词到这个单元来
+		Long userId = cmd.getUserEntry().getUserId();
+		UserWordStudyingInfo userWordStudyingInfo = userStudyingWordInfoManager
+				.getUserWordStudyingInfo(userId);
+		msgBuf.append(endl);
+		msgBuf.append("Now, your selection is: ").append(
+				userWordStudyingInfo.getStudyingType()).append(".");
+		msgBuf.append(endl);
+
+		msgBuf.append("Please input the number to change it.").append(endl);
 
 		sendBackMessage(cmd, msgBuf.toString());
 		return CONTINUE;
@@ -684,9 +825,7 @@ public class StudyWordProcessor extends InteractiveProcessor {
 				.getUserWordStudyingInfo(userId);
 		// switch (userWordStudyingInfo.getStudyingType())
 		int studyingType = -1;
-		List<String> cmds = CommonUtils.parseSimpleCommand(cmd
-				.getOriginMessage());
-		String cmdMsg = cmds.get(0);
+		String cmdMsg = cmd.getOriginMessage();
 		try {
 			studyingType = Integer.parseInt(cmdMsg);
 		} catch (Exception e) {

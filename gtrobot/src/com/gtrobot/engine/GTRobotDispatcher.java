@@ -46,6 +46,9 @@ public class GTRobotDispatcher {
 
 	public void parseAndDispatch(Message message) {
 		BaseCommand commnad = parse(message);
+		if (commnad == null) {
+			return;
+		}
 
 		WorkerDispatcher workerDispatcher = GTRobotContextHelper
 				.getWorkerDispatcher();
@@ -93,6 +96,9 @@ public class GTRobotDispatcher {
 	 * @return
 	 */
 	private BaseCommand parse(String from, String body) {
+		if (body == null) {
+			return null;
+		}
 		// Trim the message body to parse the command prefix
 		String jid = StringUtils.parseBareAddress(from);
 		String commandStr = body.trim();
@@ -157,7 +163,7 @@ public class GTRobotDispatcher {
 		}
 
 		command.setFrom(from);
-		command.setOriginMessage(body);
+		command.setOriginMessage(body.trim());
 		command.setArgv(commands);
 		command.setUserEntry(jid);
 		if (command instanceof ProcessableCommand) {

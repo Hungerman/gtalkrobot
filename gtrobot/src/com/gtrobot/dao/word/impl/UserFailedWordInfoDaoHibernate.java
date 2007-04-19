@@ -56,7 +56,7 @@ public class UserFailedWordInfoDaoHibernate extends BaseDaoHibernate implements
 		UserFailedWordInfo userFailedWordInfo = (UserFailedWordInfo) getHibernateTemplate()
 				.get(UserFailedWordInfo.class, userFailedWordInfoKey);
 		if (userFailedWordInfo == null) {
-			log.warn("uh oh, UserFailedWordInfo with id '"
+			log.debug("uh oh, UserFailedWordInfo with id '"
 					+ userFailedWordInfoKey + "' not found...");
 			return null;
 		}

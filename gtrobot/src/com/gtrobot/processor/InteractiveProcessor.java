@@ -107,21 +107,25 @@ public class InteractiveProcessor extends AbstractProcessor {
 	protected int interactiveOnlineProcess(BaseCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		List<String> cmds = CommonUtils.parseSimpleCommand(cmd
-				.getOriginMessage());
-		String cmdMsg = cmds.get(0);
-
-		if (".".equalsIgnoreCase(cmdMsg)) {
-			msgBuf = executeStepOnlineHelp(cmd);
-
-			sendBackMessage(cmd, msgBuf.toString());
-			return REPEAT_THIS_STEP;
+		cmd.setInteractiveCommands(CommonUtils.parseInteractiveCommand(cmd
+				.getOriginMessage()));
+		if (cmd.getInteractiveCommands() == null) {
+			return CONTINUE;
 		}
-		if (".b".equalsIgnoreCase(cmdMsg)) {
-			return STEP_TO_MENU;
-		}
-		if (".x".equalsIgnoreCase(cmdMsg)) {
-			return STEP_TO_EXIT_MAIN_MENU;
+		String cmdMsg = cmd.getInteractiveCommands().get(0);
+		if (cmd.getInteractiveCommands().size() == 1) {
+			if (".".equalsIgnoreCase(cmdMsg)) {
+				msgBuf = executeStepOnlineHelp(cmd);
+
+				sendBackMessage(cmd, msgBuf.toString());
+				return REPEAT_THIS_STEP;
+			}
+			if (".b".equalsIgnoreCase(cmdMsg)) {
+				return STEP_TO_MENU;
+			}
+			if (".x".equalsIgnoreCase(cmdMsg)) {
+				return STEP_TO_EXIT_MAIN_MENU;
+			}
 		}
 		return CONTINUE;
 	}
@@ -178,9 +182,7 @@ public class InteractiveProcessor extends AbstractProcessor {
 	}
 
 	protected int interactiveProcess_11(BaseCommand cmd) throws XMPPException {
-		List<String> cmds = CommonUtils.parseSimpleCommand(cmd
-				.getOriginMessage());
-		String cmdMsg = cmds.get(0);
+		String cmdMsg = cmd.getOriginMessage();
 
 		Integer step = commandToStepMappings.get(cmdMsg);
 		if (step == null) {

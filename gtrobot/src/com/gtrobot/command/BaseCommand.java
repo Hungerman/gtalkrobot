@@ -24,6 +24,8 @@ public class BaseCommand {
 
 	private String errorMessage;
 
+	List<String> interactiveCommands = null;
+
 	public Processor getProcessor() {
 		return processor;
 	}
@@ -91,6 +93,14 @@ public class BaseCommand {
 
 	public void setFrom(String from) {
 		this.from = from;
+	}
+
+	public List<String> getInteractiveCommands() {
+		return interactiveCommands;
+	}
+
+	public void setInteractiveCommands(List<String> interactiveCommands) {
+		this.interactiveCommands = interactiveCommands;
 	}
 
 	public String getI18NMessage(String key) {
