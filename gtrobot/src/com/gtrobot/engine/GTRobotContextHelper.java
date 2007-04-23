@@ -5,15 +5,16 @@ import net.sf.ehcache.Cache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.gtrobot.processor.common.HelpProcessor;
 import com.gtrobot.service.common.UserEntryService;
 import com.gtrobot.thread.WorkerDispatcher;
 
 /**
- * Manager all user information. Mantenant the activeUserList. When user status
- * change event coming, this context will be invoked to update the user's
- * status.
+ * 初始化Spring的Context。<br>
+ * 提供快速方便的接口访问所有在SpringContext中的对象。<br>
+ * 如果要访问对象不存在（或者没有定义,或者生成的时候发生错误），则返回null。
  * 
  * 
  * @author sunyuxin
@@ -23,7 +24,7 @@ public class GTRobotContextHelper {
 	protected static final transient Log log = LogFactory
 			.getLog(GTRobotContextHelper.class);
 
-	private static ApplicationContext context = GTRobotContext.getContext();
+	private static ApplicationContext appContext;
 
 	/** GoogleTalkConnection定数 */
 	private static final String GOOGLE_TALK_CONNECTION = "googleTalkConnection";
@@ -47,17 +48,33 @@ public class GTRobotContextHelper {
 	private static final String HELP_PROCESSOR = "helpProcessor";
 
 	/**
+	 * 初始化Spring的Context。
+	 */
+	public static final ApplicationContext initApplicationContext() {
+		if (appContext == null) {
+			appContext = new ClassPathXmlApplicationContext(
+					"classpath*:*-appContext.xml");
+		}
+		return appContext;
+	}
+
+	public static final ApplicationContext getApplicationContext() {
+		return initApplicationContext();
+	}
+
+	/**
 	 * Beanの取得
 	 * 
 	 * @param beanName
 	 * @return Object
 	 */
 	public static Object getBean(String beanName) {
-		if (!context.containsBean(beanName)) {
-			log.warn("Can't find the bean in application context: " + beanName);
+		if (!appContext.containsBean(beanName)) {
+			log.warn("Can't find the bean in application appContext: "
+					+ beanName);
 			return null;
 		}
-		return context.getBean(beanName);
+		return appContext.getBean(beanName);
 	}
 
 	public static GoogleTalkConnection getGoogleTalkConnection() {

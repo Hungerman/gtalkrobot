@@ -11,6 +11,15 @@ import org.jivesoftware.smack.packet.Presence;
 
 import com.gtrobot.utils.MessageHelper;
 
+/**
+ * GoogleTalkConnection的管理类。<br>
+ * 封装了初始化Connection需要的所有参数，这些参数通过Spring的Context进行传递过来。<br>
+ * 具体定义在gtrobot-command-context.xml和gtrobot.properties中。
+ * <p>
+ * 在GTRobotStarter中会调用init方法来初始化这个Connection的相关内容。包括设定对应的Listener。
+ * 
+ * @author Joey
+ */
 public class GoogleTalkConnection {
 	private String serviceName;
 
@@ -88,6 +97,11 @@ public class GoogleTalkConnection {
 		return xMPPConnection;
 	}
 
+	/**
+	 * 构造Connection需要的对象，并进行初始化和连接。然后添加GTRobotConnectionListener，GTRobotMessageListener和GTRobotRosterListener。
+	 * 
+	 * @throws XMPPException
+	 */
 	public void init() throws XMPPException {
 		ConnectionConfiguration connectionConfiguration = new ConnectionConfiguration(
 				host, port, serviceName);
@@ -115,6 +129,12 @@ public class GoogleTalkConnection {
 			xMPPConnection.disconnect();
 	}
 
+	/**
+	 * 发送Robot的状态信息。
+	 * 
+	 * @param conn
+	 * @throws XMPPException
+	 */
 	private void updatePresence(XMPPConnection conn) throws XMPPException {
 		// Create a new presence.
 		Presence presence = new Presence(Presence.Type.available);
@@ -123,20 +143,5 @@ public class GoogleTalkConnection {
 
 		// Send the packet
 		conn.sendPacket(presence);
-
-		// ChatManager chatmanager = conn.getChatManager();
-		// chatmanager.
-		// Chat newChat = chatmanager.createChat("dragonetail@gmail.com",
-		// new MessageListener() {
-		//
-		// public void processMessage(Chat chat, Message message) {
-		// System.out.println("Received message: " + message.getBody());
-		// }
-		// });
-		// try {
-		// newChat.sendMessage("Howdy!");
-		// } catch (XMPPException e) {
-		// System.out.println("Error Delivering block");
-		// }
 	}
 }

@@ -6,13 +6,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 
-import com.gtrobot.engine.GTRobotContext;
+import com.gtrobot.engine.GTRobotContextHelper;
 
 public class MessageHelper {
 	protected static final transient Log log = LogFactory
 			.getLog(MessageHelper.class);
 
-	private static ApplicationContext context = GTRobotContext.getContext();
+	private static ApplicationContext context = GTRobotContextHelper
+			.getApplicationContext();;
 
 	public static String getMessage(String key) {
 		return getMessage(key, null, null);

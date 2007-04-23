@@ -18,6 +18,19 @@ import com.gtrobot.thread.WorkerDispatcher;
 import com.gtrobot.utils.CommonUtils;
 import com.gtrobot.utils.UserSessionUtil;
 
+/**
+ * 从GTRobotMessageListener处接收得到Message，然后进行分析，得到（生成）Comamnd对象，然后调用把Command对象传递给WorkerDispatcher进行业务处理。
+ * <p>
+ * 
+ * defaultCommand定义了命令解析失败的时候，缺省的Command对象。<br>
+ * commandMappings定义了所有Comamnd Name对应的Command对象的对应关系。
+ * <p>
+ * 
+ * "/"和":"开头的命令，为全局类型的命令。因为在这里进行解析处理，所以优先级最高。<br>
+ * 
+ * @author Joey
+ * 
+ */
 public class GTRobotDispatcher {
 	protected static final transient Log log = LogFactory
 			.getLog(GTRobotDispatcher.class);
@@ -25,10 +38,6 @@ public class GTRobotDispatcher {
 	public static final String COMMAND_PREFIX_1 = "/";
 
 	public static final String COMMAND_PREFIX_2 = ":";
-
-	public static final String EXIT_COMMAND = "x";
-
-	public static final String BACK_MENU_COMMAND = "b";
 
 	private String defaultCommand = null;
 
@@ -128,13 +137,10 @@ public class GTRobotDispatcher {
 				// info
 				command = getCommandByType(commandType);
 				if (command == null) {
-					if (commandType.equals(COMMAND_PREFIX_1)
-							|| commandType.equals(COMMAND_PREFIX_2)) {
-						command = previousCommand;
-					} else if ((commandType.equals(EXIT_COMMAND) || commandType
-							.equals(BACK_MENU_COMMAND))) {
-						command = previousCommand;
-					}
+					// if (commandType.equals(COMMAND_PREFIX_1)
+					// || commandType.equals(COMMAND_PREFIX_2)) {
+					// command = previousCommand;
+					// }
 				} else {
 					Processor processor = command.getProcessor();
 					// When you are in an interactive operations, if you want to

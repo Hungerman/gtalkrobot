@@ -9,7 +9,6 @@ import org.jivesoftware.smack.XMPPException;
 import com.gtrobot.command.BaseCommand;
 import com.gtrobot.command.ProcessableCommand;
 import com.gtrobot.engine.GTRobotContextHelper;
-import com.gtrobot.exception.CommandMatchedException;
 import com.gtrobot.model.common.UserEntry;
 import com.gtrobot.processor.InteractiveProcessor;
 
@@ -91,8 +90,7 @@ public class RoomChatProcessor extends InteractiveProcessor {
 		return STEP_TO_NORMAL_CHAT;
 	}
 
-	protected int interactiveProcess_9999(BaseCommand cmd)
-			throws XMPPException, CommandMatchedException {
+	protected int interactiveProcess_9999(BaseCommand cmd) throws XMPPException {
 		String jid = cmd.getUserEntry().getJid();
 		activeUserList.remove(jid);
 

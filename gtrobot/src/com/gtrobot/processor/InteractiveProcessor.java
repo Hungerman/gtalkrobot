@@ -12,7 +12,6 @@ import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.BaseCommand;
 import com.gtrobot.engine.GTRobotContextHelper;
-import com.gtrobot.exception.CommandMatchedException;
 import com.gtrobot.utils.CommonUtils;
 import com.gtrobot.utils.UserSessionUtil;
 
@@ -147,8 +146,7 @@ public class InteractiveProcessor extends AbstractProcessor {
 		return STEP_TO_MENU;
 	}
 
-	protected int interactiveProcess_9999(BaseCommand cmd)
-			throws XMPPException, CommandMatchedException {
+	protected int interactiveProcess_9999(BaseCommand cmd) throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
 		// formartMessageHeader(cmd, msgBuf);
 

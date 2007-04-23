@@ -13,6 +13,14 @@ import org.jivesoftware.smack.util.StringUtils;
 import com.gtrobot.model.common.UserEntry;
 import com.gtrobot.service.common.UserEntryService;
 
+/**
+ * 侦听用户的状态变化，更新用户的状态，发布通知。<br>
+ * 需要继续完善。
+ * 
+ * 
+ * @author Joey
+ * 
+ */
 public class GTRobotRosterListener implements RosterListener {
 	protected static final transient Log log = LogFactory
 			.getLog(GTRobotRosterListener.class);
@@ -38,6 +46,7 @@ public class GTRobotRosterListener implements RosterListener {
 
 	public void presenceChanged(Presence presence) {
 		updateUserStatus(presence, "Presence changed");
+		// TODO 需要继续完善。 例如用户在ChatRoom，需要通知，等等；相对需要一个复杂的逻辑流程
 	}
 
 	private void showMessage(Collection userList, String message) {
