@@ -4,6 +4,12 @@ import java.util.List;
 
 import com.gtrobot.command.ProcessableCommand;
 
+/**
+ * 发送秘密消息的命令。
+ * 
+ * @author Joey
+ * 
+ */
 public class PrivateMessageCommand extends ProcessableCommand {
 	private String targetJid;
 

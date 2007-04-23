@@ -4,6 +4,12 @@ import java.util.List;
 
 import com.gtrobot.command.ProcessableCommand;
 
+/**
+ * 查询在线用户的命令。
+ * 
+ * @author Joey
+ * 
+ */
 public class SearchUserCommand extends ProcessableCommand {
 	private String condition;
 

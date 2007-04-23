@@ -7,24 +7,63 @@ import com.gtrobot.model.common.UserEntry;
 import com.gtrobot.processor.Processor;
 import com.gtrobot.utils.MessageHelper;
 
+/**
+ * Command对象的基类。
+ * Command对象应该配置在Spring的gtrobot-command-context.xml中，并且要使用非Singleton的方式进行配置。
+ * 
+ * @author Joey
+ * 
+ */
 public class BaseCommand {
+	/**
+	 * Comamnd对应的Processor实例。通过Spring配置。
+	 */
 	private Processor processor;
 
+	/**
+	 * Command的类型，唯一确定一个Command的类型。
+	 */
 	private String commandType;
 
+	/**
+	 * 根据当时访问关联的用户对象。
+	 */
 	private UserEntry userEntry;
 
+	/**
+	 * 原始的消息信息。
+	 */
 	private String originMessage;
 
+	/**
+	 * 消息的原始From信息。
+	 */
 	private String from;
 
-	private List argv;
-
+	/**
+	 * 错误类型。
+	 */
 	private ErrorType errorType = ErrorType.normal;
 
+	/**
+	 * 错误消息。
+	 */
 	private String errorMessage;
 
-	List<String> interactiveCommands = null;
+	/**
+	 * 根据分隔符解析后的命令和参数列表。
+	 */
+	private List<String> argv;
+
+	/**
+	 * 根据第一个分隔符解析后的命令和参数列表。
+	 */
+	List<String> interactiveCommands;
+
+	/**
+	 * 主要使用在交互式处理中，表示这个Command是否已经被处理过了。
+	 */
+	boolean isProcessed = false;
 
 	public Processor getProcessor() {
 		return processor;
@@ -66,11 +105,11 @@ public class BaseCommand {
 		this.originMessage = orginMessage;
 	}
 
-	public List getArgv() {
+	public List<String> getArgv() {
 		return argv;
 	}
 
-	public void setArgv(List argvs) {
+	public void setArgv(List<String> argvs) {
 		this.argv = argvs;
 	}
 
@@ -101,6 +140,14 @@ public class BaseCommand {
 
 	public void setInteractiveCommands(List<String> interactiveCommands) {
 		this.interactiveCommands = interactiveCommands;
+	}
+
+	public boolean isProcessed() {
+		return isProcessed;
+	}
+
+	public void setProcessed(boolean isProcessed) {
+		this.isProcessed = isProcessed;
 	}
 
 	public String getI18NMessage(String key) {

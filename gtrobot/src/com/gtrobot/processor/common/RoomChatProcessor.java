@@ -57,6 +57,11 @@ public class RoomChatProcessor extends InteractiveProcessor {
 	/**
 	 * STEP_TO_NORMAL_CHAT
 	 */
+	protected int interactiveProcessPrompt_1000(ProcessableCommand cmd)
+			throws XMPPException {
+		return WAIT_INPUT;
+	}
+
 	protected int interactiveProcess_1000(ProcessableCommand cmd)
 			throws XMPPException {
 		UserEntry sender = cmd.getUserEntry();
@@ -90,7 +95,7 @@ public class RoomChatProcessor extends InteractiveProcessor {
 		return STEP_TO_NORMAL_CHAT;
 	}
 
-	protected int interactiveProcess_9999(BaseCommand cmd) throws XMPPException {
+	protected void exitInteractiveProcess(BaseCommand cmd) throws XMPPException {
 		String jid = cmd.getUserEntry().getJid();
 		activeUserList.remove(jid);
 
@@ -100,6 +105,6 @@ public class RoomChatProcessor extends InteractiveProcessor {
 		msgBuf.append(cmd.getI18NMessage("roomchat.left"));
 		broadcastMessage(cmd.getUserEntry(), msgBuf.toString());
 
-		return super.interactiveProcess_9999(cmd);
+		return;
 	}
 }
