@@ -17,7 +17,10 @@ import com.gtrobot.thread.signalqueues.EventQueue;
 
 /**
  * 
- * Added Hibernate session filter for every thread.
+ * 实现了一个具体的业务Thread操作类的执行接口。<br>
+ * 通过Command对象关联的Processor进行实际的业务调用。<br>
+ * 
+ * 同时这里封装了Hibernate Session的管理处理。
  * 
  * @author Joey
  * 
@@ -47,6 +50,7 @@ public class GTRobotWorkerThread extends WorkerThread {
 		TransactionSynchronizationManager.bindResource(sessionFactory,
 				new SessionHolder(session));
 		try {
+			// 执行具体的业务操作
 			processor.process(command);
 		} catch (Exception e) {
 			log.error("Exception when processing in processor: "
@@ -67,11 +71,12 @@ public class GTRobotWorkerThread extends WorkerThread {
 	protected Session getSession(SessionFactory sessionFactory)
 			throws DataAccessResourceFailureException {
 		Session session = SessionFactoryUtils.getSession(sessionFactory, true);
-		session.setFlushMode(FlushMode.NEVER);
+		session.setFlushMode(FlushMode.MANUAL);
 		return session;
 	}
 
 	protected void closeSession(Session session, SessionFactory sessionFactory) {
+		session.flush();
 		SessionFactoryUtils.releaseSession(session, sessionFactory);
 	}
 }

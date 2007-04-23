@@ -9,9 +9,7 @@ import java.sql.SQLException;
 
 import org.springframework.orm.ObjectRetrievalFailureException;
 
-import com.gtrobot.engine.GTRobotContext;
 import com.gtrobot.engine.GTRobotContextHelper;
-import com.gtrobot.exception.DataAccessException;
 import com.gtrobot.model.word.WordEntry;
 import com.gtrobot.model.word.WordUnit;
 import com.gtrobot.model.word.WordUnitEntry;
@@ -30,7 +28,7 @@ public class WordImportor {
 	private int wordLelvel = 0;
 
 	public WordImportor() {
-		GTRobotContext.getContext();
+		GTRobotContextHelper.initApplicationContext();
 
 		wordEntryManager = (WordEntryManager) GTRobotContextHelper
 				.getBean("wordEntryManager");
@@ -98,8 +96,8 @@ public class WordImportor {
 		return wordUnit;
 	}
 
-	private WordEntry processLine(String line) throws DataAccessException,
-			SQLException, UnsupportedEncodingException {
+	private WordEntry processLine(String line) throws SQLException,
+			UnsupportedEncodingException {
 
 		// できる//②/动2/会，能/0/
 		String[] split = line.split("/");

@@ -3,15 +3,12 @@ package com.gtrobot;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.gtrobot.engine.GTRobotContext;
 import com.gtrobot.engine.GTRobotContextHelper;
 import com.gtrobot.engine.GoogleTalkConnection;
 
 /**
- * Main enterance of GTRobot. <br>
- * Initialize configuration, cache, database connection, XMPPConnection, and
- * roster listener, packet listener.
- * 
+ * 程序的入口 <br>
+ * 初始化Spring的Context，初始化Connection，初始化ThreadWorkerDispatcher
  * 
  * @author sunyuxin
  * 
@@ -31,16 +28,16 @@ public class GTRobotStarter {
 
 	private boolean startup() {
 		try {
-			// Load and check the system paramter
-			GTRobotContext.getContext();
+			// 初始化Spring的Context
+			GTRobotContextHelper.initApplicationContext();
 
-			// Setup the XMPP connection
+			// 初始化Connection
 			// org.jivesoftware.smack.XMPPConnection.DEBUG_ENABLED = true;
 			GoogleTalkConnection googleTalkConnection = GTRobotContextHelper
 					.getGoogleTalkConnection();
 			googleTalkConnection.init();
 
-			// Setup the worker thread pook and dispatcher
+			// 初始化ThreadWorkerDispatcher
 			GTRobotContextHelper.getWorkerDispatcher();
 
 			return true;

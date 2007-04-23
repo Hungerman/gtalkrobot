@@ -9,7 +9,6 @@ import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.BaseCommand;
 import com.gtrobot.engine.GTRobotContextHelper;
-import com.gtrobot.exception.CommandMatchedException;
 import com.gtrobot.model.common.UserEntry;
 import com.gtrobot.service.common.UserEntryService;
 import com.gtrobot.utils.UserChatUtil;
@@ -42,8 +41,7 @@ public abstract class AbstractProcessor implements Processor {
 		}
 	}
 
-	protected void beforeProcess(BaseCommand abCmd)
-			throws CommandMatchedException, XMPPException {
+	protected void beforeProcess(BaseCommand abCmd) throws XMPPException {
 		String error = abCmd.getErrorMessage();
 		if (error != null) {
 			log.error("Error in AbstractProcessor.beforeProcess: " + error);
