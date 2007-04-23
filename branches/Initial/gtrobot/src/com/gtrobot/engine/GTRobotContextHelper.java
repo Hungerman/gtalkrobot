@@ -50,15 +50,15 @@ public class GTRobotContextHelper {
 	/**
 	 * 初始化Spring的Context。
 	 */
-	public static final ApplicationContext initApplicationContext() {
+	public static ApplicationContext initApplicationContext() {
 		if (appContext == null) {
 			appContext = new ClassPathXmlApplicationContext(
-					"classpath*:*-appContext.xml");
+					"classpath*:*-context.xml");
 		}
 		return appContext;
 	}
 
-	public static final ApplicationContext getApplicationContext() {
+	public static ApplicationContext getApplicationContext() {
 		return initApplicationContext();
 	}
 
@@ -69,12 +69,12 @@ public class GTRobotContextHelper {
 	 * @return Object
 	 */
 	public static Object getBean(String beanName) {
-		if (!appContext.containsBean(beanName)) {
+		if (!getApplicationContext().containsBean(beanName)) {
 			log.warn("Can't find the bean in application appContext: "
 					+ beanName);
 			return null;
 		}
-		return appContext.getBean(beanName);
+		return getApplicationContext().getBean(beanName);
 	}
 
 	public static GoogleTalkConnection getGoogleTalkConnection() {
