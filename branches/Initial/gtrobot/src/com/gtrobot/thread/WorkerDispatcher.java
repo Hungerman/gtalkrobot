@@ -3,9 +3,9 @@ package com.gtrobot.thread;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.gtrobot.thread.signalqueues.FIFORingEventQueue;
 import com.gtrobot.thread.signalqueues.Queue;
 import com.gtrobot.thread.signalqueues.QueueProxy;
-import com.gtrobot.thread.signalqueues.FIFORingEventQueue;
 
 /**
  * ThreadPool的处理Dispatcher类。当接收新的Event的时候，从ThreadPool中选择Idle的Worker进行激活，使其对Event进行具体的处理。

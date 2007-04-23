@@ -1,10 +1,8 @@
 package com.gtrobot.processor.word;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.BaseCommand;
@@ -12,91 +10,100 @@ import com.gtrobot.command.ProcessableCommand;
 import com.gtrobot.model.word.WordEntry;
 import com.gtrobot.model.word.WordUnit;
 import com.gtrobot.model.word.WordUnitEntry;
-import com.gtrobot.processor.InteractiveProcessor;
-import com.gtrobot.service.word.UserStudyingWordInfoManager;
-import com.gtrobot.service.word.UserUnitInfoManager;
-import com.gtrobot.service.word.WordEntryManager;
-import com.gtrobot.service.word.WordUnitManager;
+import com.gtrobot.utils.CommonUtils;
 
-public class WordManagementProcessor extends InteractiveProcessor {
+public class WordManagementProcessor extends BaseWordProcessor {
 	private static final int STEP_TO_WORD_MANAGEMENT = 1000;
 
 	private static final int STEP_TO_SUB_LOOP_WORDS = 1010;
 
 	private static final int STEP_TO_SUB_CHANGE_WORD = 1020;
 
-	private UserUnitInfoManager userUnitInfoManager;
-
-	private WordUnitManager wordUnitManager;
-
-	private UserStudyingWordInfoManager userStudyingWordInfoManager;
-
-	private WordEntryManager wordEntryManager;
-
-	public void setWordUnitManager(WordUnitManager wordUnitManager) {
-		this.wordUnitManager = wordUnitManager;
-	}
-
-	public void setUserUnitInfoManager(UserUnitInfoManager userUnitInfoManager) {
-		this.userUnitInfoManager = userUnitInfoManager;
-	}
-
-	public void setUserStudyingWordInfoManager(
-			UserStudyingWordInfoManager userStudyingWordInfoManager) {
-		this.userStudyingWordInfoManager = userStudyingWordInfoManager;
-	}
-
-	public void setWordEntryManager(WordEntryManager wordEntryManager) {
-		this.wordEntryManager = wordEntryManager;
-	}
-
 	/**
 	 * Menu
 	 */
-	protected int interactiveProcess_10(BaseCommand cmd) throws XMPPException {
+	protected int interactiveProcessPrompt_10(BaseCommand cmd)
+			throws XMPPException {
 		return STEP_TO_WORD_MANAGEMENT;
 	}
 
 	/**
-	 * STEP_TO_WORD_MANAGEMENT = 1000
+	 * 选择单元 STEP_TO_WORD_MANAGEMENT = 1000
 	 */
+	protected StringBuffer interactiveOnlineHelper_1000(ProcessableCommand cmd) {
+		StringBuffer msgBuf = new StringBuffer();
+		msgBuf.append("> .c <wordUnitName> Create a new word unit.").append(
+				endl);
+		msgBuf.append("> .l List all word units.").append(endl);
+
+		return msgBuf;
+	}
+
 	@SuppressWarnings("unchecked")
-	protected int interactiveProcess_1000(ProcessableCommand cmd)
+	protected int interactiveOnlineProcess_1000(ProcessableCommand cmd)
+			throws XMPPException {
+		StringBuffer msgBuf = new StringBuffer();
+		List<String> cmds = cmd.getInteractiveCommands();
+		if (cmds == null) {
+			return CONTINUE;
+		}
+		String cmdMsg = cmds.get(0);
+
+		if (cmds.size() == 1) {
+			if (".l".equalsIgnoreCase(cmdMsg)) {
+				List results = wordUnitManager.getWordUnits();
+
+				msgBuf.append("Totaly, there are : " + results.size()
+						+ " units.");
+				msgBuf.append(endl);
+
+				for (Iterator<WordUnit> it = results.iterator(); it.hasNext();) {
+					WordUnit wordUnit = it.next();
+					msgBuf.append(wordUnit.getWordUnitId()).append("  ");
+					msgBuf.append(wordUnit.getName()).append("  ");
+					msgBuf.append(wordUnit.getWordCount()).append("  ");
+					msgBuf.append(wordUnit.getLevel()).append("  ");
+
+					msgBuf.append(endl);
+				}
+
+				msgBuf.append(endl);
+				sendBackMessage(cmd, msgBuf.toString());
+				return CONTINUE;
+			}
+		}
+		if (cmds.size() == 2) {
+			String content = cmds.get(1);
+			if (".c".equalsIgnoreCase(cmdMsg)) {
+				WordUnit wordUnit = new WordUnit();
+				wordUnit.setName(content);
+				wordUnitManager.saveWordUnit(wordUnit);
+
+				msgBuf.append("New word unit has been created with id: "
+						+ wordUnit.getWordUnitId());
+				sendBackMessage(cmd, msgBuf.toString());
+				return CONTINUE;
+			}
+		}
+		return CONTINUE;
+	}
+
+	protected int interactiveProcessPrompt_1000(ProcessableCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
 
 		msgBuf.append("Please choose one to modify...");
 		sendBackMessage(cmd, msgBuf.toString());
-		return CONTINUE;
+		return WAIT_INPUT;
 	}
 
 	@SuppressWarnings("unchecked")
-	protected int interactiveProcess_1001(ProcessableCommand cmd)
+	protected int interactiveProcess_1000(ProcessableCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
 		Long wordUnitId = null;
 
 		String cmdMsg = cmd.getOriginMessage();
-		if ("?".equals(cmdMsg)) {// List all wordUnits
-			List results = wordUnitManager.getWordUnits();
-
-			msgBuf.append("Totaly, there are : " + results.size() + " units.");
-			msgBuf.append(endl);
-
-			for (Iterator<WordUnit> it = results.iterator(); it.hasNext();) {
-				WordUnit wordUnit = it.next();
-				msgBuf.append(wordUnit.getWordUnitId()).append("  ");
-				msgBuf.append(wordUnit.getName()).append("  ");
-				msgBuf.append(wordUnit.getWordCount()).append("  ");
-				msgBuf.append(wordUnit.getLevel()).append("  ");
-
-				msgBuf.append(endl);
-			}
-
-			msgBuf.append(endl);
-			sendBackMessage(cmd, msgBuf.toString());
-			return STEP_TO_WORD_MANAGEMENT;
-		}
 		try {
 			wordUnitId = new Long(cmdMsg);
 			// check word unit exist
@@ -106,244 +113,204 @@ public class WordManagementProcessor extends InteractiveProcessor {
 			}
 		} catch (NumberFormatException e) {
 			msgBuf.append("You entered one invalid word unit number.");
-			return STEP_TO_WORD_MANAGEMENT;
+			return REPEAT_THIS_STEP;
 		}
-		createWordProcessingSession(wordUnitId);
+		setSession(wordUnitId);
 
 		// Next Step
 		return STEP_TO_SUB_LOOP_WORDS;
 	}
 
 	/**
-	 * STEP_TO_SUB_LOOP_WORDS = 1010
+	 * 选择单词 STEP_TO_SUB_LOOP_WORDS = 1010
 	 */
+	protected StringBuffer interactiveOnlineHelper_1010(ProcessableCommand cmd) {
+		StringBuffer msgBuf = new StringBuffer();
+		msgBuf.append("> .c <wordName> Create a new word.").append(endl);
+		msgBuf.append("> .s <wordId> Add words into unit.").append(endl);
+
+		msgBuf.append("> .d <wordId> Delete a word from unit.").append(endl);
+		msgBuf.append("> .l List all words.").append(endl);
+
+		return msgBuf;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected int interactiveOnlineProcess_1010(ProcessableCommand cmd)
+			throws XMPPException {
+		StringBuffer msgBuf = new StringBuffer();
+		List<String> cmds = cmd.getInteractiveCommands();
+		if (cmds == null) {
+			return CONTINUE;
+		}
+		String cmdMsg = cmds.get(0);
+
+		Long wordUnitId = (Long) getSession();
+
+		if (cmds.size() == 1) {
+			if (".l".equalsIgnoreCase(cmdMsg)) {
+				WordUnit wordUnit = wordUnitManager.getWordUnit(wordUnitId);
+
+				Iterator<WordUnitEntry> iterator = wordUnit.getWordEntries()
+						.iterator();
+				msgBuf.append("Totaly, there are : "
+						+ wordUnit.getWordEntries().size() + " words in unit: "
+						+ wordUnit.getWordUnitId() + "." + wordUnit.getName());
+				msgBuf.append(endl);
+
+				while (iterator.hasNext()) {
+					WordEntry wordEntry = wordEntryManager
+							.getWordEntry(iterator.next().getPk()
+									.getWordEntryId());
+					showWord(msgBuf, wordEntry, false);
+				}
+				msgBuf.append(endl);
+				sendBackMessage(cmd, msgBuf.toString());
+				return CONTINUE;
+			}
+		}
+		if (cmds.size() == 2) {
+			String content = cmds.get(1);
+			if (".c".equalsIgnoreCase(cmdMsg)) {
+				WordEntry wordEntry = new WordEntry();
+				wordEntry.setWord(content);
+				wordEntry.setPronounce(content);
+				wordEntry.setMeaning(content);
+				wordEntryManager.saveWordEntry(wordEntry);
+
+				WordUnitEntry wordUnitEntry = new WordUnitEntry();
+				wordUnitEntry.getPk()
+						.setWordEntryId(wordEntry.getWordEntryId());
+				wordUnitEntry.getPk().setWordUnitId(wordUnitId);
+				wordUnitEntryManager.saveWordUnitEntry(wordUnitEntry);
+
+				msgBuf.append("New word has been created with id: "
+						+ wordEntry.getWordEntryId());
+				sendBackMessage(cmd, msgBuf.toString());
+				return CONTINUE;
+			}
+			if (".d".equalsIgnoreCase(cmdMsg)) {
+				List<String> params = CommonUtils.parseCommand(content, false);
+				Iterator<String> it = params.iterator();
+				msgBuf.append("Word Entry: ");
+				while (it.hasNext()) {
+					try {
+						Long weId = new Long(it.next());
+						WordUnitEntry wordUnitEntry = wordUnitEntryManager
+								.getWordUnitEntry(weId, wordUnitId);
+						if (wordUnitEntry != null) {
+							wordUnitEntryManager
+									.removeWordUnitEntry(wordUnitEntry.getPk());
+						}
+						msgBuf.append(weId).append(",");
+					} catch (Exception e) {
+					}
+				}
+				msgBuf.append(" have been removed from unit: ").append(
+						wordUnitId);
+				sendBackMessage(cmd, msgBuf.toString());
+				return CONTINUE;
+			}
+			if (".a".equalsIgnoreCase(cmdMsg)) {
+				List<String> params = CommonUtils.parseCommand(content, false);
+				Iterator<String> it = params.iterator();
+				msgBuf.append("Word Entry: ");
+				while (it.hasNext()) {
+					try {
+						Long weId = new Long(it.next());
+						WordUnitEntry wordUnitEntry = wordUnitEntryManager
+								.getWordUnitEntry(weId, wordUnitId);
+						if (wordUnitEntry == null) {
+							wordUnitEntry = new WordUnitEntry();
+							wordUnitEntry.getPk().setWordEntryId(weId);
+							wordUnitEntry.getPk().setWordUnitId(wordUnitId);
+							wordUnitEntryManager
+									.saveWordUnitEntry(wordUnitEntry);
+						}
+						msgBuf.append(weId).append(",");
+					} catch (Exception e) {
+					}
+				}
+				msgBuf.append(" have been added from unit: ")
+						.append(wordUnitId);
+				sendBackMessage(cmd, msgBuf.toString());
+				return CONTINUE;
+			}
+		}
+		return CONTINUE;
+	}
+
+	protected int interactiveProcessPrompt_1010(ProcessableCommand cmd)
+			throws XMPPException {
+		StringBuffer msgBuf = new StringBuffer();
+		msgBuf.append("Please choose one word to modify...");
+		sendBackMessage(cmd, msgBuf.toString());
+		return WAIT_INPUT;
+	}
+
 	protected int interactiveProcess_1010(ProcessableCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		// formartMessageHeader(cmd, msgBuf);
-
-		WordProcessingSession processingSession = getWordProcessingSession(cmd);
-		if (processingSession.next()) {
-			msgBuf.append(endl);
-			msgBuf.append("~~~~~~~~~~~~~~~~~~~~");
-			msgBuf.append(endl);
-
-			Long wordEntryId = processingSession.getCurrentWord();
-			WordEntry wordEntry = wordEntryManager.getWordEntry(wordEntryId);
-
-			showWord(msgBuf, wordEntry);
-			msgBuf.append(endl);
-			msgBuf
-					.append(
-							"==> s): Skip    c): Change    u): Up to change unit")
-					.append(endl);
-			msgBuf.append(endl);
-			sendBackMessage(cmd, msgBuf.toString());
-			return CONTINUE;
-		} else {
-			msgBuf.append(cmd.getI18NMessage("studyjpword.menu.1.finished"));
-			msgBuf.append(endl);
-
-			sendBackMessage(cmd, msgBuf.toString());
-			setSession(null);
-			return STEP_TO_MENU;
-		}
-	}
-
-	private void showWord(StringBuffer msgBuf, WordEntry wordEntry) {
-		msgBuf.append(wordEntry.getWord());
-		if (wordEntry.getPronounce() != null) {
-			msgBuf.append(" /");
-			msgBuf.append(wordEntry.getPronounce());
-			msgBuf.append("/ ");
-		}
-
-		if (wordEntry.getWordType() != null) {
-			msgBuf.append("  (");
-			msgBuf.append(wordEntry.getWordType());
-			msgBuf.append(")  ");
-		}
-		msgBuf.append(wordEntry.getMeaning());
-		msgBuf.append(endl);
-
-		msgBuf.append("用例>").append(endl);
-		msgBuf.append(wordEntry.getSentence());
-		msgBuf.append(endl);
-
-		msgBuf.append("注釈>").append(endl);
-		msgBuf.append(wordEntry.getComments());
-		msgBuf.append(endl);
-	}
-
-	protected int interactiveProcess_1011(ProcessableCommand cmd)
-			throws XMPPException {
-		StringBuffer msgBuf = new StringBuffer();
-
 		String cmdMsg = cmd.getOriginMessage();
-		if ("s".equalsIgnoreCase(cmdMsg)) {
-			return STEP_TO_SUB_LOOP_WORDS;
+		Long wordEntryId = null;
+		WordEntry wordEntry = null;
+		try {
+			wordEntryId = new Long(cmdMsg);
+			// check word exist
+			wordEntry = wordEntryManager.getWordEntry(wordEntryId);
+			if (wordEntry == null) {
+				throw new NumberFormatException();
+			}
+		} catch (NumberFormatException e) {
+			msgBuf.append("You entered one invalid word number.");
+			return REPEAT_THIS_STEP;
 		}
-		if ("c".equalsIgnoreCase(cmdMsg)) {
-			return STEP_TO_SUB_CHANGE_WORD;
-		}
-		if ("u".equalsIgnoreCase(cmdMsg)) {
-			return STEP_TO_WORD_MANAGEMENT;
-		}
-
-		msgBuf.append("==> s): Skip    c): Change    u): Up to change unit")
-				.append(endl);
-		msgBuf.append(endl);
-		sendBackMessage(cmd, msgBuf.toString());
-		return REPEAT_THIS_STEP;
+		setSession(wordEntry);
+		return STEP_TO_SUB_CHANGE_WORD;
 	}
 
 	/**
-	 * STEP_TO_SUB_CHANGE_WORD = 1020
+	 * 修改一个单词 STEP_TO_SUB_CHANGE_WORD = 1020
 	 */
+	protected StringBuffer interactiveOnlineHelper_1020(ProcessableCommand cmd) {
+		StringBuffer msgBuf = new StringBuffer();
+
+		commonOnlineHelper_ChangeWord(msgBuf);
+
+		return msgBuf;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected int interactiveOnlineProcess_1020(ProcessableCommand cmd)
+			throws XMPPException {
+		List<String> cmds = cmd.getInteractiveCommands();
+
+		return commonOnlineProcess_ChangeWord(cmd, cmds,
+				(WordEntry) getTempSession());
+	}
+
+	protected int interactiveProcessPrompt_1020(ProcessableCommand cmd) {
+		StringBuffer msgBuf = new StringBuffer();
+		WordEntry wordEntry = (WordEntry) getTempSession();
+		showWord(msgBuf, wordEntry);
+
+		msgBuf.append(endl);
+		msgBuf.append("OK?");
+
+		return CONTINUE;
+	}
 
 	@SuppressWarnings("unchecked")
 	protected int interactiveProcess_1020(ProcessableCommand cmd)
 			throws XMPPException {
-		Long wordEntryId = getWordProcessingSession(cmd).getCurrentWord();
-		WordEntry wordEntry = wordEntryManager.getWordEntry(wordEntryId);
-		setTempSession(wordEntry);
-
-		cmd.setOriginMessage(null);
-		return this.getStep() + 1;
-	}
-
-	protected int interactiveProcess_1021(ProcessableCommand cmd)
-			throws XMPPException {
-		return commonChangeProcess(cmd, "The word is: ", "word");
-	}
-
-	protected int interactiveProcess_1022(ProcessableCommand cmd)
-			throws XMPPException {
-		return commonChangeProcess(cmd, "The word's pronounce is: ",
-				"pronounce");
-	}
-
-	protected int interactiveProcess_1023(ProcessableCommand cmd)
-			throws XMPPException {
-		return commonChangeProcess(cmd, "The word's pronounceType is: ",
-				"pronounceType");
-	}
-
-	protected int interactiveProcess_1024(ProcessableCommand cmd)
-			throws XMPPException {
-		return commonChangeProcess(cmd, "The word's wordType is: ", "wordType");
-	}
-
-	protected int interactiveProcess_1025(ProcessableCommand cmd)
-			throws XMPPException {
-		return commonChangeProcess(cmd, "The word's meaning is: ", "meaning");
-	}
-
-	protected int interactiveProcess_1026(ProcessableCommand cmd)
-			throws XMPPException {
-		return commonChangeProcess(cmd, "The word's sentence is: ", "sentence");
-	}
-
-	protected int interactiveProcess_1027(ProcessableCommand cmd)
-			throws XMPPException {
-		return commonChangeProcess(cmd, "The word's comments is: ", "comments");
-	}
-
-	protected int interactiveProcess_1028(ProcessableCommand cmd)
-			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		WordEntry wordEntry = (WordEntry) getTempSession();
 
-		showWord(msgBuf, wordEntry);
-		msgBuf.append(endl);
-		msgBuf
-				.append("==> y): Confirm & Save    c): Change again   n): Drop your modification");
-		msgBuf.append(endl);
-
-		sendBackMessage(cmd, msgBuf.toString());
-		return CONTINUE;
-	}
-
-	protected int interactiveProcess_1029(ProcessableCommand cmd)
-			throws XMPPException {
-		StringBuffer msgBuf = new StringBuffer();
-		// formartMessageHeader(cmd, msgBuf);
-
-		String cmdMsg = cmd.getOriginMessage().trim();
-		if ("y".equalsIgnoreCase(cmdMsg)) {
-			WordEntry wordEntry = (WordEntry) getTempSession();
-			wordEntryManager.saveWordEntry(wordEntry);
-			setTempSession(null);
-			return STEP_TO_SUB_LOOP_WORDS;
-		}
-		if ("c".equalsIgnoreCase(cmdMsg)) {
-			cmd.setOriginMessage(null);
-			return STEP_TO_SUB_CHANGE_WORD + 1;
-		}
-		if ("n".equalsIgnoreCase(cmdMsg)) {
-			return STEP_TO_SUB_LOOP_WORDS;
-		}
-
-		msgBuf
-				.append("==> y: Confirm & Save    c: Change again   n: Drop your modification");
-		msgBuf.append(endl);
-
-		sendBackMessage(cmd, msgBuf.toString());
-		return REPEAT_THIS_STEP;
-	}
-
-	protected int commonChangeProcess(ProcessableCommand cmd, String prompt,
-			String propertyName) throws XMPPException {
-		StringBuffer msgBuf = new StringBuffer();
-		WordEntry wordEntry = (WordEntry) getTempSession();
-
-		String cmdMsg = cmd.getOriginMessage();
-		if (cmdMsg == null) {
-			msgBuf.append(prompt);
-			Object value = null;
-			try {
-				value = PropertyUtils.getProperty(wordEntry, propertyName);
-			} catch (Exception e) {
-			}
-			msgBuf.append(value);
+		if (YES == checkAnswer(cmd)) {
+			msgBuf.append("OK.");
 			msgBuf.append(endl);
-			msgBuf.append("==> s): Skip    内容): Change").append(endl);
-			msgBuf.append(endl);
-
 			sendBackMessage(cmd, msgBuf.toString());
-			return REPEAT_THIS_STEP;
-		} else {
-			cmdMsg = cmdMsg.trim();
-			if (!("s".equalsIgnoreCase(cmdMsg))) {
-				try {
-					PropertyUtils.setProperty(wordEntry, propertyName, cmdMsg);
-				} catch (Exception e) {
-				}
-			}
-
-			cmd.setOriginMessage(null);
-			return this.getStep() + 1;
+			return STEP_TO_SUB_LOOP_WORDS;
 		}
-	}
-
-	private WordProcessingSession getWordProcessingSession(
-			ProcessableCommand cmd) {
-		WordProcessingSession processingSession = (WordProcessingSession) getSession();
-		return processingSession;
-	}
-
-	@SuppressWarnings("unchecked")
-	private WordProcessingSession createWordProcessingSession(Long wordUnitId) {
-		WordUnit wordUnit = wordUnitManager.getWordUnit(wordUnitId);
-
-		Iterator<WordUnitEntry> iterator = wordUnit.getWordEntries().iterator();
-		List<Long> wordEntries = new ArrayList<Long>();
-		while (iterator.hasNext()) {
-			wordEntries.add(iterator.next().getPk().getWordEntryId());
-		}
-		WordProcessingSession ss = new WordProcessingSession(wordUnitId,
-				wordEntries);
-		setSession(ss);
-		return ss;
+		return REPEAT_THIS_STEP;
 	}
 }

@@ -94,6 +94,7 @@ public class InteractiveProcessor extends AbstractProcessor {
 
 	protected void internalProcess(BaseCommand abCmd) throws XMPPException {
 		while (true) {
+			log.debug("Processing step: " + getStep());
 			int result = executeOnlineProcess(abCmd);
 			if (result == CONTINUE && abCmd.isProcessed()) {
 				result = executeProcessPrompt(abCmd);
