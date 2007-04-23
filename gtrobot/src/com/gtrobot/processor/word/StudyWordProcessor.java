@@ -9,24 +9,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.XMPPException;
 
-import com.gtrobot.command.BaseCommand;
 import com.gtrobot.command.ProcessableCommand;
 import com.gtrobot.model.word.UserUnitInfo;
 import com.gtrobot.model.word.UserUnitInfoKey;
 import com.gtrobot.model.word.UserWordStudyingInfo;
 import com.gtrobot.model.word.WordEntry;
 import com.gtrobot.model.word.WordUnit;
-import com.gtrobot.processor.InteractiveProcessor;
-import com.gtrobot.service.word.UserFailedWordInfoManager;
-import com.gtrobot.service.word.UserStudyingWordInfoManager;
-import com.gtrobot.service.word.UserUnitInfoManager;
-import com.gtrobot.service.word.WordEntryManager;
-import com.gtrobot.service.word.WordService;
-import com.gtrobot.service.word.WordUnitEntryManager;
-import com.gtrobot.service.word.WordUnitManager;
 import com.gtrobot.utils.CommonUtils;
 
-public class StudyWordProcessor extends InteractiveProcessor {
+public class StudyWordProcessor extends BaseWordProcessor {
 	protected static final transient Log log = LogFactory
 			.getLog(StudyWordProcessor.class);
 
@@ -43,51 +34,6 @@ public class StudyWordProcessor extends InteractiveProcessor {
 	private static final int STEP_TO_CONTENTMANAGENT_CHANGEUNIT = 2300;
 
 	private static final int STEP_TO_CONTENTMANAGENT_CHANGESTUDYTYPE = 2400;
-
-	private UserUnitInfoManager userUnitInfoManager;
-
-	private WordUnitManager wordUnitManager;
-
-	private UserStudyingWordInfoManager userStudyingWordInfoManager;
-
-	private WordEntryManager wordEntryManager;
-
-	private UserFailedWordInfoManager userFailedWordInfoManager;
-
-	private WordUnitEntryManager wordUnitEntryManager;
-
-	private WordService wordService;
-
-	public void setWordUnitManager(WordUnitManager wordUnitManager) {
-		this.wordUnitManager = wordUnitManager;
-	}
-
-	public void setUserUnitInfoManager(UserUnitInfoManager userUnitInfoManager) {
-		this.userUnitInfoManager = userUnitInfoManager;
-	}
-
-	public void setUserStudyingWordInfoManager(
-			UserStudyingWordInfoManager userStudyingWordInfoManager) {
-		this.userStudyingWordInfoManager = userStudyingWordInfoManager;
-	}
-
-	public void setWordEntryManager(WordEntryManager wordEntryManager) {
-		this.wordEntryManager = wordEntryManager;
-	}
-
-	public void setUserFailedWordInfoManager(
-			UserFailedWordInfoManager userFailedWordInfoManager) {
-		this.userFailedWordInfoManager = userFailedWordInfoManager;
-	}
-
-	public void setWordUnitEntryManager(
-			WordUnitEntryManager wordUnitEntryManager) {
-		this.wordUnitEntryManager = wordUnitEntryManager;
-	}
-
-	public void setWordService(WordService wordService) {
-		this.wordService = wordService;
-	}
 
 	protected void initMenuComamndToStepMappings() {
 		super.initMenuComamndToStepMappings();
@@ -106,48 +52,6 @@ public class StudyWordProcessor extends InteractiveProcessor {
 		menuInfo.add("studyjpword.menu.conntentmanagement.showunit");
 		menuInfo.add("studyjpword.menu.conntentmanagement.changeunit");
 		menuInfo.add("studyjpword.menu.conntentmanagement.changestudytype");
-	}
-
-	protected int interactiveOnlineProcess(BaseCommand cmd)
-			throws XMPPException {
-		int result = super.interactiveOnlineProcess(cmd);
-		if (result != CONTINUE) {
-			return result;
-		}
-
-		StringBuffer msgBuf = new StringBuffer();
-		List<String> cmds = cmd.getInteractiveCommands();
-		if (cmds == null) {
-			return CONTINUE;
-		}
-		String cmdMsg = cmds.get(0);
-		if (cmds.size() == 2) {
-			String content = cmds.get(1);
-			if (".g".equalsIgnoreCase(cmdMsg)
-					|| ".google".equalsIgnoreCase(cmdMsg)) {
-				int maxResults = 20;
-				if (".google".equalsIgnoreCase(cmdMsg)) {
-					maxResults = 1000;
-				}
-				List ls = wordEntryManager.searchWordEntries(content,
-						maxResults);
-				Iterator it = ls.iterator();
-				msgBuf.append("Search result: ").append(ls.size());
-				msgBuf.append(endl);
-				while (it.hasNext()) {
-					showWord(msgBuf, (WordEntry) it.next());
-				}
-				sendBackMessage(cmd, msgBuf.toString());
-				return REPEAT_THIS_STEP;
-			}
-		}
-		return CONTINUE;
-	}
-
-	protected StringBuffer interactiveOnlineHelper(BaseCommand cmd) {
-		StringBuffer msgBuf = super.interactiveOnlineHelper(cmd);
-		msgBuf.append("> .g <keyword> Google word.").append(endl);
-		return msgBuf;
 	}
 
 	/**
@@ -194,9 +98,8 @@ public class StudyWordProcessor extends InteractiveProcessor {
 
 		msgBuf.append("> .f Mark this word as finished.").append(endl);
 		msgBuf.append("> .m Add this word into my private unit.").append(endl);
-		msgBuf.append("> .as <content> Append sentence as sample.")
-				.append(endl);
-		msgBuf.append("> .an <comments> Append note as conments.").append(endl);
+
+		commonOnlineHelper_ChangeWord(msgBuf);
 
 		return msgBuf;
 	}
@@ -266,44 +169,8 @@ public class StudyWordProcessor extends InteractiveProcessor {
 				return STEP_TO_CONTINUE_STUDY;
 			}
 		}
-		if (cmds.size() == 2) {
-			// Process the command with parameter
-			String content = cmds.get(1);
-			if (".as".equalsIgnoreCase(cmdMsg)) {
-				if (wordEntry.getSentence() != null) {
-					msgBuf.append(wordEntry.getSentence());
-					msgBuf.append(endl);
-				}
-				msgBuf.append(content.trim());
-				wordEntry.setSentence(msgBuf.toString());
-				wordEntryManager.saveWordEntry(wordEntry);
 
-				msgBuf = new StringBuffer();
-				showWord(msgBuf, wordEntry);
-				msgBuf.append("Your entered sentence has been added.").append(
-						endl);
-				sendBackMessage(cmd, msgBuf.toString());
-				return STEP_TO_CONTINUE_STUDY;
-			}
-			if (".an".equalsIgnoreCase(cmdMsg)) {
-				if (wordEntry.getComments() != null) {
-					msgBuf.append(wordEntry.getComments());
-					msgBuf.append(endl);
-				}
-				msgBuf.append(content.trim());
-				wordEntry.setComments(msgBuf.toString());
-				wordEntryManager.saveWordEntry(wordEntry);
-
-				msgBuf = new StringBuffer();
-				showWord(msgBuf, wordEntry);
-				msgBuf.append("Your entered comments has been added.").append(
-						endl);
-				sendBackMessage(cmd, msgBuf.toString());
-				return STEP_TO_CONTINUE_STUDY;
-			}
-		}
-		// cmd.setOriginMessage(".");
-		return CONTINUE;
+		return commonOnlineProcess_ChangeWord(cmd, cmds, wordEntry);
 	}
 
 	protected int interactiveProcessPrompt_1001(ProcessableCommand cmd)
@@ -439,37 +306,6 @@ public class StudyWordProcessor extends InteractiveProcessor {
 		msgBuf.append(endl);
 		sendBackMessage(cmd, msgBuf.toString());
 		return STEP_TO_CONTINUE_STUDY_EXIT;
-	}
-
-	private void showWord(StringBuffer msgBuf, WordEntry wordEntry) {
-		msgBuf.append(wordEntry.getWord());
-		if (wordEntry.getPronounce() != null) {
-			msgBuf.append("　/");
-			msgBuf.append(wordEntry.getPronounce());
-			msgBuf.append("/");
-			msgBuf.append(wordEntry.getPronounceType());
-			msgBuf.append("/　");
-		}
-
-		if (wordEntry.getWordType() != null) {
-			msgBuf.append("　(");
-			msgBuf.append(wordEntry.getWordType());
-			msgBuf.append(")　");
-		}
-		msgBuf.append(wordEntry.getMeaning());
-		msgBuf.append(endl);
-
-		if (wordEntry.getSentence() != null) {
-			msgBuf.append("<用例>").append(endl);
-			msgBuf.append(wordEntry.getSentence());
-			msgBuf.append(endl);
-		}
-
-		if (wordEntry.getComments() != null) {
-			msgBuf.append("<注釈>").append(endl);
-			msgBuf.append(wordEntry.getComments());
-			msgBuf.append(endl);
-		}
 	}
 
 	/**
