@@ -8,6 +8,12 @@ import org.jivesoftware.smack.ChatManager;
 
 import com.gtrobot.engine.GTRobotContextHelper;
 
+/**
+ * 管理同所有用户的Chat对象的Cache处理。
+ * 
+ * @author Joey
+ * 
+ */
 public class UserChatUtil {
 	public static final Chat getChat(String jid) {
 		Chat chat = getChatFromCache(jid);

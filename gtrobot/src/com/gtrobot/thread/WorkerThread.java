@@ -3,21 +3,27 @@ package com.gtrobot.thread;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.gtrobot.thread.signalqueues.EventQueue;
+import com.gtrobot.thread.signalqueues.Queue;
 
+/**
+ * 实现了Thread Pool中的Worker的实装类。子类需要重载internalProcess来实现具体的业务处理。
+ * 
+ * @author Joey
+ * 
+ */
 public class WorkerThread implements Runnable {
 	protected static final transient Log log = LogFactory
 			.getLog(WorkerThread.class);
 
 	private Object processingData;
 
-	private EventQueue parentThreadPool;
+	private Queue parentThreadPool;
 
 	private Thread workerThread;
 
 	private boolean isRunning = true;
 
-	public WorkerThread(String name, EventQueue threadPool) {
+	public WorkerThread(String name, Queue threadPool) {
 		parentThreadPool = threadPool;
 		workerThread = new Thread(this, name);
 		workerThread.setDaemon(false);

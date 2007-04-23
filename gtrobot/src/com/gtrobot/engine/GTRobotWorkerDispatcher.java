@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.gtrobot.thread.WorkerDispatcher;
 import com.gtrobot.thread.WorkerThread;
-import com.gtrobot.thread.signalqueues.EventQueue;
+import com.gtrobot.thread.signalqueues.Queue;
 
 /**
  * 定义GTRobot使用的ThreadWorderDispatcher类。完成任务在ThreadPool中的分发。
@@ -21,7 +21,7 @@ public class GTRobotWorkerDispatcher extends WorkerDispatcher {
 		super(name, threadNumber);
 	}
 
-	protected WorkerThread getWorkerThread(int i, EventQueue threadPool) {
+	protected WorkerThread getWorkerThread(int i, Queue threadPool) {
 		return new GTRobotWorkerThread("GTRobotWorkerThread: " + i, threadPool);
 	}
 }

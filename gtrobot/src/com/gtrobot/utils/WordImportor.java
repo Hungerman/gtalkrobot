@@ -18,6 +18,12 @@ import com.gtrobot.service.word.WordEntryManager;
 import com.gtrobot.service.word.WordUnitEntryManager;
 import com.gtrobot.service.word.WordUnitManager;
 
+/**
+ * 实现数据的导入处理。
+ * 
+ * @author Joey
+ * 
+ */
 public class WordImportor {
 	private WordEntryManager wordEntryManager = null;
 

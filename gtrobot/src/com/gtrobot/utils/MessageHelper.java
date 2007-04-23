@@ -8,6 +8,12 @@ import org.springframework.context.ApplicationContext;
 
 import com.gtrobot.engine.GTRobotContextHelper;
 
+/**
+ * 提供了通过Spring的MessageSource访问Message内容的接口。
+ * 
+ * @author Joey
+ * 
+ */
 public class MessageHelper {
 	protected static final transient Log log = LogFactory
 			.getLog(MessageHelper.class);
