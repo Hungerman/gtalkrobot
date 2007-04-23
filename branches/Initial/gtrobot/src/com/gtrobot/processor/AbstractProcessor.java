@@ -13,6 +13,13 @@ import com.gtrobot.model.common.UserEntry;
 import com.gtrobot.service.common.UserEntryService;
 import com.gtrobot.utils.UserChatUtil;
 
+/**
+ * 业务处理的基类。 提供业务处理的基本操作接口。 处理流程： 1. process方法：
+ * 设置用户ThreadLocal情报。调用beforeProcess处理，如果没有错误，则调用internalProcess方法。，清除ThreadLocale信息。
+ * 
+ * @author Joey
+ * 
+ */
 public abstract class AbstractProcessor implements Processor {
 	protected static final transient Log log = LogFactory
 			.getLog(AbstractProcessor.class);
@@ -22,10 +29,6 @@ public abstract class AbstractProcessor implements Processor {
 	protected static final String seperator = "~~~~~~~~~~~~~~~~~~~~~~~~";
 
 	private static ThreadLocal<UserEntry> userEntryHolder = new ThreadLocal<UserEntry>();
-
-	public AbstractProcessor() {
-		// ctx = GlobalContext.getInstance();
-	}
 
 	public void process(BaseCommand abCmd) {
 		try {

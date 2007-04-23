@@ -2,6 +2,12 @@ package com.gtrobot.command;
 
 import java.util.List;
 
+/**
+ * 对于简单的on和off参数类型的命令。
+ * 
+ * @author Joey
+ * 
+ */
 public class SwitchCommand extends ProcessableCommand {
 	private static final String ON = "on";
 

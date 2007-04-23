@@ -86,8 +86,8 @@ public class StudyWordProcessor extends InteractiveProcessor {
 		this.wordUnitEntryManager = wordUnitEntryManager;
 	}
 
-	protected void initCommandToStepMappings() {
-		super.initCommandToStepMappings();
+	protected void initMenuComamndToStepMappings() {
+		super.initMenuComamndToStepMappings();
 
 		addCommandToStepMapping("1", STEP_TO_CONTINUE_STUDY);
 		addCommandToStepMapping("21", STEP_TO_CONTENTMANAGENT_ADDUNIT);

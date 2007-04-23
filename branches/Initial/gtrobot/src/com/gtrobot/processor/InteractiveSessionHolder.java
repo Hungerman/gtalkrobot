@@ -1,5 +1,11 @@
 package com.gtrobot.processor;
 
+/**
+ * 交互式业务处理关联的Session情报。Session信息，Step信息，临时Session信息。
+ * 
+ * @author Joey
+ * 
+ */
 public class InteractiveSessionHolder {
 	private Object session;
 

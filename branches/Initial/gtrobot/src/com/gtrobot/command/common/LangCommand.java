@@ -6,6 +6,12 @@ import java.util.Locale;
 import com.gtrobot.command.ProcessableCommand;
 import com.gtrobot.utils.CommonUtils;
 
+/**
+ * 设置Locale的命令对象。
+ * 
+ * @author Joey
+ * 
+ */
 public class LangCommand extends ProcessableCommand {
 	private String operation;
 
