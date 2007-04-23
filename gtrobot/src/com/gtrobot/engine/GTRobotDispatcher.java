@@ -172,6 +172,7 @@ public class GTRobotDispatcher {
 		command.setOriginMessage(body.trim());
 		command.setArgv(commands);
 		command.setUserEntry(jid);
+		command.setProcessed(false);
 		if (command instanceof ProcessableCommand) {
 			((ProcessableCommand) command).parseArgv(commands);
 		}

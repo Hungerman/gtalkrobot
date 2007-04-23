@@ -42,7 +42,6 @@ import com.gtrobot.utils.UserSessionUtil;
  * interactiveOnlineHelper，interactiveProcessPrompt，interactiveProcess都执行完成后，递增Step数，执行后一Step的处理。<br>
  * 2. REPEAT_THIS_STEP：讨论中<br>
  * 3. WAIT_INPUT： 中止当前处理，等待用户输入。<br>
- * 4. END_BY_INTERNAL_EXCEPTION： 异常推出。讨论中<br>
  * 5. >0： 返回的是具体的Step数，直接执行对应的Step处理。<br>
  * 
  * @author Joey
@@ -56,8 +55,6 @@ public class InteractiveProcessor extends AbstractProcessor {
 	protected static final int REPEAT_THIS_STEP = -1;
 
 	protected static final int WAIT_INPUT = -2;
-
-	protected static final int END_BY_INTERNAL_EXCEPTION = -9999;
 
 	protected static final int STEP_TO_MENU = 10;
 
@@ -97,15 +94,6 @@ public class InteractiveProcessor extends AbstractProcessor {
 
 	protected void internalProcess(BaseCommand abCmd) throws XMPPException {
 		while (true) {
-			// int result = executeOnlineProcess(abCmd);
-			// if (result >= CONTINUE) {
-			// if (result > CONTINUE) {
-			// jumpToStep(result);
-			// }
-			// result = executeProcess(abCmd);
-			// } else {
-			// abCmd.setOriginMessage(null);
-			// }
 			int result = executeOnlineProcess(abCmd);
 			if (result == CONTINUE && abCmd.isProcessed()) {
 				result = executeProcessPrompt(abCmd);
@@ -407,10 +395,7 @@ public class InteractiveProcessor extends AbstractProcessor {
 		if (result == null) {
 			return STEP_TO_EXIT_MAIN_MENU;
 		} else {
-			intResult = ((Integer) result).intValue();
-			if (intResult == END_BY_INTERNAL_EXCEPTION)
-				return CONTINUE;
-			return intResult;
+			return ((Integer) result).intValue();
 		}
 	}
 
@@ -454,7 +439,7 @@ public class InteractiveProcessor extends AbstractProcessor {
 							+ this.getClass().getName() + "." + methodName);
 					method = (Method) methodTable.get(methodPrefix);
 				} else {
-					return END_BY_INTERNAL_EXCEPTION;
+					return CONTINUE;
 				}
 			}
 			log.debug("Invoking: " + method.getName());
