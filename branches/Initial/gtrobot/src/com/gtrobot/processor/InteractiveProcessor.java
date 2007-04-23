@@ -106,7 +106,7 @@ public class InteractiveProcessor extends AbstractProcessor {
 	protected int interactiveOnlineProcess(BaseCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		cmd.setInteractiveCommands(CommonUtils.parseInteractiveCommand(cmd
+		cmd.setInteractiveCommands(CommonUtils.parseSimpleCommand(cmd
 				.getOriginMessage()));
 		if (cmd.getInteractiveCommands() == null) {
 			return CONTINUE;

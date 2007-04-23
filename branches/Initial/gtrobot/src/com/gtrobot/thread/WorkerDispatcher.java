@@ -3,36 +3,42 @@ package com.gtrobot.thread;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.gtrobot.thread.signalqueues.EventQueue;
-import com.gtrobot.thread.signalqueues.EventQueueProxy;
+import com.gtrobot.thread.signalqueues.Queue;
+import com.gtrobot.thread.signalqueues.QueueProxy;
 import com.gtrobot.thread.signalqueues.FIFORingEventQueue;
 
+/**
+ * ThreadPool的处理Dispatcher类。当接收新的Event的时候，从ThreadPool中选择Idle的Worker进行激活，使其对Event进行具体的处理。
+ * 
+ * @author Joey
+ * 
+ */
 public class WorkerDispatcher extends SpinObjectPool {
 	protected static final transient Log log = LogFactory
 			.getLog(WorkerDispatcher.class);
 
 	private int threadNumber = 3;
 
-	private EventQueue threadPool;
+	private Queue threadPool;
 
 	public WorkerDispatcher(String name, int threadNumber) {
 		super(name, true, new FIFORingEventQueue(20));
 
 		// Initialize the thread pool
 		this.threadNumber = threadNumber;
-		threadPool = new EventQueueProxy(new FIFORingEventQueue(threadNumber));
+		threadPool = new QueueProxy(new FIFORingEventQueue(threadNumber));
 		for (int i = 0; i < threadNumber; i++) {
 			threadPool.push(getWorkerThread(i, threadPool));
 		}
 	}
 
-	protected WorkerThread getWorkerThread(int i, EventQueue threadPool) {
+	protected WorkerThread getWorkerThread(int i, Queue threadPool) {
 		return new WorkerThread("WorkerThread: " + i, threadPool);
 	}
 
 	/**
-	 * Invoked when an comamnd should be triggered into EventQueue.<br>
-	 * The new coming comamnd will be pushed into EventQueue.
+	 * Invoked when an comamnd should be triggered into Queue.<br>
+	 * The new coming comamnd will be pushed into Queue.
 	 * 
 	 * @param comamnd
 	 */
@@ -49,17 +55,6 @@ public class WorkerDispatcher extends SpinObjectPool {
 	 * @see com.gtrobot.thread.SpinThreadPool#process(java.lang.Object)
 	 */
 	protected void process(Object event) {
-		//
-		// if (processor == null) {
-		// processor =
-		// CommandProcessorMapping.getInstance().getProcessor("errorProcessor");
-		// String sysError = MessageBundle.getInstance().getMessage(
-		// "system.error.processor.null");
-		// log.warn(sysError + "with command: " + cmd.getClass().getName()
-		// + " origin message: " + cmd.getOriginMessage());
-		// cmd.setErrorMessage(sysError);
-		// }
-
 		try {
 			if (log.isDebugEnabled()) {
 				log

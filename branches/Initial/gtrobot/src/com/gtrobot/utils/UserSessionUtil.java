@@ -6,6 +6,12 @@ import net.sf.ehcache.Element;
 import com.gtrobot.command.BaseCommand;
 import com.gtrobot.engine.GTRobotContextHelper;
 
+/**
+ * 提供了根据用户JID进行Session操作的接口。内部是根据Cache内容进行实现。
+ * 
+ * @author Joey
+ * 
+ */
 public class UserSessionUtil {
 	private static final String PREVIOUS_COMMAND_KEY = "-preCommand";
 

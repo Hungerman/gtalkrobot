@@ -1,11 +1,17 @@
 package com.gtrobot.thread.signalqueues;
 
-public class EventQueueProxy implements EventQueue {
-	private EventQueue internalQueue = null;
+/**
+ * 对Queue的访问进行了同步封装。具体实现类不需要考虑同步的问题。
+ * 
+ * @author Joey
+ * 
+ */
+public class QueueProxy implements Queue {
+	private Queue internalQueue = null;
 
 	private boolean isRunning = true;
 
-	public EventQueueProxy(EventQueue queue) {
+	public QueueProxy(Queue queue) {
 		super();
 		internalQueue = queue;
 	}

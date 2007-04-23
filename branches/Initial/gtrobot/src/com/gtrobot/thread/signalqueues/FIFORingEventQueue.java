@@ -1,6 +1,12 @@
 package com.gtrobot.thread.signalqueues;
 
-public class FIFORingEventQueue implements EventQueue {
+/**
+ * 实现了一个FIFO的Queue类的实例。这里不用考虑同步和等待的问题，在进行Push和Pop的时候，外层调用已经保证了对应的操作已经是可行的。
+ * 
+ * @author Joey
+ * 
+ */
+public class FIFORingEventQueue implements Queue {
 	public static int QUEUE_MAX_SIZE = 10000;
 
 	public static int QUEUE_MIN_SIZE = 10;

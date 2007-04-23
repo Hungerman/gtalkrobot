@@ -13,7 +13,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import com.gtrobot.command.BaseCommand;
 import com.gtrobot.processor.Processor;
 import com.gtrobot.thread.WorkerThread;
-import com.gtrobot.thread.signalqueues.EventQueue;
+import com.gtrobot.thread.signalqueues.Queue;
 
 /**
  * 
@@ -29,7 +29,7 @@ public class GTRobotWorkerThread extends WorkerThread {
 	protected static final transient Log log = LogFactory
 			.getLog(GTRobotWorkerThread.class);
 
-	public GTRobotWorkerThread(String name, EventQueue threadPool) {
+	public GTRobotWorkerThread(String name, Queue threadPool) {
 		super(name, threadPool);
 	}
 
