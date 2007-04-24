@@ -75,12 +75,18 @@ public class WordManagementProcessor extends BaseWordProcessor {
 		if (cmds.size() == 2) {
 			String content = cmds.get(1);
 			if (".c".equalsIgnoreCase(cmdMsg)) {
-				WordUnit wordUnit = new WordUnit();
-				wordUnit.setName(content);
-				wordUnitManager.saveWordUnit(wordUnit);
+				WordUnit wordUnitTemp = wordUnitManager.getWordUnit(content);
+				if (wordUnitTemp == null) {
+					WordUnit wordUnit = new WordUnit();
+					wordUnit.setName(content);
+					wordUnitManager.saveWordUnit(wordUnit);
 
-				msgBuf.append("New word unit has been created with id: "
-						+ wordUnit.getWordUnitId());
+					msgBuf.append("New word unit has been created with id: "
+							+ wordUnit.getWordUnitId());
+				} else {
+					msgBuf.append("Error: Word unit has been there with id: "
+							+ wordUnitTemp.getWordUnitId());
+				}
 				sendBackMessage(cmd, msgBuf.toString());
 				return CONTINUE;
 			}
@@ -166,27 +172,35 @@ public class WordManagementProcessor extends BaseWordProcessor {
 				}
 				msgBuf.append(endl);
 				sendBackMessage(cmd, msgBuf.toString());
+				cmd.setProcessed(true);
 				return CONTINUE;
 			}
 		}
 		if (cmds.size() == 2) {
 			String content = cmds.get(1);
 			if (".c".equalsIgnoreCase(cmdMsg)) {
-				WordEntry wordEntry = new WordEntry();
-				wordEntry.setWord(content);
-				wordEntry.setPronounce(content);
-				wordEntry.setMeaning(content);
-				wordEntryManager.saveWordEntry(wordEntry);
+				WordEntry wordEntry = wordEntryManager.getWordEntry(content);
+				if (wordEntry == null) {
+					wordEntry = new WordEntry();
+					wordEntry.setWord(content);
+					wordEntry.setPronounce(content);
+					wordEntry.setMeaning(content);
+					wordEntryManager.saveWordEntry(wordEntry);
+				}
 
 				WordUnitEntry wordUnitEntry = new WordUnitEntry();
 				wordUnitEntry.getPk()
 						.setWordEntryId(wordEntry.getWordEntryId());
 				wordUnitEntry.getPk().setWordUnitId(wordUnitId);
-				wordUnitEntryManager.saveWordUnitEntry(wordUnitEntry);
+				if (wordUnitEntryManager
+						.getWordUnitEntry(wordUnitEntry.getPk()) == null) {
+					wordUnitEntryManager.saveWordUnitEntry(wordUnitEntry);
+				}
 
 				msgBuf.append("New word has been created with id: "
 						+ wordEntry.getWordEntryId());
 				sendBackMessage(cmd, msgBuf.toString());
+				cmd.setProcessed(true);
 				return CONTINUE;
 			}
 			if (".d".equalsIgnoreCase(cmdMsg)) {
@@ -209,6 +223,7 @@ public class WordManagementProcessor extends BaseWordProcessor {
 				msgBuf.append(" have been removed from unit: ").append(
 						wordUnitId);
 				sendBackMessage(cmd, msgBuf.toString());
+				cmd.setProcessed(true);
 				return CONTINUE;
 			}
 			if (".a".equalsIgnoreCase(cmdMsg)) {
@@ -234,6 +249,7 @@ public class WordManagementProcessor extends BaseWordProcessor {
 				msgBuf.append(" have been added from unit: ")
 						.append(wordUnitId);
 				sendBackMessage(cmd, msgBuf.toString());
+				cmd.setProcessed(true);
 				return CONTINUE;
 			}
 		}
@@ -263,9 +279,10 @@ public class WordManagementProcessor extends BaseWordProcessor {
 			}
 		} catch (NumberFormatException e) {
 			msgBuf.append("You entered one invalid word number.");
+			sendBackMessage(cmd, msgBuf.toString());
 			return REPEAT_THIS_STEP;
 		}
-		setSession(wordEntry);
+		setTempSession(wordEntry);
 		return STEP_TO_SUB_CHANGE_WORD;
 	}
 
@@ -289,7 +306,8 @@ public class WordManagementProcessor extends BaseWordProcessor {
 				(WordEntry) getTempSession());
 	}
 
-	protected int interactiveProcessPrompt_1020(ProcessableCommand cmd) {
+	protected int interactiveProcessPrompt_1020(ProcessableCommand cmd)
+			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
 		WordEntry wordEntry = (WordEntry) getTempSession();
 		showWord(msgBuf, wordEntry);
@@ -297,7 +315,8 @@ public class WordManagementProcessor extends BaseWordProcessor {
 		msgBuf.append(endl);
 		msgBuf.append("OK?");
 
-		return CONTINUE;
+		sendBackMessage(cmd, msgBuf.toString());
+		return WAIT_INPUT;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -311,6 +330,7 @@ public class WordManagementProcessor extends BaseWordProcessor {
 			sendBackMessage(cmd, msgBuf.toString());
 			return STEP_TO_SUB_LOOP_WORDS;
 		}
+		sendBackMessage(cmd, msgBuf.toString());
 		return REPEAT_THIS_STEP;
 	}
 }
