@@ -1,13 +1,13 @@
 package com.gtrobot.utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
-
-import org.springframework.orm.ObjectRetrievalFailureException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.FlushMode;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.orm.hibernate3.SessionFactoryUtils;
+import org.springframework.orm.hibernate3.SessionHolder;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.gtrobot.engine.GTRobotContextHelper;
 import com.gtrobot.model.word.WordEntry;
@@ -24,14 +24,16 @@ import com.gtrobot.service.word.WordUnitManager;
  * @author Joey
  * 
  */
-public class WordImportor {
+public abstract class WordImportor {
+	protected static final Log log = LogFactory.getLog(WordImportor.class);
+
 	private WordEntryManager wordEntryManager = null;
 
 	private WordUnitManager wordUnitManager = null;
 
 	private WordUnitEntryManager wordUnitEntryManager = null;
 
-	private int wordLelvel = 0;
+	protected int wordLelvel = 0;
 
 	public WordImportor() {
 		GTRobotContextHelper.initApplicationContext();
@@ -42,57 +44,47 @@ public class WordImportor {
 				.getBean("wordUnitManager");
 		wordUnitEntryManager = (WordUnitEntryManager) GTRobotContextHelper
 				.getBean("wordUnitEntryManager");
+
+		SessionFactory sessionFactory = (SessionFactory) GTRobotContextHelper
+				.getBean("sessionFactory");
+		Session session = SessionFactoryUtils.getSession(sessionFactory, true);
+		session.setFlushMode(FlushMode.MANUAL);
+		// session.setFlushMode(FlushMode.COMMIT);
+		TransactionSynchronizationManager.bindResource(sessionFactory,
+				new SessionHolder(session));
 	}
 
-	public void importEdict2(String fileName) {
+	public abstract void importFile(String fileName);
 
-		long count = 0;
-		String line = null;
-		String unitName = null;
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					new FileInputStream(fileName), "GBK"));
+	protected void flush() {
+		SessionFactory sessionFactory = (SessionFactory) GTRobotContextHelper
+				.getBean("sessionFactory");
+		SessionHolder holder = (SessionHolder) TransactionSynchronizationManager
+				.getResource(sessionFactory);
+		holder.getSession().flush();
+	}
 
-			unitName = reader.readLine();
-			System.out.println("\n\n\n===========================");
-			System.out.println("=====>: " + unitName);
-			WordUnit wordUnit = getWordUnit(unitName);
-			wordUnitManager.saveWordUnit(wordUnit);
+	protected void saveWordUnit(WordUnit wordUnit) {
+		wordUnitManager.saveWordUnit(wordUnit);
+		wordUnit.setWordCount(wordUnit.getWordEntries().size());
+		wordUnitManager.saveWordUnit(wordUnit);
+	}
 
-			line = reader.readLine();
-			line = reader.readLine();
-			while (!line.equals("/End")) {
-				System.out.println("----->: " + line);
-				WordEntry wordEntry = processLine(line);
-
-				wordEntryManager.saveWordEntry(wordEntry);
-				WordUnitEntryKey key = new WordUnitEntryKey();
-				key.setWordEntryId(wordEntry.getWordEntryId());
-				key.setWordUnitId(wordUnit.getWordUnitId());
-				WordUnitEntry wordUnitEntry = null;
-				try {
-					wordUnitEntry = wordUnitEntryManager.getWordUnitEntry(key);
-				} catch (ObjectRetrievalFailureException e) {
-				}
-				if (wordUnitEntry == null) {
-					wordUnitEntry = new WordUnitEntry();
-					wordUnitEntry.setPk(key);
-					wordUnitEntryManager.saveWordUnitEntry(wordUnitEntry);
-				}
-
-				line = reader.readLine();
-				count++;
-			}
-			wordUnit.setWordCount(count);
-			wordUnitManager.saveWordUnit(wordUnit);
-		} catch (Exception e) {
-			System.out
-					.println("*****>" + unitName + "(" + count + "): " + line);
-			e.printStackTrace();
+	protected void saveWordEntry(WordUnit wordUnit, WordEntry wordEntry) {
+		wordEntryManager.saveWordEntry(wordEntry);
+		WordUnitEntryKey key = new WordUnitEntryKey();
+		key.setWordEntryId(wordEntry.getWordEntryId());
+		key.setWordUnitId(wordUnit.getWordUnitId());
+		WordUnitEntry wordUnitEntry = null;
+		wordUnitEntry = wordUnitEntryManager.getWordUnitEntry(key);
+		if (wordUnitEntry == null) {
+			wordUnitEntry = new WordUnitEntry();
+			wordUnitEntry.setPk(key);
+			wordUnitEntryManager.saveWordUnitEntry(wordUnitEntry);
 		}
 	}
 
-	private WordUnit getWordUnit(String unitName) {
+	protected WordUnit createWordUnit(String unitName) {
 		WordUnit wordUnit = wordUnitManager.getWordUnit(unitName);
 		if (wordUnit == null) {
 			wordUnit = new WordUnit();
@@ -102,20 +94,9 @@ public class WordImportor {
 		return wordUnit;
 	}
 
-	private WordEntry processLine(String line) throws SQLException,
-			UnsupportedEncodingException {
-
-		// できる//②/动2/会，能/0/
-		String[] split = line.split("/");
-		String pronounce = split[0];
-		String word = split[1];
-		if (word == null || word.trim().length() == 0) {
-			word = pronounce;
-		}
-		String pronounceType = split[2];
-		String wordType = split[3];
-		String meaning = split[4];
-
+	protected WordEntry createWordEntry(String word, String pronounce,
+			String pronounceType, String wordType, String meaning,
+			String sentence, String comments) {
 		WordEntry wordEntry = wordEntryManager.getWordEntry(word);
 		if (wordEntry == null) {
 			wordEntry = new WordEntry();
@@ -124,45 +105,36 @@ public class WordImportor {
 			wordEntry.setPronounceType(pronounceType);
 			wordEntry.setWordType(wordType);
 			wordEntry.setMeaning(meaning);
+			wordEntry.setSentence(sentence);
+			wordEntry.setComments(comments);
 		} else {
+			wordEntry.setPronounce(mergeContents(pronounce, wordEntry
+					.getPronounce(), "; "));
+			wordEntry.setPronounceType(mergeContents(pronounceType, wordEntry
+					.getPronounceType(), "; "));
 			wordEntry.setWordType(mergeContents(wordType, wordEntry
-					.getWordType()));
-			wordEntry
-					.setMeaning(mergeContents(meaning, wordEntry.getMeaning()));
+					.getWordType(), "; "));
+			wordEntry.setMeaning(mergeContents(meaning, wordEntry.getMeaning(),
+					"; "));
+
+			wordEntry.setSentence(mergeContents(sentence, wordEntry
+					.getSentence(), "\r\n"));
+			wordEntry.setComments(mergeContents(comments, wordEntry
+					.getComments(), "\r\n"));
 		}
 		return wordEntry;
 	}
 
-	private String mergeContents(String newContent, String oldContent) {
+	private String mergeContents(String newContent, String oldContent,
+			String spliter) {
 		if (oldContent == null) {
 			return newContent;
 		} else {
 			if (newContent != null && newContent.length() != 0
-					&& !oldContent.equalsIgnoreCase(newContent)) {
-				return oldContent + "/" + newContent;
+					&& oldContent.indexOf(newContent) < 0) {
+				return oldContent + spliter + newContent;
 			} else
 				return oldContent;
 		}
 	}
-
-	public static final void main(String[] argv) {
-		WordImportor importor = new WordImportor();
-
-		importFile("metadata\\data\\标日初级分课单词上\\", importor, 4);
-		importFile("metadata\\data\\标日初级分课单词下\\", importor, 3);
-		importFile("metadata\\data\\标日中级分课单词\\", importor, 2);
-
-		System.exit(0);
-	}
-
-	private static void importFile(String filePath, WordImportor importor,
-			int wordLevel) {
-		importor.wordLelvel = wordLevel;
-		File dir = new File(filePath);
-		String[] filenames = dir.list();
-		for (int i = 0; i < filenames.length; i++) {
-			importor.importEdict2(filePath + filenames[i]);
-		}
-	}
-
 }

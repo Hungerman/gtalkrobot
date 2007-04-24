@@ -121,11 +121,13 @@ public class StudyWordProcessor extends BaseWordProcessor {
 			if (".p".equalsIgnoreCase(cmdMsg)) {
 				studyingSession.backOne();
 				studyingSession.backOne();
+				cmd.setProcessed(true);
 				return STEP_TO_CONTINUE_STUDY;
 			}
 			if (".s".equalsIgnoreCase(cmdMsg)) {
 				showWord(msgBuf, wordEntry);
 				sendBackMessage(cmd, msgBuf.toString());
+				cmd.setProcessed(true);
 				return STEP_TO_CONTINUE_STUDY;
 			}
 			if (".d".equalsIgnoreCase(cmdMsg)) {
@@ -143,6 +145,7 @@ public class StudyWordProcessor extends BaseWordProcessor {
 						"This word has been deleted from your private list.")
 						.append(endl);
 				sendBackMessage(cmd, msgBuf.toString());
+				cmd.setProcessed(true);
 				return STEP_TO_CONTINUE_STUDY;
 			}
 			if (".m".equalsIgnoreCase(cmdMsg)) {
@@ -153,6 +156,7 @@ public class StudyWordProcessor extends BaseWordProcessor {
 				msgBuf.append("This word has been added to your private list.")
 						.append(endl);
 				sendBackMessage(cmd, msgBuf.toString());
+				cmd.setProcessed(true);
 				return STEP_TO_CONTINUE_STUDY;
 			}
 			if (".f".equalsIgnoreCase(cmdMsg)) {
@@ -166,6 +170,7 @@ public class StudyWordProcessor extends BaseWordProcessor {
 								"This word has been moved from failed list to your private list.")
 						.append(endl);
 				sendBackMessage(cmd, msgBuf.toString());
+				cmd.setProcessed(true);
 				return STEP_TO_CONTINUE_STUDY;
 			}
 		}
@@ -221,12 +226,7 @@ public class StudyWordProcessor extends BaseWordProcessor {
 			msgBuf.append(cmd
 					.getI18NMessage("studyjpword.menu.1.enterword.prompt"));
 			msgBuf.append(endl);
-			msgBuf.append(wordEntry.getWord());
-			if (wordEntry.getPronounce() != null) {
-				msgBuf.append("  [");
-				msgBuf.append(wordEntry.getPronounce());
-				msgBuf.append("]");
-			}
+			showWord(msgBuf, wordEntry, false);
 
 			wordService.updateUserFailedWordInfo(
 					cmd.getUserEntry().getUserId(), studyingSession

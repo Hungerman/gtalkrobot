@@ -105,9 +105,10 @@ public class InteractiveProcessor extends AbstractProcessor {
 			abCmd.setProcessed(true);
 			switch (result) {
 			case WAIT_INPUT:
-			case REPEAT_THIS_STEP:
 				UserSessionUtil.storePreviousCommand(abCmd);
 				return;
+			case REPEAT_THIS_STEP:
+				continue;
 			case CONTINUE: {
 				nextStep();
 				UserSessionUtil.storePreviousCommand(abCmd);

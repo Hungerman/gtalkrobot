@@ -47,7 +47,7 @@ public class WordEntry extends BaseObject {
 	}
 
 	/**
-	 * @hibernate.property column="MEANING" not-null="true" length="200"
+	 * @hibernate.property column="MEANING" not-null="true" length="1000"
 	 */
 	public String getMeaning() {
 		return meaning;
@@ -61,7 +61,7 @@ public class WordEntry extends BaseObject {
 	}
 
 	/**
-	 * @hibernate.property column="PRONOUNCE_TYPE" length="2"
+	 * @hibernate.property column="PRONOUNCE_TYPE" length="50"
 	 */
 	public String getPronounceType() {
 		return pronounceType;
