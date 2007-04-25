@@ -8,13 +8,14 @@ error.accountLocked=非常抱歉，由于系统安全或者其他的原因，您
 error.origin.prompt=你的命令是:
 invalid.command=不可识别的命令: 
 
-help.welcome=*** 欢迎来到GTRobot! 请访问: http://code.google.com/p/gtalkrobot/ ***
+help.welcome=*** {0}，欢迎来到GTRobot! 请访问: http://code.google.com/p/gtalkrobot/ ***
 help.global.prompt=[全局命令 - 
 help.immediate.prompt=即时命令]
 help.command.help=/help : 显示此帮助信息
 help.command.lang=/lang <en|zh|ja> : 更改语言设定
 help.command.status=/st|status : 显示您的状态
 help.command.privatemessage=/pm|privatemessage <gmailId> <message>: 通过好友的Gmail帐号发送秘密消息
+help.command.changenickname=/cn|changenickname <newNickName> : 更改你的别名
 help.command.echo=/echo on|off : 是否回显您的输入
 help.command.searchuser=/sc [match string] : 查找当前在线用户
 help.interactive.prompt=交互式命令]
@@ -40,8 +41,12 @@ status.item.interactive.roomchat=您正在公共聊天室，尽情享受吧!
 status.item.interactive.studyword=您正在努力学习单词，真是个好孩子！！！
 status.item.interactive.wordmanagement=您正在努力管理单词，加油！！！
 
-privatemessage.error.targetusernotfound=您要发送消息的用户不存在，也许他还没有加入到GTRobot聊天系统，赶快给他发个Mail邀请他吧!
-privatemessage.format=发送秘密消息的格式是: /pm|privatemessage emailId message
+privatemessage.error.targetusernotfound=您要发送消息的用户不存在，也许他还没有加入到GTRobot聊天系统，赶快给他发个Mail邀请他吧! 
+privatemessage.format=发送秘密消息的格式是: /pm|privatemessage <emailId> <message>
+
+changenickname.result=你的别名已经成功改为【{0}】。
+changenickname.fail=运气不好，其他用户已经使用了别名【{0}】，请选择别的名称再试试。
+changenickname.format=更改别名的格式是: /cn|changenickname <newNickName> 
 
 echo.format=回显状态的命令格式是: /echo <on|off>
 echo.success.on=您已经*打开*了回显设置！
@@ -136,5 +141,12 @@ baseword.changeword.comments.result= 单词的注释已经被更改。
 baseword.changeword.appendSentence.result= 您提交的例句已经添加完成了。多谢您的共享！
 baseword.changeword.appendConments.result= 您提交的注释已经添加完成了。多谢您的共享！
 baseword.changeword.reportError.result= 多谢您的合作，您提交的错误信息已经被记录，我们回尽快调查修正这个错误。
+
+
+interactive.onlineHelper.prompt= 联机在线帮助：
+interactive.onlineHelper.help= .  显示联机帮助
+interactive.onlineHelper.backToMenu= .b 退回到菜单
+interactive.onlineHelper.exit= .x 退出当前的交互式操作
+
 
 

@@ -61,6 +61,18 @@ public class UserEntryServiceImpl implements UserEntryService {
 		}
 		return userEntry;
 	}
+	
+	public synchronized boolean updateNickname(UserEntry userEntry, String newNickname)
+	{
+		UserEntry userEntryTemp = userEntryManager.getUserEntryByNickName(newNickname);
+		if(userEntryTemp!= null && !userEntry.equals(userEntryTemp))
+		{
+			return false;
+		}
+		userEntry.setNickName(newNickname);
+		userEntryManager.saveUserEntry(userEntry);
+		return true;
+	}
 
 	public void updateUserEntryPresence(UserEntry userEntry, Presence presence) {
 		if (Presence.Type.available.equals(presence.getType())

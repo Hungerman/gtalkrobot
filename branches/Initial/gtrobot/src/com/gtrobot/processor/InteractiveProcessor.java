@@ -11,7 +11,7 @@ import java.util.Map;
 import org.jivesoftware.smack.XMPPException;
 
 import com.gtrobot.command.BaseCommand;
-import com.gtrobot.engine.GTRobotContextHelper;
+import com.gtrobot.processor.common.HelpProcessor;
 import com.gtrobot.utils.CommonUtils;
 import com.gtrobot.utils.UserSessionUtil;
 
@@ -164,10 +164,10 @@ public class InteractiveProcessor extends AbstractProcessor {
 	 */
 	protected StringBuffer interactiveOnlineHelper(BaseCommand cmd) {
 		StringBuffer msgBuf = new StringBuffer();
-		msgBuf.append("Online command help:").append(endl);
-		msgBuf.append("> .  Show this online help.").append(endl);
-		msgBuf.append("> .b Back to menu.").append(endl);
-		msgBuf.append("> .x Back to main menu.").append(endl);
+		msgBuf.append(getI18NMessage("interactive.onlineHelper.prompt")).append(endl);
+		msgBuf.append(getI18NMessage("interactive.onlineHelper.help")).append(endl);
+		msgBuf.append(getI18NMessage("interactive.onlineHelper.backToMenu")).append(endl);
+		msgBuf.append(getI18NMessage("interactive.onlineHelper.exit")).append(endl);
 
 		return msgBuf;
 	}
@@ -227,9 +227,10 @@ public class InteractiveProcessor extends AbstractProcessor {
 		msgBuf
 				.append(getI18NMessage("interactive.exit."
 						+ cmd.getCommandType()));
-		sendBackMessage(cmd, msgBuf.toString());
 
-		GTRobotContextHelper.getHelpProcessor().internalProcess(cmd);
+		HelpProcessor.showHelpInfo(msgBuf);
+
+		sendBackMessage(cmd, msgBuf.toString());
 		return STEP_TO_EXITED;
 	}
 

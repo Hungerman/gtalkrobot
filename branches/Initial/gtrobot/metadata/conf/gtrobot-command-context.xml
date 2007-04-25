@@ -34,6 +34,8 @@
 				<prop key="sc">searchUserComamnd</prop>
 				<prop key="privatemessage">privateMessageComamnd</prop>
 				<prop key="pm">privateMessageComamnd</prop>
+				<prop key="changenickname">changeNickNameCommand</prop>
+				<prop key="cn">changeNickNameCommand</prop>
 				<prop key="roomchat">roomChatComamnd</prop>
 				<prop key="rc">roomChatComamnd</prop>
 				<prop key="studyword">studyWordComamnd</prop>
@@ -87,6 +89,12 @@
 		<property name="processor" ref="privateMessageProcessor"/>
 	</bean>
 	<bean id="privateMessageProcessor" class="com.gtrobot.processor.common.PrivateMessageProcessor"/>
+
+	<bean id="changeNickNameCommand" class="com.gtrobot.command.common.ChangeNickNameCommand" singleton="false">
+		<property name="commandType" value="changenickname"/>
+		<property name="processor" ref="changeNickNameProcessor"/>
+	</bean>
+	<bean id="changeNickNameProcessor" class="com.gtrobot.processor.common.ChangeNickNameProcessor"/>
 
 	<bean id="roomChatComamnd" class="com.gtrobot.command.ProcessableCommand" singleton="false">
 		<property name="commandType" value="roomchat"/>

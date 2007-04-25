@@ -198,15 +198,23 @@
         </java>
     </target>
     
-    <target name="wi" depends=""
-        description="Start GTRobot">
-        <java classname="com.gtrobot.utils.WordImportor" fork="yes">
+    <target name="xlsimport" depends=""
+        description="XlsWordImportor">
+        <java classname="com.gtrobot.utils.XlsWordImportor" fork="yes">
             <classpath>
-                <path refid="lib.classpath"/>
+                <path refid="locallib.classpath"/>
             </classpath>
         </java>
     </target>
     
+    <target name="xlsexport" depends=""
+        description="XlsWordExportor">
+        <java classname="com.gtrobot.utils.XlsWordExportor" fork="yes">
+            <classpath>
+                <path refid="locallib.classpath"/>
+            </classpath>
+        </java>
+    </target>
     
     
     <target name="xdoclet2">
@@ -222,16 +230,16 @@
             />
         <xdoclet2 encoding="utf-8">
             <!-- defines the file handled by xdoclet2 -->
-            <fileset dir="${src.dir}">
+            <fileset dir="${src.dir}/com/gtrobot/model">
                 <include name="**/*.java"/>
+                <exclude name="**/AccountType.java"/>
             </fileset>
 
             <!-- defines the processing of a plugin -->
             <component
                 classname="org.xdoclet.plugin.hibernate.HibernateMappingPlugin"
                 destdir="${hibernate.hbm.xml.dir}"
-                version="3.0"
-                
+                version="3.0"                
             />
         </xdoclet2>
     </target>

@@ -11,7 +11,27 @@ public class HelpProcessor extends AbstractProcessor {
 	public void internalProcess(BaseCommand cmd) throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
 
-		msgBuf.append(getI18NMessage("help.welcome"));
+		showHelpInfo(msgBuf);
+
+		String commandType = UserSessionUtil.isInInteractiveOperation(cmd
+				.getUserEntry().getJid());
+		if (commandType != null) {
+			msgBuf.append(endl);
+
+			msgBuf.append(getI18NMessage("status.item.interactive."
+					+ commandType));
+			msgBuf.append(endl);
+
+			msgBuf.append(getI18NMessage("help.interactive.help"));
+			msgBuf.append(endl);
+		}
+
+		sendBackMessage(cmd, msgBuf.toString());
+	}
+
+	public static void showHelpInfo(StringBuffer msgBuf) {
+		msgBuf.append(getI18NMessage("help.welcome",
+				new Object[] { getUserEntryHolder().getNickName() }));
 
 		msgBuf.append(endl);
 
@@ -29,6 +49,9 @@ public class HelpProcessor extends AbstractProcessor {
 		msgBuf.append(endl);
 
 		msgBuf.append(getI18NMessage("help.command.privatemessage"));
+		msgBuf.append(endl);
+
+		msgBuf.append(getI18NMessage("help.command.changenickname"));
 		msgBuf.append(endl);
 
 		msgBuf.append(getI18NMessage("help.command.echo"));
@@ -49,21 +72,6 @@ public class HelpProcessor extends AbstractProcessor {
 
 		msgBuf.append(getI18NMessage("help.command.wordmanagement"));
 		msgBuf.append(endl);
-
-		String commandType = UserSessionUtil.isInInteractiveOperation(cmd
-				.getUserEntry().getJid());
-		if (commandType != null) {
-			msgBuf.append(endl);
-
-			msgBuf.append(getI18NMessage("status.item.interactive."
-					+ commandType));
-			msgBuf.append(endl);
-
-			msgBuf.append(getI18NMessage("help.interactive.help"));
-			msgBuf.append(endl);
-		}
-
-		sendBackMessage(cmd, msgBuf.toString());
 	}
 
 }

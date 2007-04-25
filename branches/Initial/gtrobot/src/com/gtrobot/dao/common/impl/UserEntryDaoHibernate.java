@@ -27,6 +27,16 @@ public class UserEntryDaoHibernate extends BaseDaoHibernate implements
 		}
 		return (UserEntry) ls.get(0);
 	}
+	
+	public UserEntry getUserEntryByNickName(String newNickName)
+	{
+		List ls = getHibernateTemplate().find("from UserEntry where nickName=?",
+				new Object[] { newNickName });
+		if (ls.size() <= 0) {
+			return null;
+		}
+		return (UserEntry) ls.get(0);
+	}
 
 	public List getUserEntrys(UserEntry userEntry) {
 		return getHibernateTemplate().find("from UserEntry");

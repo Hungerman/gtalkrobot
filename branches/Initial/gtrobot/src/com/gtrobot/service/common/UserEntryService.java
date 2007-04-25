@@ -19,6 +19,7 @@ public interface UserEntryService {
 	public Collection<String> getAllActiveUsers();
 
 	public UserEntry getUserEntry(String jid);
+	public boolean updateNickname(UserEntry userEntry, String newNickname);
 
 	public void saveUserEntry(UserEntry userEntry);
 
