@@ -38,6 +38,9 @@ public class UserEntryManagerImpl extends BaseManager implements
 		return dao.getUserEntry(jid);
 	}
 
+	public UserEntry getUserEntryByNickName(String newNickname){
+		return dao.getUserEntryByNickName(newNickname);
+	}
 	/**
 	 * @see jp.co.softbrain.service.UserEntryEntryManager#getUserEntrys(jp.co.softbrain.model.UserEntry)
 	 */

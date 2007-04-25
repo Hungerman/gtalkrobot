@@ -39,18 +39,13 @@ public class RoomChatProcessor extends InteractiveProcessor {
 		return super.interactiveProcess(cmd);
 	}
 
-	protected int interactiveProcess_10(ProcessableCommand cmd)
+	protected int interactiveProcessPrompt_10(ProcessableCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
 		msgBuf.append(getI18NMessage("roomchat.menu.welcome"));
 		msgBuf.append(endl);
 
 		sendBackMessage(cmd, msgBuf.toString());
-		return CONTINUE;
-	}
-
-	protected int interactiveProcess_11(ProcessableCommand cmd)
-			throws XMPPException {
 		return STEP_TO_NORMAL_CHAT;
 	}
 
@@ -66,8 +61,9 @@ public class RoomChatProcessor extends InteractiveProcessor {
 			throws XMPPException {
 		UserEntry sender = cmd.getUserEntry();
 		StringBuffer msgBuf = new StringBuffer();
+		msgBuf.append("【");
 		msgBuf.append(sender.getNickName());
-		msgBuf.append(" #> ");
+		msgBuf.append("】 ");
 		msgBuf.append(cmd.getOriginMessage());
 
 		broadcastMessage(cmd.getUserEntry(), msgBuf.toString());

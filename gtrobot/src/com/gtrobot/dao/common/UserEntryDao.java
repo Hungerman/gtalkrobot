@@ -9,9 +9,12 @@ public interface UserEntryDao extends Dao {
 
 	public UserEntry getUserEntry(String jid);
 
+	public UserEntry getUserEntryByNickName(String newNickname);
+
 	public List getUserEntrys(UserEntry userEntry);
 
 	public void saveUserEntry(UserEntry userEntry);
 
 	public void removeUserEntry(UserEntry userEntry);
+
 }

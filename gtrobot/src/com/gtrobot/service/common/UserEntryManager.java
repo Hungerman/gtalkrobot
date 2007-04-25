@@ -25,6 +25,8 @@ public interface UserEntryManager {
 	 */
 	public UserEntry getUserEntry(String jid);
 
+	public UserEntry getUserEntryByNickName(String newNickname);
+
 	/**
 	 * ユーザ対象リスト取得.
 	 * 
@@ -50,4 +52,5 @@ public interface UserEntryManager {
 	 *            ユーザイド
 	 */
 	public void removeUserEntry(UserEntry userEntry);
+
 }

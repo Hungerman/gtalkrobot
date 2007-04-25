@@ -22,10 +22,6 @@ public class PrivateMessageProcessor extends AbstractProcessor {
 					.append(getI18NMessage("privatemessage.error.targetusernotfound"));
 			msgBuf.append(cmd.getTargetJid());
 			msgBuf.append(endl);
-			msgBuf.append(getI18NMessage("error.origin.prompt"));
-			msgBuf.append(cmd.getOriginMessage());
-			msgBuf.append(endl);
-
 			sendBackMessage(abCmd, msgBuf.toString());
 		} else {
 			UserEntry sender = cmd.getUserEntry();
