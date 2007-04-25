@@ -98,4 +98,15 @@
         </property>
     </bean>
     <!--UserWordInfo-END-->
+    
+	<bean id="wordService" class="com.gtrobot.service.word.impl.WordServiceImpl">
+			<property name="userUnitInfoManager" ref="userUnitInfoManager"/>
+			<property name="wordUnitManager" ref="wordUnitManager"/>
+			<property name="userStudyingWordInfoManager" ref="userStudyingWordInfoManager"/>
+			<property name="wordEntryManager" ref="wordEntryManager"/>
+			<property name="userFailedWordInfoManager" ref="userFailedWordInfoManager"/>
+			<property name="wordUnitEntryManager" ref="wordUnitEntryManager"/>
+	</bean>
+
+
 </beans>

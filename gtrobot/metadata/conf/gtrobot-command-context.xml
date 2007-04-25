@@ -105,6 +105,7 @@
 			<property name="wordEntryManager" ref="wordEntryManager"/>
 			<property name="userFailedWordInfoManager" ref="userFailedWordInfoManager"/>
 			<property name="wordUnitEntryManager" ref="wordUnitEntryManager"/>
+			<property name="wordService" ref="wordService"/>
 			
 	</bean>
 	
@@ -117,6 +118,9 @@
 			<property name="wordUnitManager" ref="wordUnitManager"/>
 			<property name="userStudyingWordInfoManager" ref="userStudyingWordInfoManager"/>
 			<property name="wordEntryManager" ref="wordEntryManager"/>
+			<property name="userFailedWordInfoManager" ref="userFailedWordInfoManager"/>
+			<property name="wordUnitEntryManager" ref="wordUnitEntryManager"/>
+			<property name="wordService" ref="wordService"/>
 	</bean>
 
 </beans>
