@@ -63,8 +63,7 @@ public class UserEntryServiceImpl implements UserEntryService {
 	}
 
 	public void updateUserEntryPresence(UserEntry userEntry, Presence presence) {
-		if (userEntry.isChattable()
-				&& Presence.Type.available.equals(presence.getType())
+		if (Presence.Type.available.equals(presence.getType())
 				&& ((presence.getMode() == null) || (Presence.Mode.available
 						.equals(presence.getMode()) || Presence.Mode.chat
 						.equals(presence.getMode())))) {

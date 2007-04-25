@@ -14,7 +14,7 @@ public class WordUnitDaoHibernate extends BaseDaoHibernate implements
 	 *      WordUnits(com.gtrobot.model.word.WordUnit)
 	 */
 	public List getWordUnits() {
-		return getHibernateTemplate().find("from WordUnit");
+		return getHibernateTemplate().find("from WordUnit order by wordUnitId");
 
 		/*
 		 * Remove the line above and uncomment this code block if you want to

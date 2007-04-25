@@ -21,9 +21,9 @@ public class EchoProcessor extends AbstractProcessor {
 			GTRobotContextHelper.getUserEntryService().saveUserEntry(userEntry);
 		}
 		if (cmd.isOperationON()) {
-			msgBuf.append(cmd.getI18NMessage("echo.success.on"));
+			msgBuf.append(getI18NMessage("echo.success.on"));
 		} else {
-			msgBuf.append(cmd.getI18NMessage("echo.success.off"));
+			msgBuf.append(getI18NMessage("echo.success.off"));
 		}
 		sendBackMessage(abCmd, msgBuf.toString());
 	}

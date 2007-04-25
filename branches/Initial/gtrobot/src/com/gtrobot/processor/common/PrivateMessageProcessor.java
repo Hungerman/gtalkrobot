@@ -18,11 +18,11 @@ public class PrivateMessageProcessor extends AbstractProcessor {
 		UserEntry targetUserEntry = GTRobotContextHelper.getUserEntryService()
 				.getUserEntry(cmd.getTargetJid());
 		if (targetUserEntry == null) {
-			msgBuf.append(cmd
-					.getI18NMessage("privatemessage.error.targetusernotfound"));
+			msgBuf
+					.append(getI18NMessage("privatemessage.error.targetusernotfound"));
 			msgBuf.append(cmd.getTargetJid());
 			msgBuf.append(endl);
-			msgBuf.append(cmd.getI18NMessage("error.origin.prompt"));
+			msgBuf.append(getI18NMessage("error.origin.prompt"));
 			msgBuf.append(cmd.getOriginMessage());
 			msgBuf.append(endl);
 

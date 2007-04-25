@@ -82,16 +82,16 @@ public class BaseWordProcessor extends InteractiveProcessor {
 		String cmdMsg = cmds.get(0);
 		if (cmds.size() == 2) {
 			String content = cmds.get(1);
-			if (".g".equalsIgnoreCase(cmdMsg)
-					|| ".google".equalsIgnoreCase(cmdMsg)) {
+			if (".g".equalsIgnoreCase(cmdMsg)) {
 				int maxResults = 20;
-				if (".google".equalsIgnoreCase(cmdMsg)) {
+				if (getUserEntryHolder().isAdmin()) {
 					maxResults = 1000;
 				}
 				List ls = wordEntryManager.searchWordEntries(content,
 						maxResults);
 				Iterator it = ls.iterator();
-				msgBuf.append("Search result: ").append(ls.size());
+				msgBuf.append(getI18NMessage("baseword.search.result",
+						new Object[] { ls.size() }));
 				msgBuf.append(endl);
 				while (it.hasNext()) {
 					showWord(msgBuf, (WordEntry) it.next());
@@ -105,7 +105,7 @@ public class BaseWordProcessor extends InteractiveProcessor {
 
 	protected StringBuffer interactiveOnlineHelper(BaseCommand cmd) {
 		StringBuffer msgBuf = super.interactiveOnlineHelper(cmd);
-		msgBuf.append("> .g <keyword> Google word.").append(endl);
+		msgBuf.append(getI18NMessage("baseword.search.prompt")).append(endl);
 		return msgBuf;
 	}
 
@@ -140,13 +140,15 @@ public class BaseWordProcessor extends InteractiveProcessor {
 		msgBuf.append(endl);
 		if (showAll) {
 			if (wordEntry.getSentence() != null) {
-				msgBuf.append("<用例>").append(endl);
+				msgBuf.append(getI18NMessage("baseword.showword.sentence"))
+						.append(endl);
 				msgBuf.append(wordEntry.getSentence());
 				msgBuf.append(endl);
 			}
 
 			if (wordEntry.getComments() != null) {
-				msgBuf.append("<注釈>").append(endl);
+				msgBuf.append(getI18NMessage("baseword.showword.comments"))
+						.append(endl);
 				msgBuf.append(wordEntry.getComments());
 				msgBuf.append(endl);
 			}
@@ -154,16 +156,28 @@ public class BaseWordProcessor extends InteractiveProcessor {
 	}
 
 	protected void commonOnlineHelper_ChangeWord(StringBuffer msgBuf) {
-		msgBuf.append("> .cw <word> Change the word.").append(endl);
-		msgBuf.append("> .cp <pronounce> Change the pronounce.").append(endl);
-		msgBuf.append("> .cpt <pronounceType> Change the pronounce type.")
+		if (getUserEntryHolder().isAdmin()) {
+			msgBuf.append(getI18NMessage("baseword.changeword.word")).append(
+					endl);
+			msgBuf.append(getI18NMessage("baseword.changeword.pronounce"))
+					.append(endl);
+			msgBuf.append(getI18NMessage("baseword.changeword.pronounceType"))
+					.append(endl);
+			msgBuf.append(getI18NMessage("baseword.changeword.wordType"))
+					.append(endl);
+			msgBuf.append(getI18NMessage("baseword.changeword.meaning"))
+					.append(endl);
+			msgBuf.append(getI18NMessage("baseword.changeword.sentence"))
+					.append(endl);
+			msgBuf.append(getI18NMessage("baseword.changeword.comments"))
+					.append(endl);
+		}
+		msgBuf.append(getI18NMessage("baseword.changeword.appendSentence"))
 				.append(endl);
-		msgBuf.append("> .cwt <wordType> Change the word type.").append(endl);
-		msgBuf.append("> .cm <meaning> Change the meaning.").append(endl);
-
-		msgBuf.append("> .as <content> Append sentence as sample.")
+		msgBuf.append(getI18NMessage("baseword.changeword.appendConments"))
 				.append(endl);
-		msgBuf.append("> .an <comments> Append note as conments.").append(endl);
+		msgBuf.append(getI18NMessage("baseword.changeword.reportError"))
+				.append(endl);
 	}
 
 	protected int commonOnlineProcess_ChangeWord(BaseCommand cmd,
@@ -177,41 +191,72 @@ public class BaseWordProcessor extends InteractiveProcessor {
 		if (cmds.size() == 2) {
 			// Process the command with parameter
 			String content = cmds.get(1);
-			if (".cw".equalsIgnoreCase(cmdMsg)) {
-				WordEntry wordEntryTemp = wordEntryManager
-						.getWordEntry(content);
-				if (wordEntryTemp == null) {
-					wordEntry.setWord(content);
-					msgBuf.append("The word has been changed.").append(endl);
-				} else {
-					msgBuf.append("Error: The same word has been there.")
+			if (getUserEntryHolder().isAdmin()) {
+				if (".cw".equalsIgnoreCase(cmdMsg)) {
+					WordEntry wordEntryTemp = wordEntryManager
+							.getWordEntry(content);
+					if (wordEntryTemp == null) {
+						wordEntry.setWord(content);
+						msgBuf
+								.append(
+										getI18NMessage("baseword.changeword.word.result"))
+								.append(endl);
+					} else {
+						msgBuf
+								.append(
+										getI18NMessage("baseword.changeword.word.fail"))
+								.append(endl);
+					}
+					flag = true;
+				}
+				if (".cp".equalsIgnoreCase(cmdMsg)) {
+					wordEntry.setPronounce(content);
+					flag = true;
+					msgBuf
+							.append(
+									getI18NMessage("baseword.changeword.pronounce.result"))
 							.append(endl);
 				}
-				flag = true;
-			}
-			if (".cp".equalsIgnoreCase(cmdMsg)) {
-				wordEntry.setPronounce(content);
-				flag = true;
-				msgBuf.append("The word's pronounce has been changed.").append(
-						endl);
-			}
-			if (".cpt".equalsIgnoreCase(cmdMsg)) {
-				wordEntry.setPronounceType(content);
-				flag = true;
-				msgBuf.append("The word's pronounce type has been changed.")
-						.append(endl);
-			}
-			if (".cwt".equalsIgnoreCase(cmdMsg)) {
-				wordEntry.setWordType(content);
-				flag = true;
-				msgBuf.append("The word's word type has been changed.").append(
-						endl);
-			}
-			if (".cm".equalsIgnoreCase(cmdMsg)) {
-				wordEntry.setMeaning(content);
-				flag = true;
-				msgBuf.append("The word's meaning has been changed.").append(
-						endl);
+				if (".cpt".equalsIgnoreCase(cmdMsg)) {
+					wordEntry.setPronounceType(content);
+					flag = true;
+					msgBuf
+							.append(
+									getI18NMessage("baseword.changeword.pronounceType.result"))
+							.append(endl);
+				}
+				if (".cwt".equalsIgnoreCase(cmdMsg)) {
+					wordEntry.setWordType(content);
+					flag = true;
+					msgBuf
+							.append(
+									getI18NMessage("baseword.changeword.wordType.result"))
+							.append(endl);
+				}
+				if (".cm".equalsIgnoreCase(cmdMsg)) {
+					wordEntry.setMeaning(content);
+					flag = true;
+					msgBuf
+							.append(
+									getI18NMessage("baseword.changeword.meaning.result"))
+							.append(endl);
+				}
+				if (".cs".equalsIgnoreCase(cmdMsg)) {
+					wordEntry.setSentence(content);
+					flag = true;
+					msgBuf
+							.append(
+									getI18NMessage("baseword.changeword.sentence.result"))
+							.append(endl);
+				}
+				if (".cn".equalsIgnoreCase(cmdMsg)) {
+					wordEntry.setComments(content);
+					flag = true;
+					msgBuf
+							.append(
+									getI18NMessage("baseword.changeword.comments.result"))
+							.append(endl);
+				}
 			}
 
 			if (".as".equalsIgnoreCase(cmdMsg)) {
@@ -224,7 +269,9 @@ public class BaseWordProcessor extends InteractiveProcessor {
 
 				msgBuf = new StringBuffer();
 				flag = true;
-				msgBuf.append("Your entered sentence has been changed.")
+				msgBuf
+						.append(
+								getI18NMessage("baseword.changeword.appendSentence.result"))
 						.append(endl);
 			}
 			if (".an".equalsIgnoreCase(cmdMsg)) {
@@ -237,7 +284,33 @@ public class BaseWordProcessor extends InteractiveProcessor {
 
 				msgBuf = new StringBuffer();
 				flag = true;
-				msgBuf.append("Your entered comments has been changed.")
+				msgBuf
+						.append(
+								getI18NMessage("baseword.changeword.appendConments.result"))
+						.append(endl);
+			}
+			if (".rr".equalsIgnoreCase(cmdMsg)) {
+				if (wordEntry.getComments() != null) {
+					msgBuf.append(wordEntry.getComments());
+					msgBuf.append(endl);
+				}
+				msgBuf.append(endl);
+				msgBuf.append("Error reported by: \"");
+				msgBuf.append(getUserEntryHolder().getNickName());
+				msgBuf.append("\" <");
+				msgBuf.append(getUserEntryHolder().getJid());
+				msgBuf.append(">: ");
+				msgBuf.append(endl);
+
+				msgBuf.append(content.trim());
+				wordEntry.setComments(msgBuf.toString());
+				wordEntry.setHasError(true);
+
+				msgBuf = new StringBuffer();
+				flag = true;
+				msgBuf
+						.append(
+								getI18NMessage("baseword.changeword.reportError.result"))
 						.append(endl);
 			}
 		}

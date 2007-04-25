@@ -19,7 +19,7 @@ public class LangProcessor extends AbstractProcessor {
 			userEntry.setLocale(cmd.getOperationLocale());
 			GTRobotContextHelper.getUserEntryService().saveUserEntry(userEntry);
 		}
-		msgBuf.append(cmd.getI18NMessage("lang.success"));
+		msgBuf.append(getI18NMessage("lang.success"));
 		msgBuf.append(userEntry.getLocale().getDisplayLanguage(
 				userEntry.getLocale()));
 		msgBuf.append(endl);

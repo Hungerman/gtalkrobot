@@ -36,7 +36,7 @@ public class SearchUserProcessor extends AbstractProcessor {
 					sessionKey);
 		}
 
-		msgBuf.append(cmd.getI18NMessage("searchuser.result.title"));
+		msgBuf.append(getI18NMessage("searchuser.result.title"));
 		msgBuf.append(endl);
 		for (int i = start; i < end; i++) {
 			msgBuf.append("$");
@@ -53,10 +53,10 @@ public class SearchUserProcessor extends AbstractProcessor {
 		}
 		userSearchFilter.storeCount(end);
 
-		msgBuf.append(cmd.getI18NMessage("searchuser.result.prompt.total"));
+		msgBuf.append(getI18NMessage("searchuser.result.prompt.total"));
 		msgBuf.append(userSearchFilter.size());
 		msgBuf.append(endl);
-		msgBuf.append(cmd.getI18NMessage("searchuser.result.prompt.next"));
+		msgBuf.append(getI18NMessage("searchuser.result.prompt.next"));
 
 		sendBackMessage(abCmd, msgBuf.toString());
 	}

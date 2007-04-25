@@ -25,11 +25,11 @@ public class UserEntry extends BaseObject {
 
 	private boolean sysMessageEnable = true;
 
-	private boolean chattable = true;
-
 	private boolean echoable = false;
 
-	private Locale locale = Locale.CHINESE;
+	private AccountType accountType = AccountType.user;
+
+	private Locale locale = Locale.ENGLISH;
 
 	/**
 	 * @hibernate.id column="USER_ID" generator-class="native"
@@ -56,17 +56,6 @@ public class UserEntry extends BaseObject {
 
 	public void setSysMessageEnable(boolean sysMessageEnable) {
 		this.sysMessageEnable = sysMessageEnable;
-	}
-
-	/**
-	 * @hibernate.property column="CHATABLE" not-null="true"
-	 */
-	public boolean isChattable() {
-		return chattable;
-	}
-
-	public void setChattable(boolean chattable) {
-		this.chattable = chattable;
 	}
 
 	/**
@@ -113,6 +102,32 @@ public class UserEntry extends BaseObject {
 
 	public void setLocale(Locale locale) {
 		this.locale = locale;
+	}
+
+	public AccountType getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(AccountType accountType) {
+		this.accountType = accountType;
+	}
+
+	/**
+	 * @hibernate.property column="ACCOUNT_TYPE" not-null="true"
+	 */
+	public int getAccountTypeCode() {
+		return accountType.getCode();
+	}
+
+	public void setAccountTypeCode(int code) {
+		this.accountType = AccountType.fromCode(code);
+		if (this.accountType == null) {
+			this.accountType = AccountType.user;
+		}
+	}
+
+	public boolean isAdmin() {
+		return this.accountType.equals(AccountType.admin);
 	}
 
 	/*

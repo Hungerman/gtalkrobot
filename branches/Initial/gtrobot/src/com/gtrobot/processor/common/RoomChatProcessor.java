@@ -26,7 +26,7 @@ public class RoomChatProcessor extends InteractiveProcessor {
 		StringBuffer msgBuf = new StringBuffer();
 		msgBuf.append(seperator);
 		msgBuf.append(endl);
-		msgBuf.append(cmd.getI18NMessage("roomchat.welcome"));
+		msgBuf.append(getI18NMessage("roomchat.welcome"));
 		msgBuf.append(endl);
 
 		sendBackMessage(cmd, msgBuf.toString());
@@ -34,7 +34,7 @@ public class RoomChatProcessor extends InteractiveProcessor {
 		msgBuf = new StringBuffer();
 		msgBuf.append("## #> ");
 		msgBuf.append(cmd.getUserEntry().getNickName());
-		msgBuf.append(cmd.getI18NMessage("roomchat.came.in"));
+		msgBuf.append(getI18NMessage("roomchat.came.in"));
 		broadcastMessage(cmd.getUserEntry(), msgBuf.toString());
 		return super.interactiveProcess(cmd);
 	}
@@ -42,7 +42,7 @@ public class RoomChatProcessor extends InteractiveProcessor {
 	protected int interactiveProcess_10(ProcessableCommand cmd)
 			throws XMPPException {
 		StringBuffer msgBuf = new StringBuffer();
-		msgBuf.append(cmd.getI18NMessage("roomchat.menu.welcome"));
+		msgBuf.append(getI18NMessage("roomchat.menu.welcome"));
 		msgBuf.append(endl);
 
 		sendBackMessage(cmd, msgBuf.toString());
@@ -84,9 +84,7 @@ public class RoomChatProcessor extends InteractiveProcessor {
 			}
 			UserEntry userEntry = GTRobotContextHelper.getUserEntryService()
 					.getUserEntry(jid);
-			if (userEntry.isChattable()) {
-				sendMessage(message, userEntry);
-			}
+			sendMessage(message, userEntry);
 		}
 	}
 
@@ -102,7 +100,7 @@ public class RoomChatProcessor extends InteractiveProcessor {
 		StringBuffer msgBuf = new StringBuffer();
 		msgBuf.append("## #> ");
 		msgBuf.append(cmd.getUserEntry().getNickName());
-		msgBuf.append(cmd.getI18NMessage("roomchat.left"));
+		msgBuf.append(getI18NMessage("roomchat.left"));
 		broadcastMessage(cmd.getUserEntry(), msgBuf.toString());
 
 		return;

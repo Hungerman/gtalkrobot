@@ -30,6 +30,8 @@ public class WordEntry extends BaseObject {
 
 	private String comments;
 
+	private boolean hasError;
+
 	/**
 	 * @hibernate.property column="COMMENTS" length="2000"
 	 */
@@ -119,6 +121,17 @@ public class WordEntry extends BaseObject {
 
 	public void setWordType(String wordType) {
 		this.wordType = wordType;
+	}
+
+	/**
+	 * @hibernate.property column="HAS_ERROR" not-null="true"
+	 */
+	public boolean isHasError() {
+		return hasError;
+	}
+
+	public void setHasError(boolean hasError) {
+		this.hasError = hasError;
 	}
 
 	/*
