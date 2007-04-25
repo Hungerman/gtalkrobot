@@ -188,7 +188,7 @@ public class InteractiveProcessor extends AbstractProcessor {
 		msgBuf.append(seperator);
 		msgBuf.append(endl);
 		for (Iterator<String> it = menuInfo.iterator(); it.hasNext();) {
-			msgBuf.append(cmd.getI18NMessage(it.next()));
+			msgBuf.append(getI18NMessage(it.next()));
 			msgBuf.append(endl);
 		}
 		sendBackMessage(cmd, msgBuf.toString());
@@ -202,7 +202,7 @@ public class InteractiveProcessor extends AbstractProcessor {
 		if (step == null) {
 			StringBuffer msgBuf = new StringBuffer();
 			msgBuf.append(endl);
-			msgBuf.append(cmd.getI18NMessage("invalid.command"));
+			msgBuf.append(getI18NMessage("invalid.command"));
 			msgBuf.append(endl);
 			sendBackMessage(cmd, msgBuf.toString());
 			return STEP_TO_MENU;
@@ -224,8 +224,9 @@ public class InteractiveProcessor extends AbstractProcessor {
 
 		exitInteractiveProcess(cmd);
 
-		msgBuf.append(cmd.getI18NMessage("InteractiveProcessor.exit."
-				+ cmd.getCommandType()));
+		msgBuf
+				.append(getI18NMessage("interactive.exit."
+						+ cmd.getCommandType()));
 		sendBackMessage(cmd, msgBuf.toString());
 
 		GTRobotContextHelper.getHelpProcessor().internalProcess(cmd);

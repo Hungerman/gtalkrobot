@@ -40,14 +40,17 @@ public class UserUnitInfoDaoHibernate extends BaseDaoHibernate implements
 	// }
 
 	public List getUserUnitInfos(final Long userEntryId) {
-		return getHibernateTemplate().find(
-				"from UserUnitInfo where pk.userId=?", userEntryId);
+		return getHibernateTemplate()
+				.find(
+						"from UserUnitInfo where pk.userId=? order by pk.wordUnit.wordUnitId",
+						userEntryId);
 	}
 
 	public List getNotFinishedUserUnitInfos(final Long userEntryId) {
-		return getHibernateTemplate().find(
-				"from UserUnitInfo where pk.userId=? and finished = false",
-				userEntryId);
+		return getHibernateTemplate()
+				.find(
+						"from UserUnitInfo where pk.userId=? and finished = false order by pk.wordUnit.wordUnitId",
+						userEntryId);
 	}
 
 	/*

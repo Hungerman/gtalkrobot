@@ -2,10 +2,8 @@ package com.gtrobot.command;
 
 import java.util.List;
 
-import com.gtrobot.engine.GTRobotContextHelper;
 import com.gtrobot.model.common.UserEntry;
 import com.gtrobot.processor.Processor;
-import com.gtrobot.utils.MessageHelper;
 
 /**
  * Command对象的基类。
@@ -43,12 +41,7 @@ public class BaseCommand {
 	/**
 	 * 错误类型。
 	 */
-	private ErrorType errorType = ErrorType.normal;
-
-	/**
-	 * 错误消息。
-	 */
-	private String errorMessage;
+	private ErrorType error = null;;
 
 	/**
 	 * 根据分隔符解析后的命令和参数列表。
@@ -81,20 +74,12 @@ public class BaseCommand {
 		this.commandType = commandType;
 	}
 
-	public ErrorType getErrorType() {
-		return errorType;
+	public ErrorType getError() {
+		return error;
 	}
 
-	public void setErrorType(ErrorType errorType) {
-		this.errorType = errorType;
-	}
-
-	public String getErrorMessage() {
-		return errorMessage;
-	}
-
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
+	public void setError(ErrorType errorType) {
+		this.error = errorType;
 	}
 
 	public String getOriginMessage() {
@@ -121,11 +106,6 @@ public class BaseCommand {
 		this.userEntry = userEntry;
 	}
 
-	public void setUserEntry(String jid) {
-		setUserEntry(GTRobotContextHelper.getUserEntryService().getUserEntry(
-				jid));
-	}
-
 	public String getFrom() {
 		return from;
 	}
@@ -148,21 +128,5 @@ public class BaseCommand {
 
 	public void setProcessed(boolean isProcessed) {
 		this.isProcessed = isProcessed;
-	}
-
-	public String getI18NMessage(String key) {
-		return MessageHelper.getMessage(key, userEntry.getLocale());
-	}
-
-	public enum ErrorType {
-		/**
-		 * Nornal error type. When show the error message, will show the command
-		 * relation information
-		 */
-		normal,
-		/**
-		 * Abnormal error.
-		 */
-		abnormal
 	}
 }

@@ -2,6 +2,7 @@ package com.gtrobot.command.common;
 
 import java.util.List;
 
+import com.gtrobot.command.ErrorType;
 import com.gtrobot.command.ProcessableCommand;
 
 /**
@@ -15,7 +16,7 @@ public class PrivateMessageCommand extends ProcessableCommand {
 
 	public void parseArgv(List argv) {
 		if (argv.size() < 3) {
-			setErrorMessage(getI18NMessage("error.parameter"));
+			setError(ErrorType.wrongParameter);
 			return;
 		}
 		targetJid = ((String) argv.get(1)).trim().toLowerCase();

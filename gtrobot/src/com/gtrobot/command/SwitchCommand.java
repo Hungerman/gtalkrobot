@@ -17,12 +17,12 @@ public class SwitchCommand extends ProcessableCommand {
 
 	public void parseArgv(List argv) {
 		if (argv.size() != 2) {
-			setErrorMessage(getI18NMessage("error.parameter"));
+			setError(ErrorType.wrongParameter);
 			return;
 		}
 		operation = ((String) argv.get(1)).trim().toLowerCase();
 		if (!(ON.endsWith(operation) || OFF.equals(operation))) {
-			setErrorMessage(getI18NMessage("error.parameter"));
+			setError(ErrorType.wrongParameter);
 		}
 
 		super.parseArgv(argv);

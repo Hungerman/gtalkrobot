@@ -11,7 +11,10 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.util.StringUtils;
 
 import com.gtrobot.command.BaseCommand;
+import com.gtrobot.command.ErrorType;
 import com.gtrobot.command.ProcessableCommand;
+import com.gtrobot.model.common.AccountType;
+import com.gtrobot.model.common.UserEntry;
 import com.gtrobot.processor.InteractiveProcessor;
 import com.gtrobot.processor.Processor;
 import com.gtrobot.thread.WorkerDispatcher;
@@ -110,22 +113,41 @@ public class GTRobotDispatcher {
 		}
 		// Trim the message body to parse the command prefix
 		String jid = StringUtils.parseBareAddress(from);
+		UserEntry userEntry = GTRobotContextHelper.getUserEntryService()
+				.getUserEntry(jid);
 		String commandStr = body.trim();
+		BaseCommand command = null;
 
+		if (!userEntry.getAccountType().equals(AccountType.blocked)) {
+			command = parseCommand(jid, commandStr);
+		} else { // AccountType.blocked
+			command = getDefaultCommand();
+			command.setError(ErrorType.accountLocked);
+		}
+
+		command.setFrom(from);
+		command.setOriginMessage(body.trim());
+		command.setUserEntry(userEntry);
+
+		return command;
+	}
+
+	private BaseCommand parseCommand(String jid, String commandStr) {
 		boolean isImmediateCommand = false;
+		List<String> commands = null;
+		BaseCommand command = null;
+
 		if (commandStr.startsWith(COMMAND_PREFIX_1)
 				|| commandStr.startsWith(COMMAND_PREFIX_2)) {
 			isImmediateCommand = true;
 		}
 
 		// Parse the command and parameters
-		List<String> commands = CommonUtils.parseCommand(commandStr,
-				isImmediateCommand);
+		commands = CommonUtils.parseCommand(commandStr, isImmediateCommand);
 		if (commands == null || commands.size() < 1) {
 			return getDefaultCommand();
 		}
 
-		BaseCommand command = null;
 		BaseCommand previousCommand = getPreviousCommand(jid);
 		if (!isImmediateCommand) {
 			command = previousCommand;
@@ -143,20 +165,20 @@ public class GTRobotDispatcher {
 					// }
 				} else {
 					Processor processor = command.getProcessor();
-					// When you are in an interactive operations, if you want to
+					// When you are in an interactive operations, if you
+					// want to
 					// enter a new
-					// interactive operation, please exit the current operation
+					// interactive operation, please exit the current
+					// operation
 					// first.
 					if (processor instanceof InteractiveProcessor
 							&& previousCommand != null) {
 						if (!command.getCommandType().equals(
 								previousCommand.getCommandType())) {
-							command
-									.setErrorMessage("Before you enter a new interactive operation, please step out of current one.");
+							command.setError(ErrorType.reEnterInteractive);
 						} else {
-							command.setErrorMessage("You have been here.");
+							command.setError(ErrorType.reEnterSameInteractive);
 						}
-						command.setErrorType(BaseCommand.ErrorType.abnormal);
 					}
 				}
 			} catch (Exception e) {
@@ -168,15 +190,11 @@ public class GTRobotDispatcher {
 			command = getDefaultCommand();
 		}
 
-		command.setFrom(from);
-		command.setOriginMessage(body.trim());
 		command.setArgv(commands);
-		command.setUserEntry(jid);
 		command.setProcessed(false);
 		if (command instanceof ProcessableCommand) {
 			((ProcessableCommand) command).parseArgv(commands);
 		}
-
 		return command;
 	}
 
@@ -184,7 +202,7 @@ public class GTRobotDispatcher {
 		BaseCommand previousCommand = UserSessionUtil
 				.retrievePreviousCommand(jid);
 		if (previousCommand != null) {
-			previousCommand.setErrorMessage(null);
+			previousCommand.setError(null);
 		}
 		return previousCommand;
 	}

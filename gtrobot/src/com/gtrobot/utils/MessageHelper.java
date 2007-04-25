@@ -30,15 +30,15 @@ public class MessageHelper {
 	}
 
 	public static String getMessage(String key, Object[] args, Locale locale) {
-		if (locale == null) {
-			locale = Locale.ENGLISH;
-		}
+		// if (locale == null) {
+		// locale = Locale.ENGLISH;
+		// }
 		String message = null;
 		try {
 			message = context.getMessage(key, args, locale);
 		} catch (Exception e) {
-			log.error("Can't find the message from the resource for: " + key
-					+ locale);
+			log.error("Can't find the message from the resource for: " + locale
+					+ "\n***>>> " + key + "=" + key);
 			message = key + "_" + locale;
 		}
 		return message;
