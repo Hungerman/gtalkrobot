@@ -24,5 +24,8 @@
 	<classpathentry kind="lib" path="lib/commons-lang.jar"/>
 	<classpathentry kind="lib" path="lib/commons-beanutils.jar"/>
 	<classpathentry kind="lib" path="locallib/poi-3.0-alpha2-20060616.jar"/>
+	<classpathentry kind="lib" path="lib/activation.jar"/>
+	<classpathentry kind="lib" path="lib/mail.jar"/>
+	<classpathentry kind="lib" path="lib/velocity-1.4.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

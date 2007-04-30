@@ -9,6 +9,8 @@ error.origin.prompt=你的命令是:
 invalid.command=不可识别的命令: 
 
 help.welcome=*** {0}，欢迎来到GTRobot! 请访问: http://code.google.com/p/gtalkrobot/ ***
+help.message= 多谢您的使用！ 请使用"/invite"发送邀请给您的朋友们，"/sendfeedback"提交您的使用建议。
+
 help.global.prompt=[全局命令 - 
 help.immediate.prompt=即时命令]
 help.command.help=/help : 显示此帮助信息
@@ -19,6 +21,8 @@ help.command.changenickname=/cn|changenickname <newNickName> : 更改你的别�
 help.command.echo=/echo on|off : 是否回显您的输入
 help.command.searchuser=/sc [match string] : 查找当前在线用户
 help.interactive.prompt=交互式命令]
+help.command.invite=/invite : 给朋友发送邀请
+help.command.sendfeedback=/sf|sendfeedback : 给GTRobot发送建议
 help.command.roomchat=/rc|roomchat : 公共聊天室
 help.command.studyword=/sw|studyword : 日语单词练功房
 help.command.wordmanagement=/wm|wordmanagement : 日语单词办公楼
@@ -27,6 +31,10 @@ help.interactive.help=. : 请输入"."可以查看到更多当前联机命令的
 interactive.exit.roomchat= 你已经离开了公共聊天室，记得再回来哦！
 interactive.exit.studyword= 你已经离开了日语单词练功房。嗯，今天做的不错，回头继续哦！
 interactive.exit.wordmanagement= 你已经离开了日语单词办公楼。
+interactive.exit.invite= 你已经离开了邀请发送处。
+interactive.exit.sendfeedback= 你已经离开了建议发送处。
+
+
 
 lang.format=更改语言设定的命令格式是: /lang <en|zh|ja>
 lang.success=您的语言环境已经更改为:  
@@ -56,6 +64,21 @@ searchuser.format=查找用户的命令格式是: /sc [condition]
 searchuser.result.title=查找到以下用户列表: 
 searchuser.result.prompt.total=总共: 
 searchuser.result.prompt.next=请使用[ // or /n ] 命令继续显示更多用户列表。
+
+invite.welcome=请给您的朋友发送邀请，一起参与到GTRobot中来吧。
+invite.prompt= 请直接输入您朋友的GMail帐号，多个帐号之间使用空格来分隔。要退回到主菜单，请使用".x"命令。
+invite.result.sent=已经向您提交的如下朋友发送了加入到GTRobot的邀请。多谢您的配合。
+invite.result.notsent=嗯...你好像没有输入你朋友的GMail帐号哦。
+invite.result.bad=你提交的这些帐号，好像有问题哦，现在GTRobot只能处理GMail的帐号哦。
+
+sendfeedback.welcome=你有什么好的建议或者问题，都可以提交上来哦。
+sendfeedback.onlineHelper= .s 发送你的建议
+sendfeedback.sent=您的建议已经发送。多谢您的配合。
+sendfeedback.nosent=您还没有输入您的建议。如果要退出，请输入".x"。
+sendfeedback.prompt.content=您输入的建议是：
+sendfeedback.prompt.withcontent=请重新输入您的建议或者输入".s"发送您的建议。如果要退出，请输入".x"。
+sendfeedback.prompt.nocontent=请输入您的建议。如果要退出，请输入".x"。
+
 
 roomchat.welcome=欢迎来到聊天室，这里可以灌水哦！
 roomchat.came.in= 刚刚小腰一扭，晃了进来...
