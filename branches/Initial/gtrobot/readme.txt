@@ -16,5 +16,9 @@ Features List:
     help comamnd
   
 
+TODO 
+  Add Compass - Java Search Engine Framework
+  http://www.opensymphony.com/compass/versions/1.1/html/index.html
+
 
 

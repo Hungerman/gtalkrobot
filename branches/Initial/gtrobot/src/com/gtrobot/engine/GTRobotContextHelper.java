@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.gtrobot.command.common.MailSenderCommand;
 import com.gtrobot.processor.common.HelpProcessor;
 import com.gtrobot.service.common.UserEntryService;
 import com.gtrobot.thread.WorkerDispatcher;
@@ -46,6 +47,9 @@ public class GTRobotContextHelper {
 
 	/** helpProcessor定数 */
 	private static final String HELP_PROCESSOR = "helpProcessor";
+
+	/** mailSenderCommand定数 */
+	private static final String MAIL_SENDER_COMMAND = "mailSenderCommand";
 
 	/**
 	 * 初始化Spring的Context。
@@ -103,5 +107,9 @@ public class GTRobotContextHelper {
 
 	public static HelpProcessor getHelpProcessor() {
 		return (HelpProcessor) getBean(HELP_PROCESSOR);
+	}
+
+	public static MailSenderCommand getMailSenderCommand() {
+		return (MailSenderCommand) getBean(MAIL_SENDER_COMMAND);
 	}
 }

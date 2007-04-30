@@ -64,6 +64,12 @@ public class HelpProcessor extends AbstractProcessor {
 		msgBuf.append(getI18NMessage("help.interactive.prompt"));
 		msgBuf.append(endl);
 
+		msgBuf.append(getI18NMessage("help.command.invite"));
+		msgBuf.append(endl);
+		
+		msgBuf.append(getI18NMessage("help.command.sendfeedback"));
+		msgBuf.append(endl);
+
 		msgBuf.append(getI18NMessage("help.command.roomchat"));
 		msgBuf.append(endl);
 
@@ -71,6 +77,10 @@ public class HelpProcessor extends AbstractProcessor {
 		msgBuf.append(endl);
 
 		msgBuf.append(getI18NMessage("help.command.wordmanagement"));
+		msgBuf.append(endl);
+		
+		msgBuf.append(endl);
+		msgBuf.append(getI18NMessage("help.message"));
 		msgBuf.append(endl);
 	}
 
