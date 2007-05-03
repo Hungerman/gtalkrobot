@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class table="USER_UNIT_INFO" name="com.gtrobot.model.word.UserUnitInfo">
+    <composite-id class="com.gtrobot.model.word.UserUnitInfoKey" access="property" name="pk">
+      <key-property column="USER_ENTRY_ID" access="property" name="userId"/>
+      <key-many-to-one class="com.gtrobot.model.word.WordUnit" column="WORD_UNIT_ID" access="property" name="wordUnit"/>
+    </composite-id>
+    <property name="studiedTimes" access="property" column="STUDIED_TIMES"/>
+    <property name="finished" access="property" column="FINISHED"/>
+    <property name="lastStudied" access="property" column="LAST_STUDIED"/>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class table="WORD_UNIT" name="com.gtrobot.model.word.WordUnit">
+    <id column="WORD_UNIT_ID" access="property" name="wordUnitId">
+      <generator class="native">
+        <param name="sequence">SEQ_WORD_UNIT</param>
+        <param name="identity"/>
+      </generator>
+    </id>
+    <property name="name" not-null="true" length="100" access="property" column="NAME" unique="true"/>
+    <property name="owner" access="property" column="OWNER"/>
+    <property name="level" not-null="true" access="property" column="LEVEL"/>
+    <bag table="WORD_UNIT_ENTRY" access="property" lazy="true" name="wordEntries">
+      <key column="WORD_UNIT_ID"/>
+      <one-to-many class="com.gtrobot.model.word.WordUnitEntry"/>
+    </bag>
+    <property name="wordCount" not-null="true" access="property" column="WORD_COUNT"/>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class table="WORD_ENTRY" name="com.gtrobot.model.word.WordEntry">
+    <id column="WORD_ENTRY_ID" access="property" name="wordEntryId">
+      <generator class="native">
+        <param name="sequence">SEQ_WORD_ENTRY</param>
+        <param name="identity"/>
+      </generator>
+    </id>
+    <property name="comments" length="2000" access="property" column="COMMENTS"/>
+    <property name="meaning" not-null="true" length="1000" access="property" column="MEANING"/>
+    <property name="pronounce" not-null="true" length="100" access="property" column="PRONOUNCE"/>
+    <property name="pronounceType" length="50" access="property" column="PRONOUNCE_TYPE"/>
+    <property name="sentence" length="2000" access="property" column="SENTENCE"/>
+    <property name="word" not-null="true" length="100" access="property" column="WORD" unique="true"/>
+    <property name="wordType" length="100" access="property" column="WORD_TYPE"/>
+    <property name="hasError" not-null="true" access="property" column="HAS_ERROR"/>
+  </class>
+</hibernate-mapping>
