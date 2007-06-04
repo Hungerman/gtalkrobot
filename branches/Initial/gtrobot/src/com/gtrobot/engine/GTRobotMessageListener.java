@@ -13,20 +13,21 @@ import org.jivesoftware.smack.packet.Packet;
  * 
  */
 public class GTRobotMessageListener implements PacketListener {
-	protected static final transient Log log = LogFactory
-			.getLog(GTRobotMessageListener.class);
+    protected static final transient Log log = LogFactory
+            .getLog(GTRobotMessageListener.class);
 
-	private GTRobotDispatcher dispatcher = GTRobotContextHelper
-			.getGTRobotDispatcher();
+    private final GTRobotDispatcher dispatcher = GTRobotContextHelper
+            .getGTRobotDispatcher();
 
-	public void processPacket(Packet packet) {
-		try {
-			Message message = (Message) packet;
+    public void processPacket(final Packet packet) {
+        try {
+            final Message message = (Message) packet;
 
-			// 调用GTRobotDispatcher进行处理
-			dispatcher.parseAndDispatch(message);
-		} catch (Exception e) {
-			log.error("Exception when processing message.", e);
-		}
-	}
+            // 调用GTRobotDispatcher进行处理
+            this.dispatcher.parseAndDispatch(message);
+        } catch (final Exception e) {
+            GTRobotMessageListener.log.error(
+                    "Exception when processing message.", e);
+        }
+    }
 }

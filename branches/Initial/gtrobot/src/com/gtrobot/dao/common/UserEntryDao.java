@@ -7,14 +7,14 @@ import com.gtrobot.model.common.UserEntry;
 
 public interface UserEntryDao extends Dao {
 
-	public UserEntry getUserEntry(String jid);
+    public UserEntry getUserEntry(String jid);
 
-	public UserEntry getUserEntryByNickName(String newNickname);
+    public UserEntry getUserEntryByNickName(String newNickname);
 
-	public List getUserEntrys(UserEntry userEntry);
+    public List getUserEntrys(UserEntry userEntry);
 
-	public void saveUserEntry(UserEntry userEntry);
+    public void saveUserEntry(UserEntry userEntry);
 
-	public void removeUserEntry(UserEntry userEntry);
+    public void removeUserEntry(UserEntry userEntry);
 
 }

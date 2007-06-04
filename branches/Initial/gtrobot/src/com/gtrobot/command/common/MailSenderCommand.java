@@ -13,34 +13,34 @@ import com.gtrobot.command.ProcessableCommand;
  * 
  */
 public class MailSenderCommand extends ProcessableCommand {
-	private SimpleMailMessage mailMessage;
+    private SimpleMailMessage mailMessage;
 
-	private String mailTemplateName;
-	
-	private Map mailTemplateModel;
+    private String mailTemplateName;
 
-	public SimpleMailMessage getMailMessage() {
-		return mailMessage;
-	}
+    private Map mailTemplateModel;
 
-	public void setMailMessage(SimpleMailMessage mailMessage) {
-		this.mailMessage = mailMessage;
-	}
+    public SimpleMailMessage getMailMessage() {
+        return this.mailMessage;
+    }
 
-	public String getMailTemplateName() {
-		return mailTemplateName;
-	}
+    public void setMailMessage(final SimpleMailMessage mailMessage) {
+        this.mailMessage = mailMessage;
+    }
 
-	public void setMailTemplateName(String templateName) {
-		this.mailTemplateName = templateName;
-	}
+    public String getMailTemplateName() {
+        return this.mailTemplateName;
+    }
 
-	public Map getMailTemplateModel() {
-		return mailTemplateModel;
-	}
+    public void setMailTemplateName(final String templateName) {
+        this.mailTemplateName = templateName;
+    }
 
-	public void setMailTemplateModel(Map model) {
-		this.mailTemplateModel = model;
-	}
+    public Map getMailTemplateModel() {
+        return this.mailTemplateModel;
+    }
+
+    public void setMailTemplateModel(final Map model) {
+        this.mailTemplateModel = model;
+    }
 
 }

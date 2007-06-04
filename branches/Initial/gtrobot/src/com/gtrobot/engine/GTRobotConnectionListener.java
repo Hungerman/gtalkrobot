@@ -11,27 +11,29 @@ import org.jivesoftware.smack.ConnectionListener;
  * 
  */
 public class GTRobotConnectionListener implements ConnectionListener {
-	protected static final transient Log log = LogFactory
-			.getLog(GTRobotConnectionListener.class);
+    protected static final transient Log log = LogFactory
+            .getLog(GTRobotConnectionListener.class);
 
-	public void connectionClosed() {
-		log.warn("Connection closed!");
-	}
+    public void connectionClosed() {
+        GTRobotConnectionListener.log.warn("Connection closed!");
+    }
 
-	public void connectionClosedOnError(Exception e) {
-		log.error("Connection closed with error: ", e);
-	}
+    public void connectionClosedOnError(final Exception e) {
+        GTRobotConnectionListener.log
+                .error("Connection closed with error: ", e);
+    }
 
-	public void reconnectingIn(int seconds) {
-		log.warn("Connection closed, reconnecting...");
-	}
+    public void reconnectingIn(final int seconds) {
+        GTRobotConnectionListener.log
+                .warn("Connection closed, reconnecting...");
+    }
 
-	public void reconnectionFailed(Exception e) {
-		log.error("Reconnection failed: ", e);
-	}
+    public void reconnectionFailed(final Exception e) {
+        GTRobotConnectionListener.log.error("Reconnection failed: ", e);
+    }
 
-	public void reconnectionSuccessful() {
-		log.info("Reconnection successfully!");
-	}
+    public void reconnectionSuccessful() {
+        GTRobotConnectionListener.log.info("Reconnection successfully!");
+    }
 
 }

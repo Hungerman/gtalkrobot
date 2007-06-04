@@ -19,46 +19,47 @@ import com.gtrobot.service.impl.BaseManager;
  *          $LastChangedDate: 2006-10-23 18:25:37 +0900 (月, 23 10 2006) $
  */
 public class UserEntryManagerImpl extends BaseManager implements
-		UserEntryManager {
-	private UserEntryDao dao;
+        UserEntryManager {
+    private UserEntryDao dao;
 
-	/**
-	 * Daoセット.
-	 * 
-	 * @param dao
-	 */
-	public void setUserEntryDao(UserEntryDao dao) {
-		this.dao = dao;
-	}
+    /**
+     * Daoセット.
+     * 
+     * @param dao
+     */
+    public void setUserEntryDao(final UserEntryDao dao) {
+        this.dao = dao;
+    }
 
-	/**
-	 * @see jp.co.softbrain.service.UserEntryEntryManager#getUserEntry(java.lang.String)
-	 */
-	public UserEntry getUserEntry(String jid) {
-		return dao.getUserEntry(jid);
-	}
+    /**
+     * @see jp.co.softbrain.service.UserEntryEntryManager#getUserEntry(java.lang.String)
+     */
+    public UserEntry getUserEntry(final String jid) {
+        return this.dao.getUserEntry(jid);
+    }
 
-	public UserEntry getUserEntryByNickName(String newNickname){
-		return dao.getUserEntryByNickName(newNickname);
-	}
-	/**
-	 * @see jp.co.softbrain.service.UserEntryEntryManager#getUserEntrys(jp.co.softbrain.model.UserEntry)
-	 */
-	public List getUserEntrys(UserEntry UserEntry) {
-		return dao.getUserEntrys(UserEntry);
-	}
+    public UserEntry getUserEntryByNickName(final String newNickname) {
+        return this.dao.getUserEntryByNickName(newNickname);
+    }
 
-	/**
-	 * @see jp.co.softbrain.service.UserEntryEntryManager#saveUserEntry(jp.co.softbrain.model.UserEntry)
-	 */
-	public void saveUserEntry(UserEntry UserEntry) {
-		dao.saveUserEntry(UserEntry);
-	}
+    /**
+     * @see jp.co.softbrain.service.UserEntryEntryManager#getUserEntrys(jp.co.softbrain.model.UserEntry)
+     */
+    public List getUserEntrys(final UserEntry UserEntry) {
+        return this.dao.getUserEntrys(UserEntry);
+    }
 
-	/**
-	 * @see jp.co.softbrain.service.UserEntryEntryManager#removeUserEntry(java.lang.String)
-	 */
-	public void removeUserEntry(UserEntry UserEntry) {
-		dao.removeUserEntry(UserEntry);
-	}
+    /**
+     * @see jp.co.softbrain.service.UserEntryEntryManager#saveUserEntry(jp.co.softbrain.model.UserEntry)
+     */
+    public void saveUserEntry(final UserEntry UserEntry) {
+        this.dao.saveUserEntry(UserEntry);
+    }
+
+    /**
+     * @see jp.co.softbrain.service.UserEntryEntryManager#removeUserEntry(java.lang.String)
+     */
+    public void removeUserEntry(final UserEntry UserEntry) {
+        this.dao.removeUserEntry(UserEntry);
+    }
 }

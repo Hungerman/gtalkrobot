@@ -16,41 +16,41 @@ import com.gtrobot.model.common.UserEntry;
  */
 public interface UserEntryManager {
 
-	/**
-	 * ユーザ対象取得.
-	 * 
-	 * @param UserEntryId
-	 *            ユーザイド
-	 * @return UserEntry ユーザobject
-	 */
-	public UserEntry getUserEntry(String jid);
+    /**
+     * ユーザ対象取得.
+     * 
+     * @param UserEntryId
+     *            ユーザイド
+     * @return UserEntry ユーザobject
+     */
+    public UserEntry getUserEntry(String jid);
 
-	public UserEntry getUserEntryByNickName(String newNickname);
+    public UserEntry getUserEntryByNickName(String newNickname);
 
-	/**
-	 * ユーザ対象リスト取得.
-	 * 
-	 * @param UserEntry
-	 *            ユーザobject
-	 * @return List ユーザList情報
-	 */
-	public List getUserEntrys(UserEntry userEntry);
+    /**
+     * ユーザ対象リスト取得.
+     * 
+     * @param UserEntry
+     *            ユーザobject
+     * @return List ユーザList情報
+     */
+    public List getUserEntrys(UserEntry userEntry);
 
-	/**
-	 * ユーザ対象更新.
-	 * 
-	 * @param UserEntry
-	 *            ユーザobject
-	 * @throws UserEntryExistsException
-	 */
-	public void saveUserEntry(UserEntry userEntry);
+    /**
+     * ユーザ対象更新.
+     * 
+     * @param UserEntry
+     *            ユーザobject
+     * @throws UserEntryExistsException
+     */
+    public void saveUserEntry(UserEntry userEntry);
 
-	/**
-	 * ユーザ対象削除.
-	 * 
-	 * @param UserEntryId
-	 *            ユーザイド
-	 */
-	public void removeUserEntry(UserEntry userEntry);
+    /**
+     * ユーザ対象削除.
+     * 
+     * @param UserEntryId
+     *            ユーザイド
+     */
+    public void removeUserEntry(UserEntry userEntry);
 
 }

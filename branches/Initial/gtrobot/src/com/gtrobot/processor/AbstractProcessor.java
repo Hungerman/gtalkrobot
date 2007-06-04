@@ -19,108 +19,114 @@ import com.gtrobot.utils.UserChatUtil;
  * 
  */
 public abstract class AbstractProcessor implements Processor {
-	protected static final transient Log log = LogFactory
-			.getLog(AbstractProcessor.class);
+    protected static final transient Log log = LogFactory
+            .getLog(AbstractProcessor.class);
 
-	protected static final String endl = "\n";
+    protected static final String endl = "\n";
 
-	protected static final String seperator = "~~~~~~~~~~~~~~~~~~~~~~~~";
+    protected static final String seperator = "~~~~~~~~~~~~~~~~~~~~~~~~";
 
-	private static ThreadLocal<UserEntry> userEntryHolder = new ThreadLocal<UserEntry>();
+    private static final ThreadLocal<UserEntry> userEntryHolder = new ThreadLocal<UserEntry>();
 
-	public void process(BaseCommand abCmd) {
-		try {
-			setUserEntryHolder(abCmd.getUserEntry());
+    public void process(final BaseCommand abCmd) {
+        try {
+            AbstractProcessor.setUserEntryHolder(abCmd.getUserEntry());
 
-			beforeProcess(abCmd);
-			if (abCmd.getError() == null) {
-				internalProcess(abCmd);
-			} else {
-				processInvalidCommandFormat(abCmd);
-			}
-			clearUserEntryHolder();
-		} catch (Exception e) {
-			log.error("Exception in process.", e);
-		}
-	}
+            this.beforeProcess(abCmd);
+            if (abCmd.getError() == null) {
+                this.internalProcess(abCmd);
+            } else {
+                this.processInvalidCommandFormat(abCmd);
+            }
+            AbstractProcessor.clearUserEntryHolder();
+        } catch (final Exception e) {
+            AbstractProcessor.log.error("Exception in process.", e);
+        }
+    }
 
-	protected void beforeProcess(BaseCommand abCmd) throws XMPPException {
-	}
+    protected void beforeProcess(final BaseCommand abCmd) throws XMPPException {
+    }
 
-	protected abstract void internalProcess(BaseCommand abCmd)
-			throws XMPPException;
+    protected abstract void internalProcess(BaseCommand abCmd)
+            throws XMPPException;
 
-	protected void sendBackMessage(BaseCommand abCmd, String message)
-			throws XMPPException {
-		UserEntry userEntry = abCmd.getUserEntry();
-		sendMessage(message, userEntry);
-	}
+    protected void sendBackMessage(final BaseCommand abCmd, final String message)
+            throws XMPPException {
+        final UserEntry userEntry = abCmd.getUserEntry();
+        this.sendMessage(message, userEntry);
+    }
 
-	protected void sendMessage(String message, UserEntry userEntry)
-			throws XMPPException {
-		Chat chat = UserChatUtil.getChat(userEntry.getJid());
-		chat.sendMessage(message);
-	}
+    protected void sendMessage(final String message, final UserEntry userEntry)
+            throws XMPPException {
+        final Chat chat = UserChatUtil.getChat(userEntry.getJid());
+        chat.sendMessage(message);
+    }
 
-	// protected void broadcastMessage(BaseCommand abCmd, String message)
-	// throws XMPPException {
-	// UserEntry sender = abCmd.getUserEntry();
-	// StringBuffer msgBuf = new StringBuffer();
-	// msgBuf.append(sender.getNickName());
-	// msgBuf.append(" #> ");
-	// msgBuf.append(message);
-	// message = msgBuf.toString();
-	//
-	// UserEntryService userEntryService = GTRobotContextHelper
-	// .getUserEntryService();
-	// Iterator userList = userEntryService.getAllActiveUsers().iterator();
-	// while (userList.hasNext()) {
-	// String jid = (String) userList.next();
-	// if (jid.equals(sender.getJid()) && !sender.isEchoable()) {
-	// continue;
-	// }
-	// UserEntry userEntry = userEntryService.getUserEntry(jid);
-	// sendMessage(message, userEntry);
-	// }
-	// }
+    // protected void broadcastMessage(BaseCommand abCmd, String message)
+    // throws XMPPException {
+    // UserEntry sender = abCmd.getUserEntry();
+    // StringBuffer msgBuf = new StringBuffer();
+    // msgBuf.append(sender.getNickName());
+    // msgBuf.append(" #> ");
+    // msgBuf.append(message);
+    // message = msgBuf.toString();
+    //
+    // UserEntryService userEntryService = GTRobotContextHelper
+    // .getUserEntryService();
+    // Iterator userList = userEntryService.getAllActiveUsers().iterator();
+    // while (userList.hasNext()) {
+    // String jid = (String) userList.next();
+    // if (jid.equals(sender.getJid()) && !sender.isEchoable()) {
+    // continue;
+    // }
+    // UserEntry userEntry = userEntryService.getUserEntry(jid);
+    // sendMessage(message, userEntry);
+    // }
+    // }
 
-	protected void processInvalidCommandFormat(BaseCommand abCmd)
-			throws XMPPException {
-		StringBuffer msgBuf = new StringBuffer();
+    protected void processInvalidCommandFormat(final BaseCommand abCmd)
+            throws XMPPException {
+        final StringBuffer msgBuf = new StringBuffer();
 
-		ErrorType error = abCmd.getError();
-		msgBuf.append(getI18NMessage("error.prompt"));
-		msgBuf.append(getI18NMessage("error." + error.name()));
-		msgBuf.append(endl);
-		if (!error.isAbnormal()) {
-			msgBuf.append(getI18NMessage(abCmd.getCommandType() + ".format"));
-			msgBuf.append(endl);
-			msgBuf.append(getI18NMessage("error.origin.prompt"));
-			msgBuf.append(abCmd.getOriginMessage());
-			msgBuf.append(endl);
-		}
+        final ErrorType error = abCmd.getError();
+        msgBuf.append(AbstractProcessor.getI18NMessage("error.prompt"));
+        msgBuf
+                .append(AbstractProcessor.getI18NMessage("error."
+                        + error.name()));
+        msgBuf.append(AbstractProcessor.endl);
+        if (!error.isAbnormal()) {
+            msgBuf.append(AbstractProcessor.getI18NMessage(abCmd
+                    .getCommandType()
+                    + ".format"));
+            msgBuf.append(AbstractProcessor.endl);
+            msgBuf.append(AbstractProcessor
+                    .getI18NMessage("error.origin.prompt"));
+            msgBuf.append(abCmd.getOriginMessage());
+            msgBuf.append(AbstractProcessor.endl);
+        }
 
-		sendBackMessage(abCmd, msgBuf.toString());
-	}
+        this.sendBackMessage(abCmd, msgBuf.toString());
+    }
 
-	protected static void clearUserEntryHolder() {
-		userEntryHolder.set(null);
-	}
+    protected static void clearUserEntryHolder() {
+        AbstractProcessor.userEntryHolder.set(null);
+    }
 
-	protected static UserEntry getUserEntryHolder() {
-		return (UserEntry) userEntryHolder.get();
-	}
+    protected static UserEntry getUserEntryHolder() {
+        return AbstractProcessor.userEntryHolder.get();
+    }
 
-	protected static void setUserEntryHolder(UserEntry userEntry) {
-		userEntryHolder.set(userEntry);
-	}
+    protected static void setUserEntryHolder(final UserEntry userEntry) {
+        AbstractProcessor.userEntryHolder.set(userEntry);
+    }
 
-	public static String getI18NMessage(String key) {
-		return MessageHelper.getMessage(key, getUserEntryHolder().getLocale());
-	}
+    public static String getI18NMessage(final String key) {
+        return MessageHelper.getMessage(key, AbstractProcessor
+                .getUserEntryHolder().getLocale());
+    }
 
-	public static String getI18NMessage(String key, Object[] args) {
-		return MessageHelper.getMessage(key, args, getUserEntryHolder()
-				.getLocale());
-	}
+    public static String getI18NMessage(final String key, final Object[] args) {
+        return MessageHelper.getMessage(key, args, AbstractProcessor
+                .getUserEntryHolder().getLocale());
+    }
 }

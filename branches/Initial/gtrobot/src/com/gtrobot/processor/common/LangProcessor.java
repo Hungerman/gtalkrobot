@@ -10,21 +10,23 @@ import com.gtrobot.processor.AbstractProcessor;
 
 public class LangProcessor extends AbstractProcessor {
 
-	protected void internalProcess(BaseCommand abCmd) throws XMPPException {
-		LangCommand cmd = (LangCommand) abCmd;
-		StringBuffer msgBuf = new StringBuffer();
+    @Override
+    protected void internalProcess(final BaseCommand abCmd)
+            throws XMPPException {
+        final LangCommand cmd = (LangCommand) abCmd;
+        final StringBuffer msgBuf = new StringBuffer();
 
-		UserEntry userEntry = cmd.getUserEntry();
-		if (!cmd.getOperationLocale().equals(userEntry.getLocale())) {
-			userEntry.setLocale(cmd.getOperationLocale());
-			GTRobotContextHelper.getUserEntryService().saveUserEntry(userEntry);
-		}
-		msgBuf.append(getI18NMessage("lang.success"));
-		msgBuf.append(userEntry.getLocale().getDisplayLanguage(
-				userEntry.getLocale()));
-		msgBuf.append(endl);
+        final UserEntry userEntry = cmd.getUserEntry();
+        if (!cmd.getOperationLocale().equals(userEntry.getLocale())) {
+            userEntry.setLocale(cmd.getOperationLocale());
+            GTRobotContextHelper.getUserEntryService().saveUserEntry(userEntry);
+        }
+        msgBuf.append(AbstractProcessor.getI18NMessage("lang.success"));
+        msgBuf.append(userEntry.getLocale().getDisplayLanguage(
+                userEntry.getLocale()));
+        msgBuf.append(AbstractProcessor.endl);
 
-		sendBackMessage(abCmd, msgBuf.toString());
-	}
+        this.sendBackMessage(abCmd, msgBuf.toString());
+    }
 
 }

@@ -14,36 +14,36 @@ import com.gtrobot.engine.GoogleTalkConnection;
  * 
  */
 public class GTRobotStarter {
-	protected static final transient Log log = LogFactory
-			.getLog(GTRobotStarter.class);
+    protected static final transient Log log = LogFactory
+            .getLog(GTRobotStarter.class);
 
-	public static void main(String[] args) {
-		GTRobotStarter gtrobot = new GTRobotStarter();
-		boolean success = gtrobot.startup();
-		if (!success) {
-			log.error("GTRobot startup failed!");
-			return;
-		}
-	}
+    public static void main(final String[] args) {
+        final GTRobotStarter gtrobot = new GTRobotStarter();
+        boolean success = gtrobot.startup();
+        if (!success) {
+            GTRobotStarter.log.error("GTRobot startup failed!");
+            return;
+        }
+    }
 
-	private boolean startup() {
-		try {
-			// 初始化Spring的Context
-			GTRobotContextHelper.initApplicationContext();
+    private boolean startup() {
+        try {
+            // 初始化Spring的Context
+            GTRobotContextHelper.initApplicationContext();
 
-			// 初始化Connection
-			// org.jivesoftware.smack.XMPPConnection.DEBUG_ENABLED = true;
-			GoogleTalkConnection googleTalkConnection = GTRobotContextHelper
-					.getGoogleTalkConnection();
-			googleTalkConnection.init();
+            // 初始化Connection
+            // org.jivesoftware.smack.XMPPConnection.DEBUG_ENABLED = true;
+            final GoogleTalkConnection googleTalkConnection = GTRobotContextHelper
+                    .getGoogleTalkConnection();
+            googleTalkConnection.init();
 
-			// 初始化ThreadWorkerDispatcher
-			GTRobotContextHelper.getWorkerDispatcher();
+            // 初始化ThreadWorkerDispatcher
+            GTRobotContextHelper.getWorkerDispatcher();
 
-			return true;
-		} catch (Exception e) {
-			log.error("System error!", e);
-			return false;
-		}
-	}
+            return true;
+        } catch (final Exception e) {
+            GTRobotStarter.log.error("System error!", e);
+            return false;
+        }
+    }
 }

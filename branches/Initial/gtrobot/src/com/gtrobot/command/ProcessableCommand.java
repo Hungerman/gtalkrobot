@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class ProcessableCommand extends BaseCommand {
 
-	public void parseArgv(List argv) {
-		return;
-	}
+    public void parseArgv(final List argv) {
+        return;
+    }
 }

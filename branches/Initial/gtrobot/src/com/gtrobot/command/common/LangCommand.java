@@ -14,29 +14,30 @@ import com.gtrobot.utils.CommonUtils;
  * 
  */
 public class LangCommand extends ProcessableCommand {
-	private String operation;
+    private String operation;
 
-	private Locale locale;
+    private Locale locale;
 
-	public void parseArgv(List argv) {
-		if (argv.size() != 2) {
-			setError(ErrorType.wrongParameter);
-			return;
-		}
-		operation = ((String) argv.get(1)).trim().toLowerCase();
-		locale = CommonUtils.parseLocale(operation);
-		if (locale == null) {
-			setError(ErrorType.wrongParameter);
-		}
+    @Override
+    public void parseArgv(final List argv) {
+        if (argv.size() != 2) {
+            this.setError(ErrorType.wrongParameter);
+            return;
+        }
+        this.operation = ((String) argv.get(1)).trim().toLowerCase();
+        this.locale = CommonUtils.parseLocale(this.operation);
+        if (this.locale == null) {
+            this.setError(ErrorType.wrongParameter);
+        }
 
-		super.parseArgv(argv);
-	}
+        super.parseArgv(argv);
+    }
 
-	public Locale getOperationLocale() {
-		return new Locale(operation);
-	}
+    public Locale getOperationLocale() {
+        return new Locale(this.operation);
+    }
 
-	public String getOperation() {
-		return operation;
-	}
+    public String getOperation() {
+        return this.operation;
+    }
 }

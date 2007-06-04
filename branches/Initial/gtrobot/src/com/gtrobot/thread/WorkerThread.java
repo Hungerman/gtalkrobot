@@ -12,72 +12,76 @@ import com.gtrobot.thread.signalqueues.Queue;
  * 
  */
 public class WorkerThread implements Runnable {
-	protected static final transient Log log = LogFactory
-			.getLog(WorkerThread.class);
+    protected static final transient Log log = LogFactory
+            .getLog(WorkerThread.class);
 
-	private Object processingData;
+    private Object processingData;
 
-	private Queue parentThreadPool;
+    private Queue parentThreadPool;
 
-	private Thread workerThread;
+    private Thread workerThread;
 
-	private boolean isRunning = true;
+    private boolean isRunning = true;
 
-	public WorkerThread(String name, Queue threadPool) {
-		parentThreadPool = threadPool;
-		workerThread = new Thread(this, name);
-		workerThread.setDaemon(false);
-		workerThread.start();
-	}
+    public WorkerThread(final String name, final Queue threadPool) {
+        this.parentThreadPool = threadPool;
+        this.workerThread = new Thread(this, name);
+        this.workerThread.setDaemon(false);
+        this.workerThread.start();
+    }
 
-	/**
-	 * run ()
-	 * 
-	 * Wait for an command to process.<br>
-	 */
-	public void run() {
-		while (isRunning) {
-			if (log.isDebugEnabled()) {
-				log.debug("WorkerThread is waiting for a new command comming.");
-			}
-			process();
+    /**
+     * run ()
+     * 
+     * Wait for an command to process.<br>
+     */
+    public void run() {
+        while (this.isRunning) {
+            if (WorkerThread.log.isDebugEnabled()) {
+                WorkerThread.log
+                        .debug("WorkerThread is waiting for a new command comming.");
+            }
+            this.process();
 
-			if (log.isDebugEnabled()) {
-				log.debug("WorkerThread just finished a command process.");
-			}
-		}
-	}
+            if (WorkerThread.log.isDebugEnabled()) {
+                WorkerThread.log
+                        .debug("WorkerThread just finished a command process.");
+            }
+        }
+    }
 
-	private synchronized void process() {
-		if (processingData == null && isRunning) {
-			try {
-				this.wait();
-			} catch (InterruptedException e) {
-			}
-		}
-		try {
-			if (processingData == null || !isRunning)
-				return;
-			internalProcess();
-		} catch (Exception e) {
-			log.error("Error while WorkerThread.process!", e);
-		}
-		// Reset the parameters and push self back to ThreadPool
-		processingData = null;
-		parentThreadPool.push(this);
-	}
+    private synchronized void process() {
+        if ((this.processingData == null) && this.isRunning) {
+            try {
+                this.wait();
+            } catch (final InterruptedException e) {
+            }
+        }
+        try {
+            if ((this.processingData == null) || !this.isRunning) {
+                return;
+            }
+            this.internalProcess();
+        } catch (final Exception e) {
+            WorkerThread.log.error("Error while WorkerThread.process!", e);
+        }
+        // Reset the parameters and push self back to ThreadPool
+        this.processingData = null;
+        this.parentThreadPool.push(this);
+    }
 
-	protected void internalProcess() {
-		if (log.isDebugEnabled()) {
-			log.debug("WorkerThread just finished a dummy process.");
-		}
-	}
+    protected void internalProcess() {
+        if (WorkerThread.log.isDebugEnabled()) {
+            WorkerThread.log
+                    .debug("WorkerThread just finished a dummy process.");
+        }
+    }
 
-	public Object getProcessingData() {
-		return processingData;
-	}
+    public Object getProcessingData() {
+        return this.processingData;
+    }
 
-	public void setProcessingData(Object processingData) {
-		this.processingData = processingData;
-	}
+    public void setProcessingData(final Object processingData) {
+        this.processingData = processingData;
+    }
 }

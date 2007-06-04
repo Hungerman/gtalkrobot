@@ -7,37 +7,37 @@ package com.gtrobot.processor;
  * 
  */
 public class InteractiveSessionHolder {
-	private Object session;
+    private Object session;
 
-	private int step;
+    private int step;
 
-	private Object tempSession;
+    private Object tempSession;
 
-	public InteractiveSessionHolder() {
-		step = 0;
-	}
+    public InteractiveSessionHolder() {
+        this.step = 0;
+    }
 
-	public Object getSession() {
-		return session;
-	}
+    public Object getSession() {
+        return this.session;
+    }
 
-	public int getStep() {
-		return step;
-	}
+    public int getStep() {
+        return this.step;
+    }
 
-	public Object getTempSession() {
-		return tempSession;
-	}
+    public Object getTempSession() {
+        return this.tempSession;
+    }
 
-	public void setSession(Object session) {
-		this.session = session;
-	}
+    public void setSession(final Object session) {
+        this.session = session;
+    }
 
-	public void setStep(int step) {
-		this.step = step;
-	}
+    public void setStep(final int step) {
+        this.step = step;
+    }
 
-	public void setTempSession(Object tempSession) {
-		this.tempSession = tempSession;
-	}
+    public void setTempSession(final Object tempSession) {
+        this.tempSession = tempSession;
+    }
 }

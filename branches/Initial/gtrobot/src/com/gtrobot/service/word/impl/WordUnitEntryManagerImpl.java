@@ -9,52 +9,52 @@ import com.gtrobot.service.impl.BaseManager;
 import com.gtrobot.service.word.WordUnitEntryManager;
 
 public class WordUnitEntryManagerImpl extends BaseManager implements
-		WordUnitEntryManager {
-	private WordUnitEntryDao dao;
+        WordUnitEntryManager {
+    private WordUnitEntryDao dao;
 
-	/**
-	 * Set the Dao for communication with the data layer.
-	 * 
-	 * @param dao
-	 */
-	public void setWordUnitEntryDao(WordUnitEntryDao dao) {
-		this.dao = dao;
-	}
+    /**
+     * Set the Dao for communication with the data layer.
+     * 
+     * @param dao
+     */
+    public void setWordUnitEntryDao(final WordUnitEntryDao dao) {
+        this.dao = dao;
+    }
 
-	/**
-	 * @see com.gtrobot.model.service.WordUnitEntryManager#get
-	 *      WordUnitEntrys(com.gtrobot.model.word.WordUnitEntry)
-	 */
-	public List getWordUnitEntrys() {
-		return dao.getWordUnitEntrys();
-	}
+    /**
+     * @see com.gtrobot.model.service.WordUnitEntryManager#get
+     *      WordUnitEntrys(com.gtrobot.model.word.WordUnitEntry)
+     */
+    public List getWordUnitEntrys() {
+        return this.dao.getWordUnitEntrys();
+    }
 
-	/**
-	 * @see com.gtrobot.model.service.WordUnitEntryManager#get
-	 *      WordUnitEntry(String key)
-	 */
-	public WordUnitEntry getWordUnitEntry(final WordUnitEntryKey key) {
-		return dao.getWordUnitEntry(key);
-	}
+    /**
+     * @see com.gtrobot.model.service.WordUnitEntryManager#get
+     *      WordUnitEntry(String key)
+     */
+    public WordUnitEntry getWordUnitEntry(final WordUnitEntryKey key) {
+        return this.dao.getWordUnitEntry(key);
+    }
 
-	public WordUnitEntry getWordUnitEntry(final Long wordEntryId,
-			final Long wordUnitId) {
-		return dao.getWordUnitEntry(wordEntryId, wordUnitId);
-	}
+    public WordUnitEntry getWordUnitEntry(final Long wordEntryId,
+            final Long wordUnitId) {
+        return this.dao.getWordUnitEntry(wordEntryId, wordUnitId);
+    }
 
-	/**
-	 * @see com.gtrobot.model.service.WordUnitEntryManager#save
-	 *      WordUnitEntry(WordUnitEntry wordUnitEntry)
-	 */
-	public void saveWordUnitEntry(WordUnitEntry wordUnitEntry) {
-		dao.saveWordUnitEntry(wordUnitEntry);
-	}
+    /**
+     * @see com.gtrobot.model.service.WordUnitEntryManager#save
+     *      WordUnitEntry(WordUnitEntry wordUnitEntry)
+     */
+    public void saveWordUnitEntry(final WordUnitEntry wordUnitEntry) {
+        this.dao.saveWordUnitEntry(wordUnitEntry);
+    }
 
-	/**
-	 * @see com.gtrobot.model.service.WordUnitEntryManager#remove
-	 *      WordUnitEntry(String key)
-	 */
-	public void removeWordUnitEntry(final WordUnitEntryKey key) {
-		dao.removeWordUnitEntry(key);
-	}
+    /**
+     * @see com.gtrobot.model.service.WordUnitEntryManager#remove
+     *      WordUnitEntry(String key)
+     */
+    public void removeWordUnitEntry(final WordUnitEntryKey key) {
+        this.dao.removeWordUnitEntry(key);
+    }
 }

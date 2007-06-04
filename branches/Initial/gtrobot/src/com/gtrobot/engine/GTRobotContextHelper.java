@@ -22,94 +22,104 @@ import com.gtrobot.thread.WorkerDispatcher;
  * 
  */
 public class GTRobotContextHelper {
-	protected static final transient Log log = LogFactory
-			.getLog(GTRobotContextHelper.class);
+    protected static final transient Log log = LogFactory
+            .getLog(GTRobotContextHelper.class);
 
-	private static ApplicationContext appContext;
+    private static ApplicationContext appContext;
 
-	/** GoogleTalkConnection定数 */
-	private static final String GOOGLE_TALK_CONNECTION = "googleTalkConnection";
+    /** GoogleTalkConnection定数 */
+    private static final String GOOGLE_TALK_CONNECTION = "googleTalkConnection";
 
-	/** Session Cache定数 */
-	private static final String SESSION_CACHE = "sessionCache";
+    /** Session Cache定数 */
+    private static final String SESSION_CACHE = "sessionCache";
 
-	/** Chat Cache定数 */
-	private static final String CHAT_CACHE = "sessionCache";
+    /** Chat Cache定数 */
+    private static final String CHAT_CACHE = "sessionCache";
 
-	/** WorkerDispatcher定数 */
-	private static final String WORKER_DISPATCHER = "workerDispatcher";
+    /** WorkerDispatcher定数 */
+    private static final String WORKER_DISPATCHER = "workerDispatcher";
 
-	/** GTRobotDispatcher定数 */
-	private static final String GTROBOT_DISPATCHER = "gTRobotDispatcher";
+    /** GTRobotDispatcher定数 */
+    private static final String GTROBOT_DISPATCHER = "gTRobotDispatcher";
 
-	/** UserEntryService定数 */
-	private static final String USERENTRY_SERVICE = "userEntryService";
+    /** UserEntryService定数 */
+    private static final String USERENTRY_SERVICE = "userEntryService";
 
-	/** helpProcessor定数 */
-	private static final String HELP_PROCESSOR = "helpProcessor";
+    /** helpProcessor定数 */
+    private static final String HELP_PROCESSOR = "helpProcessor";
 
-	/** mailSenderCommand定数 */
-	private static final String MAIL_SENDER_COMMAND = "mailSenderCommand";
+    /** mailSenderCommand定数 */
+    private static final String MAIL_SENDER_COMMAND = "mailSenderCommand";
 
-	/**
-	 * 初始化Spring的Context。
-	 */
-	public static ApplicationContext initApplicationContext() {
-		if (appContext == null) {
-			appContext = new ClassPathXmlApplicationContext(
-					"classpath*:*-context.xml");
-		}
-		return appContext;
-	}
+    /**
+     * 初始化Spring的Context。
+     */
+    public static ApplicationContext initApplicationContext() {
+        if (GTRobotContextHelper.appContext == null) {
+            GTRobotContextHelper.appContext = new ClassPathXmlApplicationContext(
+                    "classpath*:*-context.xml");
+        }
+        return GTRobotContextHelper.appContext;
+    }
 
-	public static ApplicationContext getApplicationContext() {
-		return initApplicationContext();
-	}
+    public static ApplicationContext getApplicationContext() {
+        return GTRobotContextHelper.initApplicationContext();
+    }
 
-	/**
-	 * Beanの取得
-	 * 
-	 * @param beanName
-	 * @return Object
-	 */
-	public static Object getBean(String beanName) {
-		if (!getApplicationContext().containsBean(beanName)) {
-			log.warn("Can't find the bean in application appContext: "
-					+ beanName);
-			return null;
-		}
-		return getApplicationContext().getBean(beanName);
-	}
+    /**
+     * Beanの取得
+     * 
+     * @param beanName
+     * @return Object
+     */
+    public static Object getBean(final String beanName) {
+        if (!GTRobotContextHelper.getApplicationContext()
+                .containsBean(beanName)) {
+            GTRobotContextHelper.log
+                    .warn("Can't find the bean in application appContext: "
+                            + beanName);
+            return null;
+        }
+        return GTRobotContextHelper.getApplicationContext().getBean(beanName);
+    }
 
-	public static GoogleTalkConnection getGoogleTalkConnection() {
-		return (GoogleTalkConnection) getBean(GOOGLE_TALK_CONNECTION);
-	}
+    public static GoogleTalkConnection getGoogleTalkConnection() {
+        return (GoogleTalkConnection) GTRobotContextHelper
+                .getBean(GTRobotContextHelper.GOOGLE_TALK_CONNECTION);
+    }
 
-	public static Cache getSessionCache() {
-		return (Cache) getBean(SESSION_CACHE);
-	}
+    public static Cache getSessionCache() {
+        return (Cache) GTRobotContextHelper
+                .getBean(GTRobotContextHelper.SESSION_CACHE);
+    }
 
-	public static Cache getChatCache() {
-		return (Cache) getBean(CHAT_CACHE);
-	}
+    public static Cache getChatCache() {
+        return (Cache) GTRobotContextHelper
+                .getBean(GTRobotContextHelper.CHAT_CACHE);
+    }
 
-	public static WorkerDispatcher getWorkerDispatcher() {
-		return (WorkerDispatcher) getBean(WORKER_DISPATCHER);
-	}
+    public static WorkerDispatcher getWorkerDispatcher() {
+        return (WorkerDispatcher) GTRobotContextHelper
+                .getBean(GTRobotContextHelper.WORKER_DISPATCHER);
+    }
 
-	public static GTRobotDispatcher getGTRobotDispatcher() {
-		return (GTRobotDispatcher) getBean(GTROBOT_DISPATCHER);
-	}
+    public static GTRobotDispatcher getGTRobotDispatcher() {
+        return (GTRobotDispatcher) GTRobotContextHelper
+                .getBean(GTRobotContextHelper.GTROBOT_DISPATCHER);
+    }
 
-	public static UserEntryService getUserEntryService() {
-		return (UserEntryService) getBean(USERENTRY_SERVICE);
-	}
+    public static UserEntryService getUserEntryService() {
+        return (UserEntryService) GTRobotContextHelper
+                .getBean(GTRobotContextHelper.USERENTRY_SERVICE);
+    }
 
-	public static HelpProcessor getHelpProcessor() {
-		return (HelpProcessor) getBean(HELP_PROCESSOR);
-	}
+    public static HelpProcessor getHelpProcessor() {
+        return (HelpProcessor) GTRobotContextHelper
+                .getBean(GTRobotContextHelper.HELP_PROCESSOR);
+    }
 
-	public static MailSenderCommand getMailSenderCommand() {
-		return (MailSenderCommand) getBean(MAIL_SENDER_COMMAND);
-	}
+    public static MailSenderCommand getMailSenderCommand() {
+        return (MailSenderCommand) GTRobotContextHelper
+                .getBean(GTRobotContextHelper.MAIL_SENDER_COMMAND);
+    }
 }

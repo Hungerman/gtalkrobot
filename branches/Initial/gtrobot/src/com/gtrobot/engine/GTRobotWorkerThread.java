@@ -26,57 +26,64 @@ import com.gtrobot.thread.signalqueues.Queue;
  * 
  */
 public class GTRobotWorkerThread extends WorkerThread {
-	protected static final transient Log log = LogFactory
-			.getLog(GTRobotWorkerThread.class);
+    protected static final transient Log log = LogFactory
+            .getLog(GTRobotWorkerThread.class);
 
-	public GTRobotWorkerThread(String name, Queue threadPool) {
-		super(name, threadPool);
-	}
+    public GTRobotWorkerThread(final String name, final Queue threadPool) {
+        super(name, threadPool);
+    }
 
-	protected void internalProcess() {
-		BaseCommand command = (BaseCommand) getProcessingData();
+    @Override
+    protected void internalProcess() {
+        final BaseCommand command = (BaseCommand) this.getProcessingData();
 
-		Processor processor = command.getProcessor();
-		if (processor == null) {
-			log.error("Command's processor is null! "
-					+ command.getCommandType() + " : "
-					+ command.getClass().getName());
-			return;
-		}
-		SessionFactory sessionFactory = (SessionFactory) GTRobotContextHelper
-				.getBean("sessionFactory");
-		log.debug("Opening Hibernate Session in GTRobotWorkerThread");
-		Session session = getSession(sessionFactory);
-		TransactionSynchronizationManager.bindResource(sessionFactory,
-				new SessionHolder(session));
-		try {
-			// 执行具体的业务操作
-			processor.process(command);
-		} catch (Exception e) {
-			log.error("Exception when processing in processor: "
-					+ processor.toString(), e);
-		} finally {
-			TransactionSynchronizationManager.unbindResource(sessionFactory);
-			log
-					.debug("Closing single Hibernate Session in GTRobotWorkerThread");
-			try {
-				closeSession(session, sessionFactory);
-			} catch (RuntimeException ex) {
-				log.error("Unexpected exception on closing Hibernate Session",
-						ex);
-			}
-		}
-	}
+        final Processor processor = command.getProcessor();
+        if (processor == null) {
+            GTRobotWorkerThread.log.error("Command's processor is null! "
+                    + command.getCommandType() + " : "
+                    + command.getClass().getName());
+            return;
+        }
+        final SessionFactory sessionFactory = (SessionFactory) GTRobotContextHelper
+                .getBean("sessionFactory");
+        GTRobotWorkerThread.log
+                .debug("Opening Hibernate Session in GTRobotWorkerThread");
+        final Session session = this.getSession(sessionFactory);
+        TransactionSynchronizationManager.bindResource(sessionFactory,
+                new SessionHolder(session));
+        try {
+            // 执行具体的业务操作
+            processor.process(command);
+        } catch (final Exception e) {
+            GTRobotWorkerThread.log.error(
+                    "Exception when processing in processor: "
+                            + processor.toString(), e);
+        } finally {
+            TransactionSynchronizationManager.unbindResource(sessionFactory);
+            GTRobotWorkerThread.log
+                    .debug("Closing single Hibernate Session in GTRobotWorkerThread");
+            try {
+                this.closeSession(session, sessionFactory);
+            } catch (final RuntimeException ex) {
+                GTRobotWorkerThread.log
+                        .error(
+                                "Unexpected exception on closing Hibernate Session",
+                                ex);
+            }
+        }
+    }
 
-	protected Session getSession(SessionFactory sessionFactory)
-			throws DataAccessResourceFailureException {
-		Session session = SessionFactoryUtils.getSession(sessionFactory, true);
-		session.setFlushMode(FlushMode.MANUAL);
-		return session;
-	}
+    protected Session getSession(final SessionFactory sessionFactory)
+            throws DataAccessResourceFailureException {
+        final Session session = SessionFactoryUtils.getSession(sessionFactory,
+                true);
+        session.setFlushMode(FlushMode.MANUAL);
+        return session;
+    }
 
-	protected void closeSession(Session session, SessionFactory sessionFactory) {
-		session.flush();
-		SessionFactoryUtils.releaseSession(session, sessionFactory);
-	}
+    protected void closeSession(final Session session,
+            final SessionFactory sessionFactory) {
+        session.flush();
+        SessionFactoryUtils.releaseSession(session, sessionFactory);
+    }
 }

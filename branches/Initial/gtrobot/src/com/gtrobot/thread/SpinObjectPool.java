@@ -28,71 +28,74 @@ import com.gtrobot.thread.signalqueues.QueueProxy;
  */
 
 public abstract class SpinObjectPool implements Runnable {
-	protected static final transient Log log = LogFactory
-			.getLog(SpinObjectPool.class);
+    protected static final transient Log log = LogFactory
+            .getLog(SpinObjectPool.class);
 
-	private Queue eventQueue;
+    private Queue eventQueue;
 
-	private Thread spinThread;
+    private Thread spinThread;
 
-	private boolean isRunning = true;
+    private boolean isRunning = true;
 
-	public SpinObjectPool(String name, boolean isDaemon, Queue eventQueue) {
-		this.eventQueue = new QueueProxy(eventQueue);
-		spinThread = new Thread(this, name);
-		spinThread.setDaemon(isDaemon);
-		spinThread.start();
-	}
+    public SpinObjectPool(final String name, final boolean isDaemon,
+            final Queue eventQueue) {
+        this.eventQueue = new QueueProxy(eventQueue);
+        this.spinThread = new Thread(this, name);
+        this.spinThread.setDaemon(isDaemon);
+        this.spinThread.start();
+    }
 
-	/**
-	 * run ()
-	 * 
-	 * Wait for an event coming from Queue.<br>
-	 * When an event came, pop the event and process it.<br>
-	 */
-	public void run() {
-		while (isRunning) {
-			if (log.isDebugEnabled()) {
-				log.debug("SpinObjectPool is waiting to pop a event.");
-			}
-			// Block to wait for an event coming.
-			Object event = eventQueue.pop();
-			// Deal the event
-			process(event);
-			if (log.isDebugEnabled()) {
-				log.debug("SpinObjectPool just processed an event.");
-			}
-		}
-	}
+    /**
+     * run ()
+     * 
+     * Wait for an event coming from Queue.<br>
+     * When an event came, pop the event and process it.<br>
+     */
+    public void run() {
+        while (this.isRunning) {
+            if (SpinObjectPool.log.isDebugEnabled()) {
+                SpinObjectPool.log
+                        .debug("SpinObjectPool is waiting to pop a event.");
+            }
+            // Block to wait for an event coming.
+            final Object event = this.eventQueue.pop();
+            // Deal the event
+            this.process(event);
+            if (SpinObjectPool.log.isDebugEnabled()) {
+                SpinObjectPool.log
+                        .debug("SpinObjectPool just processed an event.");
+            }
+        }
+    }
 
-	/**
-	 * Deal the logic with the event.
-	 * 
-	 * @param event
-	 */
-	protected abstract void process(Object event);
+    /**
+     * Deal the logic with the event.
+     * 
+     * @param event
+     */
+    protected abstract void process(Object event);
 
-	/**
-	 * Invoked when an evnet should be triggered into Queue.<br>
-	 * The new coming event will be pushed into Queue.
-	 * 
-	 * @param event
-	 */
-	protected void trigger(Object event) {
-		synchronized (eventQueue) {
-			// Check and block while the Queue is full
-			eventQueue.push(event);
-			eventQueue.notifyAll();
-		}
-	}
+    /**
+     * Invoked when an evnet should be triggered into Queue.<br>
+     * The new coming event will be pushed into Queue.
+     * 
+     * @param event
+     */
+    protected void trigger(final Object event) {
+        synchronized (this.eventQueue) {
+            // Check and block while the Queue is full
+            this.eventQueue.push(event);
+            this.eventQueue.notifyAll();
+        }
+    }
 
-	public final void stop() {
-		synchronized (eventQueue) {
-			isRunning = false;
-			eventQueue.stop();
-			// ReflectionBus.broadcast(new
-			// NotifyStopProcessSignal(spinThread.getName()));
-			eventQueue.notifyAll();
-		}
-	}
+    public final void stop() {
+        synchronized (this.eventQueue) {
+            this.isRunning = false;
+            this.eventQueue.stop();
+            // ReflectionBus.broadcast(new
+            // NotifyStopProcessSignal(spinThread.getName()));
+            this.eventQueue.notifyAll();
+        }
+    }
 }

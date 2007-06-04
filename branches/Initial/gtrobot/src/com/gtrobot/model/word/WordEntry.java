@@ -12,162 +12,167 @@ import com.gtrobot.model.BaseObject;
  * @hibernate.class table="WORD_ENTRY"
  */
 public class WordEntry extends BaseObject {
-	private static final long serialVersionUID = -3908805687733951263L;
+    private static final long serialVersionUID = -3908805687733951263L;
 
-	private Long wordEntryId;
+    private Long wordEntryId;
 
-	private String word;
+    private String word;
 
-	private String pronounce;
+    private String pronounce;
 
-	private String pronounceType;
+    private String pronounceType;
 
-	private String wordType;
+    private String wordType;
 
-	private String meaning;
+    private String meaning;
 
-	private String sentence;
+    private String sentence;
 
-	private String comments;
+    private String comments;
 
-	private boolean hasError;
+    private boolean hasError;
 
-	/**
-	 * @hibernate.property column="COMMENTS" length="2000"
-	 */
-	public String getComments() {
-		return comments;
-	}
+    /**
+     * @hibernate.property column="COMMENTS" length="2000"
+     */
+    public String getComments() {
+        return this.comments;
+    }
 
-	/**
-	 * @hibernate.id column="WORD_ENTRY_ID" generator-class="native"
-	 * @hibernate.generator-param name="sequence" value="SEQ_WORD_ENTRY"
-	 * @hibernate.generator-param name="identity"
-	 */
-	public Long getWordEntryId() {
-		return wordEntryId;
-	}
+    /**
+     * @hibernate.id column="WORD_ENTRY_ID" generator-class="native"
+     * @hibernate.generator-param name="sequence" value="SEQ_WORD_ENTRY"
+     * @hibernate.generator-param name="identity"
+     */
+    public Long getWordEntryId() {
+        return this.wordEntryId;
+    }
 
-	/**
-	 * @hibernate.property column="MEANING" not-null="true" length="1000"
-	 */
-	public String getMeaning() {
-		return meaning;
-	}
+    /**
+     * @hibernate.property column="MEANING" not-null="true" length="1000"
+     */
+    public String getMeaning() {
+        return this.meaning;
+    }
 
-	/**
-	 * @hibernate.property column="PRONOUNCE" not-null="true" length="100"
-	 */
-	public String getPronounce() {
-		return pronounce;
-	}
+    /**
+     * @hibernate.property column="PRONOUNCE" not-null="true" length="100"
+     */
+    public String getPronounce() {
+        return this.pronounce;
+    }
 
-	/**
-	 * @hibernate.property column="PRONOUNCE_TYPE" length="50"
-	 */
-	public String getPronounceType() {
-		return pronounceType;
-	}
+    /**
+     * @hibernate.property column="PRONOUNCE_TYPE" length="50"
+     */
+    public String getPronounceType() {
+        return this.pronounceType;
+    }
 
-	public void setPronounceType(String pronounceType) {
-		this.pronounceType = pronounceType;
-	}
+    public void setPronounceType(final String pronounceType) {
+        this.pronounceType = pronounceType;
+    }
 
-	/**
-	 * @hibernate.property column="SENTENCE" length="2000"
-	 */
-	public String getSentence() {
-		return sentence;
-	}
+    /**
+     * @hibernate.property column="SENTENCE" length="2000"
+     */
+    public String getSentence() {
+        return this.sentence;
+    }
 
-	/**
-	 * @hibernate.property column="WORD" length="100" not-null="true"
-	 *                     unique="true"
-	 */
-	public String getWord() {
-		return word;
-	}
+    /**
+     * @hibernate.property column="WORD" length="100" not-null="true"
+     *                     unique="true"
+     */
+    public String getWord() {
+        return this.word;
+    }
 
-	/**
-	 * @hibernate.property column="WORD_TYPE" length="100"
-	 */
-	public String getWordType() {
-		return wordType;
-	}
+    /**
+     * @hibernate.property column="WORD_TYPE" length="100"
+     */
+    public String getWordType() {
+        return this.wordType;
+    }
 
-	public void setComments(String comments) {
-		this.comments = comments;
-	}
+    public void setComments(final String comments) {
+        this.comments = comments;
+    }
 
-	public void setWordEntryId(Long id) {
-		this.wordEntryId = id;
-	}
+    public void setWordEntryId(final Long id) {
+        this.wordEntryId = id;
+    }
 
-	public void setMeaning(String meaning) {
-		this.meaning = meaning;
-	}
+    public void setMeaning(final String meaning) {
+        this.meaning = meaning;
+    }
 
-	public void setPronounce(String pronounce) {
-		this.pronounce = pronounce;
-	}
+    public void setPronounce(final String pronounce) {
+        this.pronounce = pronounce;
+    }
 
-	public void setSentence(String sentence) {
-		this.sentence = sentence;
-	}
+    public void setSentence(final String sentence) {
+        this.sentence = sentence;
+    }
 
-	public void setWord(String word) {
-		this.word = word;
-	}
+    public void setWord(final String word) {
+        this.word = word;
+    }
 
-	public void setWordType(String wordType) {
-		this.wordType = wordType;
-	}
+    public void setWordType(final String wordType) {
+        this.wordType = wordType;
+    }
 
-	/**
-	 * @hibernate.property column="HAS_ERROR" not-null="true"
-	 */
-	public boolean isHasError() {
-		return hasError;
-	}
+    /**
+     * @hibernate.property column="HAS_ERROR" not-null="true"
+     */
+    public boolean isHasError() {
+        return this.hasError;
+    }
 
-	public void setHasError(boolean hasError) {
-		this.hasError = hasError;
-	}
+    public void setHasError(final boolean hasError) {
+        this.hasError = hasError;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof WordEntry))
-			return false;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof WordEntry)) {
+            return false;
+        }
 
-		final WordEntry target = (WordEntry) o;
+        final WordEntry target = (WordEntry) o;
 
-		return !(wordEntryId != null ? !wordEntryId.equals(target.wordEntryId)
-				: target.wordEntryId != null);
+        return !(this.wordEntryId != null ? !this.wordEntryId
+                .equals(target.wordEntryId) : target.wordEntryId != null);
 
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode() {
-		return (wordEntryId != null ? wordEntryId.hashCode() : 0);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return (this.wordEntryId != null ? this.wordEntryId.hashCode() : 0);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE).append(
-				this.word).toString();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE).append(
+                this.word).toString();
+    }
 }

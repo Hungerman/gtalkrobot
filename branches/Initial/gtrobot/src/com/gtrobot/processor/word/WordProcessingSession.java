@@ -3,55 +3,57 @@ package com.gtrobot.processor.word;
 import java.util.List;
 
 public class WordProcessingSession {
-	private static final int START = -1;
+    private static final int START = -1;
 
-	private Long wordUnitId;
+    private Long wordUnitId;
 
-	private List<Long> wordEntries;
+    private List<Long> wordEntries;
 
-	int curCount;
+    int curCount;
 
-	public WordProcessingSession(Long wordUnitId, List<Long> wordEntries) {
-		this.wordUnitId = wordUnitId;
-		this.wordEntries = wordEntries;
-		reset();
-	}
+    public WordProcessingSession(final Long wordUnitId,
+            final List<Long> wordEntries) {
+        this.wordUnitId = wordUnitId;
+        this.wordEntries = wordEntries;
+        this.reset();
+    }
 
-	public int getCurCount() {
-		return curCount;
-	}
+    public int getCurCount() {
+        return this.curCount;
+    }
 
-	public List<Long> getWordEntries() {
-		return wordEntries;
-	}
+    public List<Long> getWordEntries() {
+        return this.wordEntries;
+    }
 
-	public void reset() {
-		curCount = START;
-	}
+    public void reset() {
+        this.curCount = WordProcessingSession.START;
+    }
 
-	public Long getCurrentWord() {
-		return wordEntries.get(curCount);
-	}
+    public Long getCurrentWord() {
+        return this.wordEntries.get(this.curCount);
+    }
 
-	public boolean next() {
-		curCount++;
-		if (curCount >= wordEntries.size())
-			return false;
-		return true;
-	}
+    public boolean next() {
+        this.curCount++;
+        if (this.curCount >= this.wordEntries.size()) {
+            return false;
+        }
+        return true;
+    }
 
-	public Long getWordUnitId() {
-		return wordUnitId;
-	}
+    public Long getWordUnitId() {
+        return this.wordUnitId;
+    }
 
-	public void backOne() {
-		curCount--;
-		if (curCount < START) {
-			curCount = START;
-		}
-	}
+    public void backOne() {
+        this.curCount--;
+        if (this.curCount < WordProcessingSession.START) {
+            this.curCount = WordProcessingSession.START;
+        }
+    }
 
-	public void remove(Long wordEntryId) {
-		wordEntries.remove(wordEntryId);
-	}
+    public void remove(final Long wordEntryId) {
+        this.wordEntries.remove(wordEntryId);
+    }
 }

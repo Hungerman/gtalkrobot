@@ -24,41 +24,41 @@ import com.gtrobot.dao.Dao;
  *          $LastChangedDate: 2006-08-04 10:39:28 +0900 (金, 04 8 2006) $
  */
 public class BaseDaoHibernate extends HibernateDaoSupport implements Dao {
-	protected final Log log = LogFactory.getLog(getClass());
+    protected final Log log = LogFactory.getLog(this.getClass());
 
-	/**
-	 * @see jp.co.softbrain.dao.Dao#saveObject(java.lang.Object)
-	 */
-	public void saveObject(Object o) {
-		getHibernateTemplate().saveOrUpdate(o);
-	}
+    /**
+     * @see jp.co.softbrain.dao.Dao#saveObject(java.lang.Object)
+     */
+    public void saveObject(final Object o) {
+        this.getHibernateTemplate().saveOrUpdate(o);
+    }
 
-	/**
-	 * @see jp.co.softbrain.dao.Dao#getObject(java.lang.Class,
-	 *      java.io.Serializable)
-	 */
-	public Object getObject(Class clazz, Serializable id) {
-		Object o = getHibernateTemplate().get(clazz, id);
+    /**
+     * @see jp.co.softbrain.dao.Dao#getObject(java.lang.Class,
+     *      java.io.Serializable)
+     */
+    public Object getObject(final Class clazz, final Serializable id) {
+        final Object o = this.getHibernateTemplate().get(clazz, id);
 
-		if (o == null) {
-			throw new ObjectRetrievalFailureException(clazz, id);
-		}
+        if (o == null) {
+            throw new ObjectRetrievalFailureException(clazz, id);
+        }
 
-		return o;
-	}
+        return o;
+    }
 
-	/**
-	 * @see jp.co.softbrain.dao.Dao#getObjects(java.lang.Class)
-	 */
-	public List getObjects(Class clazz) {
-		return getHibernateTemplate().loadAll(clazz);
-	}
+    /**
+     * @see jp.co.softbrain.dao.Dao#getObjects(java.lang.Class)
+     */
+    public List getObjects(final Class clazz) {
+        return this.getHibernateTemplate().loadAll(clazz);
+    }
 
-	/**
-	 * @see jp.co.softbrain.dao.Dao#removeObject(java.lang.Class,
-	 *      java.io.Serializable)
-	 */
-	public void removeObject(Class clazz, Serializable id) {
-		getHibernateTemplate().delete(getObject(clazz, id));
-	}
+    /**
+     * @see jp.co.softbrain.dao.Dao#removeObject(java.lang.Class,
+     *      java.io.Serializable)
+     */
+    public void removeObject(final Class clazz, final Serializable id) {
+        this.getHibernateTemplate().delete(this.getObject(clazz, id));
+    }
 }

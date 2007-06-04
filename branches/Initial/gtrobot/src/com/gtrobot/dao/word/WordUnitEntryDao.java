@@ -8,38 +8,38 @@ import com.gtrobot.model.word.WordUnitEntryKey;
 
 public interface WordUnitEntryDao extends Dao {
 
-	/**
-	 * Retrieves all of the wordUnitEntrys
-	 */
-	public List getWordUnitEntrys();
+    /**
+     * Retrieves all of the wordUnitEntrys
+     */
+    public List getWordUnitEntrys();
 
-	/**
-	 * Gets wordUnitEntry's information based on primary key. An
-	 * ObjectRetrievalFailureException Runtime Exception is thrown if nothing is
-	 * found.
-	 * 
-	 * @param key
-	 *            the wordUnitEntry's key
-	 * @return wordUnitEntry populated wordUnitEntry object
-	 */
-	public WordUnitEntry getWordUnitEntry(final WordUnitEntryKey key);
+    /**
+     * Gets wordUnitEntry's information based on primary key. An
+     * ObjectRetrievalFailureException Runtime Exception is thrown if nothing is
+     * found.
+     * 
+     * @param key
+     *            the wordUnitEntry's key
+     * @return wordUnitEntry populated wordUnitEntry object
+     */
+    public WordUnitEntry getWordUnitEntry(final WordUnitEntryKey key);
 
-	public WordUnitEntry getWordUnitEntry(final Long wordEntryId,
-			final Long wordUnitId);
+    public WordUnitEntry getWordUnitEntry(final Long wordEntryId,
+            final Long wordUnitId);
 
-	/**
-	 * Saves a wordUnitEntry's information
-	 * 
-	 * @param wordUnitEntry
-	 *            the object to be saved
-	 */
-	public void saveWordUnitEntry(WordUnitEntry wordUnitEntry);
+    /**
+     * Saves a wordUnitEntry's information
+     * 
+     * @param wordUnitEntry
+     *            the object to be saved
+     */
+    public void saveWordUnitEntry(WordUnitEntry wordUnitEntry);
 
-	/**
-	 * Removes a wordUnitEntry from the database by key
-	 * 
-	 * @param key
-	 *            the wordUnitEntry's key
-	 */
-	public void removeWordUnitEntry(final WordUnitEntryKey key);
+    /**
+     * Removes a wordUnitEntry from the database by key
+     * 
+     * @param key
+     *            the wordUnitEntry's key
+     */
+    public void removeWordUnitEntry(final WordUnitEntryKey key);
 }

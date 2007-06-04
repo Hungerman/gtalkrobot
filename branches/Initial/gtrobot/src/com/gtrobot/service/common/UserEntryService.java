@@ -16,12 +16,13 @@ import com.gtrobot.model.common.UserEntry;
  * 
  */
 public interface UserEntryService {
-	public Collection<String> getAllActiveUsers();
+    public Collection<String> getAllActiveUsers();
 
-	public UserEntry getUserEntry(String jid);
-	public boolean updateNickname(UserEntry userEntry, String newNickname);
+    public UserEntry getUserEntry(String jid);
 
-	public void saveUserEntry(UserEntry userEntry);
+    public boolean updateNickname(UserEntry userEntry, String newNickname);
 
-	public void updateUserEntryPresence(UserEntry userEntry, Presence presence);
+    public void saveUserEntry(UserEntry userEntry);
+
+    public void updateUserEntryPresence(UserEntry userEntry, Presence presence);
 }
