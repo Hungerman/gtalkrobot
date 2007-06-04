@@ -9,26 +9,30 @@ import com.gtrobot.processor.AbstractProcessor;
 import com.gtrobot.service.common.MailEngine;
 
 public class MailSenderProcessor extends AbstractProcessor {
-	private MailEngine mailEngine;
+    private MailEngine mailEngine;
 
-	public void setMailEngine(MailEngine mailEngine) {
-		this.mailEngine = mailEngine;
-	}
+    public void setMailEngine(final MailEngine mailEngine) {
+        this.mailEngine = mailEngine;
+    }
 
-	protected void internalProcess(BaseCommand abCmd) throws XMPPException {
-		MailSenderCommand cmd = (MailSenderCommand) abCmd;
-		SimpleMailMessage mailMessage = cmd.getMailMessage();
-		if (mailMessage == null)
-			return;
-		try {
-			if (cmd.getMailTemplateName() == null) {
-				mailEngine.send(mailMessage);
-			} else {
-				mailEngine.sendMessage(mailMessage, "invitation.vm", cmd
-						.getMailTemplateModel());
-			}
-		} catch (Exception e) {
-			log.error("Exception in sending mail to:" + mailMessage.getCc());
-		}
-	}
+    @Override
+    protected void internalProcess(final BaseCommand abCmd)
+            throws XMPPException {
+        final MailSenderCommand cmd = (MailSenderCommand) abCmd;
+        final SimpleMailMessage mailMessage = cmd.getMailMessage();
+        if (mailMessage == null) {
+            return;
+        }
+        try {
+            if (cmd.getMailTemplateName() == null) {
+                this.mailEngine.send(mailMessage);
+            } else {
+                this.mailEngine.sendMessage(mailMessage, "invitation.vm", cmd
+                        .getMailTemplateModel());
+            }
+        } catch (final Exception e) {
+            AbstractProcessor.log.error("Exception in sending mail to:"
+                    + mailMessage.getCc());
+        }
+    }
 }

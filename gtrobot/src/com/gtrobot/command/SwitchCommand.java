@@ -9,26 +9,28 @@ import java.util.List;
  * 
  */
 public class SwitchCommand extends ProcessableCommand {
-	private static final String ON = "on";
+    private static final String ON = "on";
 
-	private static final String OFF = "off";
+    private static final String OFF = "off";
 
-	private String operation;
+    private String operation;
 
-	public void parseArgv(List argv) {
-		if (argv.size() != 2) {
-			setError(ErrorType.wrongParameter);
-			return;
-		}
-		operation = ((String) argv.get(1)).trim().toLowerCase();
-		if (!(ON.endsWith(operation) || OFF.equals(operation))) {
-			setError(ErrorType.wrongParameter);
-		}
+    @Override
+    public void parseArgv(final List argv) {
+        if (argv.size() != 2) {
+            this.setError(ErrorType.wrongParameter);
+            return;
+        }
+        this.operation = ((String) argv.get(1)).trim().toLowerCase();
+        if (!(SwitchCommand.ON.endsWith(this.operation) || SwitchCommand.OFF
+                .equals(this.operation))) {
+            this.setError(ErrorType.wrongParameter);
+        }
 
-		super.parseArgv(argv);
-	}
+        super.parseArgv(argv);
+    }
 
-	public boolean isOperationON() {
-		return ON.equals(operation);
-	}
+    public boolean isOperationON() {
+        return SwitchCommand.ON.equals(this.operation);
+    }
 }

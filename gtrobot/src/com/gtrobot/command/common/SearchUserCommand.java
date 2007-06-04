@@ -12,21 +12,22 @@ import com.gtrobot.command.ProcessableCommand;
  * 
  */
 public class SearchUserCommand extends ProcessableCommand {
-	private String condition;
+    private String condition;
 
-	public void parseArgv(List argv) {
-		if (argv.size() > 2) {
-			setError(ErrorType.wrongParameter);
-			return;
-		}
-		if (argv.size() == 2) {
-			condition = ((String) argv.get(1)).trim();
-		}
+    @Override
+    public void parseArgv(final List argv) {
+        if (argv.size() > 2) {
+            this.setError(ErrorType.wrongParameter);
+            return;
+        }
+        if (argv.size() == 2) {
+            this.condition = ((String) argv.get(1)).trim();
+        }
 
-		super.parseArgv(argv);
-	}
+        super.parseArgv(argv);
+    }
 
-	public String getCondition() {
-		return condition;
-	}
+    public String getCondition() {
+        return this.condition;
+    }
 }

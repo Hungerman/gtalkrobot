@@ -18,74 +18,77 @@ import com.gtrobot.model.word.WordUnit;
  */
 public class TxtWordImportor extends WordImportor {
 
-	public void importFile(String fileName) {
-		long count = 0;
-		String line = null;
-		String unitName = null;
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					new FileInputStream(fileName), "GBK"));
+    @Override
+    public void importFile(final String fileName) {
+        long count = 0;
+        String line = null;
+        String unitName = null;
+        try {
+            final BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(new FileInputStream(fileName), "GBK"));
 
-			unitName = reader.readLine();
-			log.info("\n\n\n================================>: " + unitName);
-			WordUnit wordUnit = createWordUnit(unitName);
+            unitName = reader.readLine();
+            WordImportor.log.info("\n\n\n================================>: "
+                    + unitName);
+            final WordUnit wordUnit = this.createWordUnit(unitName);
 
-			line = reader.readLine();
-			line = reader.readLine();
-			while (!line.equals("/End")) {
-				log.info("----->: " + line);
-				WordEntry wordEntry = processLine(line);
+            line = reader.readLine();
+            line = reader.readLine();
+            while (!line.equals("/End")) {
+                WordImportor.log.info("----->: " + line);
+                final WordEntry wordEntry = this.processLine(line);
 
-				saveWordEntry(wordUnit, wordEntry);
+                this.saveWordEntry(wordUnit, wordEntry);
 
-				line = reader.readLine();
-				count++;
-			}
-			wordUnit.setWordCount(count);
-			saveWordUnit(wordUnit);
-			flush();
-		} catch (Exception e) {
-			log.info("*****>" + unitName + "(" + count + "): " + line);
-			e.printStackTrace();
-		}
-	}
+                line = reader.readLine();
+                count++;
+            }
+            wordUnit.setWordCount(count);
+            this.saveWordUnit(wordUnit);
+            this.flush();
+        } catch (final Exception e) {
+            WordImportor.log.info("*****>" + unitName + "(" + count + "): "
+                    + line);
+            e.printStackTrace();
+        }
+    }
 
-	private WordEntry processLine(String line) throws SQLException,
-			UnsupportedEncodingException {
+    private WordEntry processLine(final String line) throws SQLException,
+            UnsupportedEncodingException {
 
-		// できる//②/动2/会，能/0/
-		String[] split = line.split("/");
-		String pronounce = split[0];
-		String word = split[1];
-		if (word == null || word.trim().length() == 0) {
-			word = pronounce;
-		}
-		String pronounceType = split[2];
-		String wordType = split[3];
-		String meaning = split[4];
+        // できる//②/动2/会，能/0/
+        final String[] split = line.split("/");
+        final String pronounce = split[0];
+        String word = split[1];
+        if ((word == null) || (word.trim().length() == 0)) {
+            word = pronounce;
+        }
+        final String pronounceType = split[2];
+        final String wordType = split[3];
+        final String meaning = split[4];
 
-		WordEntry wordEntry = createWordEntry(word, pronounce, pronounceType,
-				wordType, meaning, null, null);
-		return wordEntry;
-	}
+        final WordEntry wordEntry = this.createWordEntry(word, pronounce,
+                pronounceType, wordType, meaning, null, null);
+        return wordEntry;
+    }
 
-	public static final void main(String[] argv) {
-		TxtWordImportor importor = new TxtWordImportor();
+    public static final void main(final String[] argv) {
+        final TxtWordImportor importor = new TxtWordImportor();
 
-		importFile("metadata\\data\\标日初级分课单词上\\", importor, 4);
-		importFile("metadata\\data\\标日初级分课单词下\\", importor, 3);
-		importFile("metadata\\data\\标日中级分课单词\\", importor, 2);
+        TxtWordImportor.importFile("metadata\\data\\标日初级分课单词上\\", importor, 4);
+        TxtWordImportor.importFile("metadata\\data\\标日初级分课单词下\\", importor, 3);
+        TxtWordImportor.importFile("metadata\\data\\标日中级分课单词\\", importor, 2);
 
-		System.exit(0);
-	}
+        System.exit(0);
+    }
 
-	private static void importFile(String filePath, WordImportor importor,
-			int wordLevel) {
-		importor.wordLelvel = wordLevel;
-		File dir = new File(filePath);
-		String[] filenames = dir.list();
-		for (int i = 0; i < filenames.length; i++) {
-			importor.importFile(filePath + filenames[i]);
-		}
-	}
+    private static void importFile(final String filePath,
+            final WordImportor importor, final int wordLevel) {
+        importor.wordLelvel = wordLevel;
+        final File dir = new File(filePath);
+        final String[] filenames = dir.list();
+        for (final String element : filenames) {
+            importor.importFile(filePath + element);
+        }
+    }
 }

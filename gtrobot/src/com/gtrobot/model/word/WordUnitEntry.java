@@ -12,55 +12,61 @@ import com.gtrobot.model.BaseObject;
  * @hibernate.class table="WORD_UNIT_ENTRY"
  */
 public class WordUnitEntry extends BaseObject {
-	private static final long serialVersionUID = -8921629023230583323L;
+    private static final long serialVersionUID = -8921629023230583323L;
 
-	private WordUnitEntryKey pk = new WordUnitEntryKey();
+    private WordUnitEntryKey pk = new WordUnitEntryKey();
 
-	/**
-	 * @hibernate.composite-id
-	 */
-	public WordUnitEntryKey getPk() {
-		return pk;
-	}
+    /**
+     * @hibernate.composite-id
+     */
+    public WordUnitEntryKey getPk() {
+        return this.pk;
+    }
 
-	public void setPk(WordUnitEntryKey key) {
-		this.pk = key;
-	}
+    public void setPk(final WordUnitEntryKey key) {
+        this.pk = key;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof WordUnitEntry))
-			return false;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof WordUnitEntry)) {
+            return false;
+        }
 
-		final WordUnitEntry target = (WordUnitEntry) o;
+        final WordUnitEntry target = (WordUnitEntry) o;
 
-		return !(pk != null ? !pk.equals(target.pk) : target.pk != null);
+        return !(this.pk != null ? !this.pk.equals(target.pk)
+                : target.pk != null);
 
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode() {
-		return (pk != null ? pk.hashCode() : 0);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return (this.pk != null ? this.pk.hashCode() : 0);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE).append(
-				this.pk).toString();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE).append(
+                this.pk).toString();
+    }
 
 }

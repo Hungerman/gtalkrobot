@@ -8,54 +8,54 @@ import com.gtrobot.service.impl.BaseManager;
 import com.gtrobot.service.word.WordUnitManager;
 
 public class WordUnitManagerImpl extends BaseManager implements WordUnitManager {
-	private WordUnitDao dao;
+    private WordUnitDao dao;
 
-	/**
-	 * Set the Dao for communication with the data layer.
-	 * 
-	 * @param dao
-	 */
-	public void setWordUnitDao(WordUnitDao dao) {
-		this.dao = dao;
-	}
+    /**
+     * Set the Dao for communication with the data layer.
+     * 
+     * @param dao
+     */
+    public void setWordUnitDao(final WordUnitDao dao) {
+        this.dao = dao;
+    }
 
-	/**
-	 * @see com.gtrobot.model.service.WordUnitManager#get
-	 *      WordUnits(com.gtrobot.model.word.WordUnit)
-	 */
-	public List getWordUnits() {
-		return dao.getWordUnits();
-	}
+    /**
+     * @see com.gtrobot.model.service.WordUnitManager#get
+     *      WordUnits(com.gtrobot.model.word.WordUnit)
+     */
+    public List getWordUnits() {
+        return this.dao.getWordUnits();
+    }
 
-	public List getWordUnitsNotInUserList(final Long userEntryId) {
-		return dao.getWordUnitsNotInUserList(userEntryId);
-	}
+    public List getWordUnitsNotInUserList(final Long userEntryId) {
+        return this.dao.getWordUnitsNotInUserList(userEntryId);
+    }
 
-	/**
-	 * @see com.gtrobot.model.service.WordUnitManager#get WordUnit(String
-	 *      wordUnitId)
-	 */
-	public WordUnit getWordUnit(final Long wordUnitId) {
-		return dao.getWordUnit(wordUnitId);
-	}
+    /**
+     * @see com.gtrobot.model.service.WordUnitManager#get WordUnit(String
+     *      wordUnitId)
+     */
+    public WordUnit getWordUnit(final Long wordUnitId) {
+        return this.dao.getWordUnit(wordUnitId);
+    }
 
-	public WordUnit getWordUnit(final String name) {
-		return dao.getWordUnit(name);
-	}
+    public WordUnit getWordUnit(final String name) {
+        return this.dao.getWordUnit(name);
+    }
 
-	/**
-	 * @see com.gtrobot.model.service.WordUnitManager#save WordUnit(WordUnit
-	 *      wordUnit)
-	 */
-	public void saveWordUnit(WordUnit wordUnit) {
-		dao.saveWordUnit(wordUnit);
-	}
+    /**
+     * @see com.gtrobot.model.service.WordUnitManager#save WordUnit(WordUnit
+     *      wordUnit)
+     */
+    public void saveWordUnit(final WordUnit wordUnit) {
+        this.dao.saveWordUnit(wordUnit);
+    }
 
-	/**
-	 * @see com.gtrobot.model.service.WordUnitManager#remove WordUnit(String
-	 *      wordUnitId)
-	 */
-	public void removeWordUnit(final Long wordUnitId) {
-		dao.removeWordUnit(wordUnitId);
-	}
+    /**
+     * @see com.gtrobot.model.service.WordUnitManager#remove WordUnit(String
+     *      wordUnitId)
+     */
+    public void removeWordUnit(final Long wordUnitId) {
+        this.dao.removeWordUnit(wordUnitId);
+    }
 }

@@ -14,14 +14,15 @@ import com.gtrobot.thread.signalqueues.Queue;
  * 
  */
 public class GTRobotWorkerDispatcher extends WorkerDispatcher {
-	protected static final transient Log log = LogFactory
-			.getLog(GTRobotWorkerDispatcher.class);
+    protected static final transient Log log = LogFactory
+            .getLog(GTRobotWorkerDispatcher.class);
 
-	public GTRobotWorkerDispatcher(String name, int threadNumber) {
-		super(name, threadNumber);
-	}
+    public GTRobotWorkerDispatcher(final String name, final int threadNumber) {
+        super(name, threadNumber);
+    }
 
-	protected WorkerThread getWorkerThread(int i, Queue threadPool) {
-		return new GTRobotWorkerThread("GTRobotWorkerThread: " + i, threadPool);
-	}
+    @Override
+    protected WorkerThread getWorkerThread(final int i, final Queue threadPool) {
+        return new GTRobotWorkerThread("GTRobotWorkerThread: " + i, threadPool);
+    }
 }

@@ -22,66 +22,66 @@ import com.gtrobot.service.common.UserEntryService;
  * 
  */
 public class GTRobotRosterListener implements RosterListener {
-	protected static final transient Log log = LogFactory
-			.getLog(GTRobotRosterListener.class);
+    protected static final transient Log log = LogFactory
+            .getLog(GTRobotRosterListener.class);
 
-	private Roster roster = null;
+    private Roster roster = null;
 
-	public GTRobotRosterListener(Roster roster) {
-		super();
-		this.roster = roster;
-	}
+    public GTRobotRosterListener(final Roster roster) {
+        super();
+        this.roster = roster;
+    }
 
-	public void entriesAdded(Collection<String> userList) {
-		showMessage(userList, "Entries added");
-	}
+    public void entriesAdded(final Collection<String> userList) {
+        this.showMessage(userList, "Entries added");
+    }
 
-	public void entriesDeleted(Collection<String> userList) {
-		showMessage(userList, "Entries deleted");
-	}
+    public void entriesDeleted(final Collection<String> userList) {
+        this.showMessage(userList, "Entries deleted");
+    }
 
-	public void entriesUpdated(Collection<String> userList) {
-		showMessage(userList, "Entries updated");
-	}
+    public void entriesUpdated(final Collection<String> userList) {
+        this.showMessage(userList, "Entries updated");
+    }
 
-	public void presenceChanged(Presence presence) {
-		updateUserStatus(presence, "Presence changed");
-		// TODO 需要继续完善。 例如用户在ChatRoom，需要通知，等等；相对需要一个复杂的逻辑流程
-	}
+    public void presenceChanged(final Presence presence) {
+        this.updateUserStatus(presence, "Presence changed");
+        // TODO 需要继续完善。 例如用户在ChatRoom，需要通知，等等；相对需要一个复杂的逻辑流程
+    }
 
-	private void showMessage(Collection userList, String message) {
-		try {
-			if (userList == null)
-				return;
+    private void showMessage(final Collection userList, final String message) {
+        try {
+            if (userList == null) {
+                return;
+            }
 
-			Iterator it = userList.iterator();
-			{
-				String jid = (String) it.next();
-				jid = StringUtils.parseBareAddress(jid);
-				log.info(message + " :" + jid);
-				Presence presence = roster.getPresence(jid);
-				updateUserStatus(presence, message);
-			}
-		} catch (Exception e) {
-			log.error("Exception in GTRobotRosterListener.showMessage.", e);
-		}
-	}
+            final Iterator it = userList.iterator();
+            {
+                String jid = (String) it.next();
+                jid = StringUtils.parseBareAddress(jid);
+                GTRobotRosterListener.log.info(message + " :" + jid);
+                final Presence presence = this.roster.getPresence(jid);
+                this.updateUserStatus(presence, message);
+            }
+        } catch (final Exception e) {
+            GTRobotRosterListener.log.error(
+                    "Exception in GTRobotRosterListener.showMessage.", e);
+        }
+    }
 
-	private void updateUserStatus(Presence presence, String message) {
-		try {
-			UserEntryService userEntryService = GTRobotContextHelper
-					.getUserEntryService();
-			// Update the user information
-			UserEntry userEntry = userEntryService.getUserEntry(presence
-					.getFrom());
+    private void updateUserStatus(final Presence presence, final String message) {
+        try {
+            final UserEntryService userEntryService = GTRobotContextHelper
+                    .getUserEntryService();
+            // Update the user information
+            final UserEntry userEntry = userEntryService.getUserEntry(presence
+                    .getFrom());
 
-			userEntryService.updateUserEntryPresence(userEntry, presence);
-		} catch (Exception e) {
-			log
-					.error(
-							"Exception in GTRobotRosterListener.updateUserStatus.",
-							e);
-		}
-	}
+            userEntryService.updateUserEntryPresence(userEntry, presence);
+        } catch (final Exception e) {
+            GTRobotRosterListener.log.error(
+                    "Exception in GTRobotRosterListener.updateUserStatus.", e);
+        }
+    }
 
 }

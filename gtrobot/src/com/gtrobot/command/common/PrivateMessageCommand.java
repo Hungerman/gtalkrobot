@@ -12,30 +12,31 @@ import com.gtrobot.command.ProcessableCommand;
  * 
  */
 public class PrivateMessageCommand extends ProcessableCommand {
-	private String targetJid;
+    private String targetJid;
 
-	public void parseArgv(List argv) {
-		if (argv.size() < 3) {
-			setError(ErrorType.wrongParameter);
-			return;
-		}
-		targetJid = ((String) argv.get(1)).trim().toLowerCase();
+    @Override
+    public void parseArgv(final List argv) {
+        if (argv.size() < 3) {
+            this.setError(ErrorType.wrongParameter);
+            return;
+        }
+        this.targetJid = ((String) argv.get(1)).trim().toLowerCase();
 
-		super.parseArgv(argv);
-	}
+        super.parseArgv(argv);
+    }
 
-	public String getMessageContent() {
-		int pos = getOriginMessage().indexOf(targetJid);
+    public String getMessageContent() {
+        final int pos = this.getOriginMessage().indexOf(this.targetJid);
 
-		return getOriginMessage().substring(pos + targetJid.length() + 1)
-				.trim();
-	}
+        return this.getOriginMessage().substring(
+                pos + this.targetJid.length() + 1).trim();
+    }
 
-	public String getTargetJid() {
-		String jid = targetJid;
-		if (jid.indexOf('@') == -1) {
-			jid = jid + "@gmail.com";
-		}
-		return jid;
-	}
+    public String getTargetJid() {
+        String jid = this.targetJid;
+        if (jid.indexOf('@') == -1) {
+            jid = jid + "@gmail.com";
+        }
+        return jid;
+    }
 }

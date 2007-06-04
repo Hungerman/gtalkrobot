@@ -10,22 +10,24 @@ import com.gtrobot.processor.AbstractProcessor;
 
 public class EchoProcessor extends AbstractProcessor {
 
-	protected void internalProcess(BaseCommand abCmd) throws XMPPException {
-		SwitchCommand cmd = (SwitchCommand) abCmd;
-		StringBuffer msgBuf = new StringBuffer();
+    @Override
+    protected void internalProcess(final BaseCommand abCmd)
+            throws XMPPException {
+        final SwitchCommand cmd = (SwitchCommand) abCmd;
+        final StringBuffer msgBuf = new StringBuffer();
 
-		UserEntry userEntry = cmd.getUserEntry();
+        final UserEntry userEntry = cmd.getUserEntry();
 
-		if (cmd.isOperationON() != userEntry.isEchoable()) {
-			userEntry.setEchoable(cmd.isOperationON());
-			GTRobotContextHelper.getUserEntryService().saveUserEntry(userEntry);
-		}
-		if (cmd.isOperationON()) {
-			msgBuf.append(getI18NMessage("echo.success.on"));
-		} else {
-			msgBuf.append(getI18NMessage("echo.success.off"));
-		}
-		sendBackMessage(abCmd, msgBuf.toString());
-	}
+        if (cmd.isOperationON() != userEntry.isEchoable()) {
+            userEntry.setEchoable(cmd.isOperationON());
+            GTRobotContextHelper.getUserEntryService().saveUserEntry(userEntry);
+        }
+        if (cmd.isOperationON()) {
+            msgBuf.append(AbstractProcessor.getI18NMessage("echo.success.on"));
+        } else {
+            msgBuf.append(AbstractProcessor.getI18NMessage("echo.success.off"));
+        }
+        this.sendBackMessage(abCmd, msgBuf.toString());
+    }
 
 }

@@ -7,58 +7,58 @@ package com.gtrobot.thread.signalqueues;
  * 
  */
 public class QueueProxy implements Queue {
-	private Queue internalQueue = null;
+    private Queue internalQueue = null;
 
-	private boolean isRunning = true;
+    private boolean isRunning = true;
 
-	public QueueProxy(Queue queue) {
-		super();
-		internalQueue = queue;
-	}
+    public QueueProxy(final Queue queue) {
+        super();
+        this.internalQueue = queue;
+    }
 
-	public synchronized boolean push(Object event) {
-		while (internalQueue.isFull() && isRunning) {
-			try {
-				this.wait();
-			} catch (InterruptedException e) {
-			}
-		}
-		if (isRunning) {
-			return internalQueue.push(event);
-		}
-		return false;
-	}
+    public synchronized boolean push(final Object event) {
+        while (this.internalQueue.isFull() && this.isRunning) {
+            try {
+                this.wait();
+            } catch (final InterruptedException e) {
+            }
+        }
+        if (this.isRunning) {
+            return this.internalQueue.push(event);
+        }
+        return false;
+    }
 
-	public synchronized Object pop() {
-		while (internalQueue.isEmpty() && isRunning) {
-			try {
-				this.wait();
-			} catch (InterruptedException e) {
-			}
-		}
-		if (isRunning) {
-			return internalQueue.pop();
-		}
-		return null;
-	}
+    public synchronized Object pop() {
+        while (this.internalQueue.isEmpty() && this.isRunning) {
+            try {
+                this.wait();
+            } catch (final InterruptedException e) {
+            }
+        }
+        if (this.isRunning) {
+            return this.internalQueue.pop();
+        }
+        return null;
+    }
 
-	public synchronized void stop() {
-		this.isRunning = false;
-	}
+    public synchronized void stop() {
+        this.isRunning = false;
+    }
 
-	public synchronized boolean isEmpty() {
-		return internalQueue.isEmpty();
-	}
+    public synchronized boolean isEmpty() {
+        return this.internalQueue.isEmpty();
+    }
 
-	public synchronized boolean isFull() {
-		return internalQueue.isFull();
-	}
+    public synchronized boolean isFull() {
+        return this.internalQueue.isFull();
+    }
 
-	public synchronized int size() {
-		return internalQueue.size();
-	}
+    public synchronized int size() {
+        return this.internalQueue.size();
+    }
 
-	public synchronized void clear() {
-		internalQueue.clear();
-	}
+    public synchronized void clear() {
+        this.internalQueue.clear();
+    }
 }

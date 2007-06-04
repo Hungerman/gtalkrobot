@@ -18,35 +18,35 @@ import com.gtrobot.service.common.MailEngine;
  * 
  */
 public class MailSender {
-	protected static final Log log = LogFactory.getLog(MailSender.class);
+    protected static final Log log = LogFactory.getLog(MailSender.class);
 
-	private SimpleMailMessage mailMessage;
+    private SimpleMailMessage mailMessage;
 
-	private MailEngine mailEngine;
+    private MailEngine mailEngine;
 
-	public MailSender() {
-		GTRobotContextHelper.initApplicationContext();
+    public MailSender() {
+        GTRobotContextHelper.initApplicationContext();
 
-		mailMessage = (SimpleMailMessage) GTRobotContextHelper
-				.getBean("mailMessage");
-		mailEngine = (MailEngine) GTRobotContextHelper
-				.getBean("mailEngine");
-	}
-	private void testSend() {
-		mailMessage.setCc("reshine@gmail.com");
-		mailMessage.setSubject("GTRobot's Invitation");
-		
-		Map<String, String> model = new Hashtable<String, String>();
-		model.put("message", "Hello, this is a test from GTRobot.111");
-		mailEngine.sendMessage(mailMessage, "invitation.vm",
-                model);		
-	}
-	
-	public static final void main(String[] argv) throws IOException {
-		MailSender mailSender = new MailSender();
+        this.mailMessage = (SimpleMailMessage) GTRobotContextHelper
+                .getBean("mailMessage");
+        this.mailEngine = (MailEngine) GTRobotContextHelper
+                .getBean("mailEngine");
+    }
 
-		mailSender.testSend();
-		
-		System.exit(0);
-	}	
+    private void testSend() {
+        this.mailMessage.setCc("reshine@gmail.com");
+        this.mailMessage.setSubject("GTRobot's Invitation");
+
+        final Map<String, String> model = new Hashtable<String, String>();
+        model.put("message", "Hello, this is a test from GTRobot.111");
+        this.mailEngine.sendMessage(this.mailMessage, "invitation.vm", model);
+    }
+
+    public static final void main(final String[] argv) throws IOException {
+        final MailSender mailSender = new MailSender();
+
+        mailSender.testSend();
+
+        System.exit(0);
+    }
 }

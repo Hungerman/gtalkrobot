@@ -18,36 +18,36 @@ import com.gtrobot.model.common.UserEntry;
  *          $LastChangedDate: 2006-08-04 10:39:28 +0900 (金, 04 8 2006) $
  */
 public class UserEntryDaoHibernate extends BaseDaoHibernate implements
-		UserEntryDao {
-	public UserEntry getUserEntry(String jid) {
-		List ls = getHibernateTemplate().find("from UserEntry where jid=?",
-				new Object[] { jid });
-		if (ls.size() <= 0) {
-			return null;
-		}
-		return (UserEntry) ls.get(0);
-	}
-	
-	public UserEntry getUserEntryByNickName(String newNickName)
-	{
-		List ls = getHibernateTemplate().find("from UserEntry where nickName=?",
-				new Object[] { newNickName });
-		if (ls.size() <= 0) {
-			return null;
-		}
-		return (UserEntry) ls.get(0);
-	}
+        UserEntryDao {
+    public UserEntry getUserEntry(final String jid) {
+        final List ls = this.getHibernateTemplate().find(
+                "from UserEntry where jid=?", new Object[] { jid });
+        if (ls.size() <= 0) {
+            return null;
+        }
+        return (UserEntry) ls.get(0);
+    }
 
-	public List getUserEntrys(UserEntry userEntry) {
-		return getHibernateTemplate().find("from UserEntry");
-	}
+    public UserEntry getUserEntryByNickName(final String newNickName) {
+        final List ls = this.getHibernateTemplate()
+                .find("from UserEntry where nickName=?",
+                        new Object[] { newNickName });
+        if (ls.size() <= 0) {
+            return null;
+        }
+        return (UserEntry) ls.get(0);
+    }
 
-	public void removeUserEntry(UserEntry userEntry) {
-		getHibernateTemplate().delete(userEntry);
-	}
+    public List getUserEntrys(final UserEntry userEntry) {
+        return this.getHibernateTemplate().find("from UserEntry");
+    }
 
-	public void saveUserEntry(UserEntry userEntry) {
-		getHibernateTemplate().saveOrUpdate(userEntry);
-	}
+    public void removeUserEntry(final UserEntry userEntry) {
+        this.getHibernateTemplate().delete(userEntry);
+    }
+
+    public void saveUserEntry(final UserEntry userEntry) {
+        this.getHibernateTemplate().saveOrUpdate(userEntry);
+    }
 
 }

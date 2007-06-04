@@ -9,22 +9,26 @@ import com.gtrobot.processor.AbstractProcessor;
 
 public class ChangeNickNameProcessor extends AbstractProcessor {
 
-	protected void internalProcess(BaseCommand abCmd) throws XMPPException {
-		ChangeNickNameCommand cmd = (ChangeNickNameCommand) abCmd;
-		StringBuffer msgBuf = new StringBuffer();
+    @Override
+    protected void internalProcess(final BaseCommand abCmd)
+            throws XMPPException {
+        final ChangeNickNameCommand cmd = (ChangeNickNameCommand) abCmd;
+        final StringBuffer msgBuf = new StringBuffer();
 
-		boolean result = GTRobotContextHelper.getUserEntryService()
-				.updateNickname(cmd.getUserEntry(), cmd.getNewNickName());
-		if (result == true) {
-			msgBuf.append(getI18NMessage("changenickname.result",
-					new Object[] { cmd.getNewNickName() }));
+        final boolean result = GTRobotContextHelper.getUserEntryService()
+                .updateNickname(cmd.getUserEntry(), cmd.getNewNickName());
+        if (result == true) {
+            msgBuf.append(AbstractProcessor.getI18NMessage(
+                    "changenickname.result", new Object[] { cmd
+                            .getNewNickName() }));
 
-		} else {
-			msgBuf.append(getI18NMessage("changenickname.fail",
-					new Object[] { cmd.getNewNickName() }));
-		}
-		msgBuf.append(endl);
-		sendBackMessage(abCmd, msgBuf.toString());
-	}
+        } else {
+            msgBuf.append(AbstractProcessor.getI18NMessage(
+                    "changenickname.fail",
+                    new Object[] { cmd.getNewNickName() }));
+        }
+        msgBuf.append(AbstractProcessor.endl);
+        this.sendBackMessage(abCmd, msgBuf.toString());
+    }
 
 }

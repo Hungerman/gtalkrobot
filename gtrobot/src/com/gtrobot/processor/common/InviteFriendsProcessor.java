@@ -2,7 +2,6 @@ package com.gtrobot.processor.common;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,122 +11,131 @@ import org.springframework.mail.SimpleMailMessage;
 import com.gtrobot.command.ProcessableCommand;
 import com.gtrobot.command.common.MailSenderCommand;
 import com.gtrobot.engine.GTRobotContextHelper;
+import com.gtrobot.processor.AbstractProcessor;
 import com.gtrobot.processor.InteractiveProcessor;
 import com.gtrobot.thread.WorkerDispatcher;
 
 public class InviteFriendsProcessor extends InteractiveProcessor {
-	private SimpleMailMessage mailMessage;
+    private SimpleMailMessage mailMessage;
 
-	private String gtrobotUsername;
+    private String gtrobotUsername;
 
-	private String gtrobotserviceName;
+    private String gtrobotserviceName;
 
-	private static final int STEP_TO_INVITE = 1000;
+    private static final int STEP_TO_INVITE = 1000;
 
-	public void setMailMessage(SimpleMailMessage mailMessage) {
-		this.mailMessage = mailMessage;
-	}
+    public void setMailMessage(final SimpleMailMessage mailMessage) {
+        this.mailMessage = mailMessage;
+    }
 
-	public void setGtrobotUsername(String gtrobotUsername) {
-		this.gtrobotUsername = gtrobotUsername;
-	}
+    public void setGtrobotUsername(final String gtrobotUsername) {
+        this.gtrobotUsername = gtrobotUsername;
+    }
 
-	public void setGtrobotserviceName(String gtrobotserviceName) {
-		this.gtrobotserviceName = gtrobotserviceName;
-	}
+    public void setGtrobotserviceName(final String gtrobotserviceName) {
+        this.gtrobotserviceName = gtrobotserviceName;
+    }
 
-	protected int interactiveProcessPrompt_10(ProcessableCommand cmd)
-			throws XMPPException {
-		StringBuffer msgBuf = new StringBuffer();
-		msgBuf.append(getI18NMessage("invite.welcome"));
-		msgBuf.append(endl);
+    protected int interactiveProcessPrompt_10(final ProcessableCommand cmd)
+            throws XMPPException {
+        final StringBuffer msgBuf = new StringBuffer();
+        msgBuf.append(AbstractProcessor.getI18NMessage("invite.welcome"));
+        msgBuf.append(AbstractProcessor.endl);
 
-		sendBackMessage(cmd, msgBuf.toString());
-		return STEP_TO_INVITE;
-	}
+        this.sendBackMessage(cmd, msgBuf.toString());
+        return InviteFriendsProcessor.STEP_TO_INVITE;
+    }
 
-	/**
-	 * STEP_TO_INVITE
-	 */
-	protected int interactiveProcessPrompt_1000(ProcessableCommand cmd)
-			throws XMPPException {
-		StringBuffer msgBuf = new StringBuffer();
-		msgBuf.append(getI18NMessage("invite.prompt"));
-		msgBuf.append(endl);
+    /**
+     * STEP_TO_INVITE
+     */
+    protected int interactiveProcessPrompt_1000(final ProcessableCommand cmd)
+            throws XMPPException {
+        final StringBuffer msgBuf = new StringBuffer();
+        msgBuf.append(AbstractProcessor.getI18NMessage("invite.prompt"));
+        msgBuf.append(AbstractProcessor.endl);
 
-		sendBackMessage(cmd, msgBuf.toString());
-		return WAIT_INPUT;
-	}
+        this.sendBackMessage(cmd, msgBuf.toString());
+        return InteractiveProcessor.WAIT_INPUT;
+    }
 
-	protected int interactiveProcess_1000(ProcessableCommand cmd)
-			throws XMPPException {
-		StringBuffer msgBuf = new StringBuffer();
-		List<String> argv = cmd.getArgv();
+    protected int interactiveProcess_1000(final ProcessableCommand cmd)
+            throws XMPPException {
+        final StringBuffer msgBuf = new StringBuffer();
+        final List<String> argv = cmd.getArgv();
 
-		List<String> ccList = new ArrayList<String>();
-		List<String> existedList = new ArrayList<String>();
-		List<String> badList = new ArrayList<String>();
-		for (int i = 0; i < argv.size(); i++) {
-			String target = argv.get(i).toLowerCase();
-			if (target.indexOf('@') >= 0) {
-				if (target.indexOf('@') != target.lastIndexOf('@')
-						|| !target.endsWith("@" + gtrobotserviceName)) {
-					badList.add(target);
-				} else {
-					ccList.add(target);
-				}
-			} else {
-				ccList.add(target + "@" + gtrobotserviceName);
-			}
-		}
-		//TODO check the user has been in GTRObot
-		if (ccList.size() > 0) {
-			String[] cc = new String[ccList.size()];
-			ccList.toArray(cc);
-			mailMessage.setCc(cc);
-			mailMessage.setSubject("[GTRobot's Invitation] from "
-					+ cmd.getUserEntry().getNickName() + "<"
-					+ cmd.getUserEntry().getJid() + ">");
-			mailMessage.setReplyTo(cmd.getUserEntry().getJid());
+        final List<String> ccList = new ArrayList<String>();
+        // final List<String> existedList = new ArrayList<String>();
+        final List<String> badList = new ArrayList<String>();
+        for (int i = 0; i < argv.size(); i++) {
+            final String target = argv.get(i).toLowerCase();
+            if (target.indexOf('@') >= 0) {
+                if ((target.indexOf('@') != target.lastIndexOf('@'))
+                        || !target.endsWith("@" + this.gtrobotserviceName)) {
+                    badList.add(target);
+                } else {
+                    ccList.add(target);
+                }
+            } else {
+                ccList.add(target + "@" + this.gtrobotserviceName);
+            }
+        }
+        // TODO check the user has been in GTRObot
+        if (ccList.size() > 0) {
+            final String[] cc = new String[ccList.size()];
+            ccList.toArray(cc);
+            this.mailMessage.setCc(cc);
+            this.mailMessage.setSubject("[GTRobot's Invitation] from "
+                    + cmd.getUserEntry().getNickName() + "<"
+                    + cmd.getUserEntry().getJid() + ">");
+            this.mailMessage.setReplyTo(cmd.getUserEntry().getJid());
 
-			Map<String, String> model = new Hashtable<String, String>();
-			model.put("fromNickName", cmd.getUserEntry().getNickName());
-			model.put("fromJid", cmd.getUserEntry().getJid());
-			model.put("GTRobotGmail", gtrobotUsername + "@"
-					+ gtrobotserviceName);
+            final Map<String, String> model = new Hashtable<String, String>();
+            model.put("fromNickName", cmd.getUserEntry().getNickName());
+            model.put("fromJid", cmd.getUserEntry().getJid());
+            model.put("GTRobotGmail", this.gtrobotUsername + "@"
+                    + this.gtrobotserviceName);
 
-			MailSenderCommand mailSenderCommand = GTRobotContextHelper
-					.getMailSenderCommand();
-			mailSenderCommand.setMailMessage(mailMessage);
-			mailSenderCommand.setMailTemplateName("invitation.vm");
-			mailSenderCommand.setMailTemplateModel(model);
+            final MailSenderCommand mailSenderCommand = GTRobotContextHelper
+                    .getMailSenderCommand();
+            mailSenderCommand.setMailMessage(this.mailMessage);
+            mailSenderCommand.setMailTemplateName("invitation.vm");
+            mailSenderCommand.setMailTemplateModel(model);
 
-			WorkerDispatcher workerDispatcher = GTRobotContextHelper
-					.getWorkerDispatcher();
-			workerDispatcher.triggerEvent(mailSenderCommand);
+            final WorkerDispatcher workerDispatcher = GTRobotContextHelper
+                    .getWorkerDispatcher();
+            workerDispatcher.triggerEvent(mailSenderCommand);
 
-			msgBuf.append(getI18NMessage("invite.result.sent")).append(endl);
-			for (Iterator<String> it = ccList.iterator(); it.hasNext();) {
-				msgBuf.append(it.next()).append("; ");
-			}
-			msgBuf.append(endl);
-		} else {
-			msgBuf.append(getI18NMessage("invite.result.notsent")).append(endl);
-		}
-		if (badList.size() > 0) {
-			msgBuf.append(getI18NMessage("invite.result.bad")).append(endl);
-			for (Iterator<String> it = badList.iterator(); it.hasNext();) {
-				msgBuf.append(it.next()).append("; ");
-			}
-			msgBuf.append(endl);
-		}
+            msgBuf.append(
+                    AbstractProcessor.getI18NMessage("invite.result.sent"))
+                    .append(AbstractProcessor.endl);
+            for (final String string : ccList) {
+                msgBuf.append(string).append("; ");
+            }
+            msgBuf.append(AbstractProcessor.endl);
+        } else {
+            msgBuf.append(
+                    AbstractProcessor.getI18NMessage("invite.result.notsent"))
+                    .append(AbstractProcessor.endl);
+        }
+        if (badList.size() > 0) {
+            msgBuf
+                    .append(
+                            AbstractProcessor
+                                    .getI18NMessage("invite.result.bad"))
+                    .append(AbstractProcessor.endl);
+            for (final String string : badList) {
+                msgBuf.append(string).append("; ");
+            }
+            msgBuf.append(AbstractProcessor.endl);
+        }
 
-		sendBackMessage(cmd, msgBuf.toString());
-		return CONTINUE;
-	}
+        this.sendBackMessage(cmd, msgBuf.toString());
+        return InteractiveProcessor.CONTINUE;
+    }
 
-	protected int interactiveProcess_1001(ProcessableCommand cmd)
-			throws XMPPException {
-		return STEP_TO_INVITE;
-	}
+    protected int interactiveProcess_1001(final ProcessableCommand cmd)
+            throws XMPPException {
+        return InviteFriendsProcessor.STEP_TO_INVITE;
+    }
 }

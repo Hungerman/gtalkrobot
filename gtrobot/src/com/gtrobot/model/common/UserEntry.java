@@ -15,155 +15,160 @@ import com.gtrobot.model.BaseObject;
  * @hibernate.class table="USER_ENTRY"
  */
 public class UserEntry extends BaseObject {
-	private static final long serialVersionUID = 7767511322988084969L;
+    private static final long serialVersionUID = 7767511322988084969L;
 
-	private Long userId;
+    private Long userId;
 
-	private String jid;
+    private String jid;
 
-	private String nickName;
+    private String nickName;
 
-	private boolean sysMessageEnable = true;
+    private boolean sysMessageEnable = true;
 
-	private boolean echoable = false;
+    private boolean echoable = false;
 
-	private AccountType accountType = AccountType.user;
+    private AccountType accountType = AccountType.user;
 
-	private Locale locale = Locale.ENGLISH;
+    private Locale locale = Locale.ENGLISH;
 
-	/**
-	 * @hibernate.id column="USER_ID" generator-class="native"
-	 * @hibernate.generator-param name="sequence" value="SEQ_USER_ENTRY"
-	 * @hibernate.generator-param name="identity"
-	 */
-	public Long getUserId() {
-		return userId;
-	}
+    /**
+     * @hibernate.id column="USER_ID" generator-class="native"
+     * @hibernate.generator-param name="sequence" value="SEQ_USER_ENTRY"
+     * @hibernate.generator-param name="identity"
+     */
+    public Long getUserId() {
+        return this.userId;
+    }
 
-	public void setUserId(Long id) {
-		this.userId = id;
-		if (nickName == null) {
-			this.nickName = StringUtils.parseName(jid);
-		}
-	}
+    public void setUserId(final Long id) {
+        this.userId = id;
+        if (this.nickName == null) {
+            this.nickName = StringUtils.parseName(this.jid);
+        }
+    }
 
-	/**
-	 * @hibernate.property column="SYS_MSG_ENABLE" not-null="true"
-	 */
-	public boolean isSysMessageEnable() {
-		return sysMessageEnable;
-	}
+    /**
+     * @hibernate.property column="SYS_MSG_ENABLE" not-null="true"
+     */
+    public boolean isSysMessageEnable() {
+        return this.sysMessageEnable;
+    }
 
-	public void setSysMessageEnable(boolean sysMessageEnable) {
-		this.sysMessageEnable = sysMessageEnable;
-	}
+    public void setSysMessageEnable(final boolean sysMessageEnable) {
+        this.sysMessageEnable = sysMessageEnable;
+    }
 
-	/**
-	 * @hibernate.property column="JID" length="100" not-null="true"
-	 *                     unique="true"
-	 */
-	public String getJid() {
-		return jid;
-	}
+    /**
+     * @hibernate.property column="JID" length="100" not-null="true"
+     *                     unique="true"
+     */
+    public String getJid() {
+        return this.jid;
+    }
 
-	public void setJid(String jid) {
-		this.jid = jid;
-	}
+    public void setJid(final String jid) {
+        this.jid = jid;
+    }
 
-	/**
-	 * @hibernate.property column="NICK_NAME" length="100" not-null="true"
-	 *                     unique="true"
-	 */
-	public String getNickName() {
-		return nickName;
-	}
+    /**
+     * @hibernate.property column="NICK_NAME" length="100" not-null="true"
+     *                     unique="true"
+     */
+    public String getNickName() {
+        return this.nickName;
+    }
 
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
+    public void setNickName(final String nickName) {
+        this.nickName = nickName;
+    }
 
-	/**
-	 * @hibernate.property column="ECHOABLE"
-	 */
-	public boolean isEchoable() {
-		return echoable;
-	}
+    /**
+     * @hibernate.property column="ECHOABLE"
+     */
+    public boolean isEchoable() {
+        return this.echoable;
+    }
 
-	public void setEchoable(boolean echoable) {
-		this.echoable = echoable;
-	}
+    public void setEchoable(final boolean echoable) {
+        this.echoable = echoable;
+    }
 
-	/**
-	 * @hibernate.property column="LOCALE" length="3" not-null="true"
-	 */
-	public Locale getLocale() {
-		return locale;
-	}
+    /**
+     * @hibernate.property column="LOCALE" length="3" not-null="true"
+     */
+    public Locale getLocale() {
+        return this.locale;
+    }
 
-	public void setLocale(Locale locale) {
-		this.locale = locale;
-	}
+    public void setLocale(final Locale locale) {
+        this.locale = locale;
+    }
 
-	public AccountType getAccountType() {
-		return accountType;
-	}
+    public AccountType getAccountType() {
+        return this.accountType;
+    }
 
-	public void setAccountType(AccountType accountType) {
-		this.accountType = accountType;
-	}
+    public void setAccountType(final AccountType accountType) {
+        this.accountType = accountType;
+    }
 
-	/**
-	 * @hibernate.property column="ACCOUNT_TYPE" not-null="true"
-	 */
-	public int getAccountTypeCode() {
-		return accountType.getCode();
-	}
+    /**
+     * @hibernate.property column="ACCOUNT_TYPE" not-null="true"
+     */
+    public int getAccountTypeCode() {
+        return this.accountType.getCode();
+    }
 
-	public void setAccountTypeCode(int code) {
-		this.accountType = AccountType.fromCode(code);
-		if (this.accountType == null) {
-			this.accountType = AccountType.user;
-		}
-	}
+    public void setAccountTypeCode(final int code) {
+        this.accountType = AccountType.fromCode(code);
+        if (this.accountType == null) {
+            this.accountType = AccountType.user;
+        }
+    }
 
-	public boolean isAdmin() {
-		return this.accountType.equals(AccountType.admin);
-	}
+    public boolean isAdmin() {
+        return this.accountType.equals(AccountType.admin);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof UserEntry))
-			return false;
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof UserEntry)) {
+            return false;
+        }
 
-		final UserEntry target = (UserEntry) o;
+        final UserEntry target = (UserEntry) o;
 
-		return !(userId != null ? !userId.equals(target.userId)
-				: target.userId != null);
+        return !(this.userId != null ? !this.userId.equals(target.userId)
+                : target.userId != null);
 
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode() {
-		return (userId != null ? userId.hashCode() : 0);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return (this.userId != null ? this.userId.hashCode() : 0);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE).append(
-				this.jid).toString();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE).append(
+                this.jid).toString();
+    }
 }

@@ -15,32 +15,34 @@ import com.gtrobot.engine.GTRobotContextHelper;
  * 
  */
 public class MessageHelper {
-	protected static final transient Log log = LogFactory
-			.getLog(MessageHelper.class);
+    protected static final transient Log log = LogFactory
+            .getLog(MessageHelper.class);
 
-	private static ApplicationContext context = GTRobotContextHelper
-			.getApplicationContext();;
+    private static final ApplicationContext context = GTRobotContextHelper
+            .getApplicationContext();;
 
-	public static String getMessage(String key) {
-		return getMessage(key, null, null);
-	}
+    public static String getMessage(final String key) {
+        return MessageHelper.getMessage(key, null, null);
+    }
 
-	public static String getMessage(String key, Locale locale) {
-		return getMessage(key, null, locale);
-	}
+    public static String getMessage(final String key, final Locale locale) {
+        return MessageHelper.getMessage(key, null, locale);
+    }
 
-	public static String getMessage(String key, Object[] args, Locale locale) {
-		// if (locale == null) {
-		// locale = Locale.ENGLISH;
-		// }
-		String message = null;
-		try {
-			message = context.getMessage(key, args, locale);
-		} catch (Exception e) {
-			log.error("Can't find the message from the resource for: " + locale
-					+ "\n***>>> " + key + "=" + key);
-			message = key + "_" + locale;
-		}
-		return message;
-	}
+    public static String getMessage(final String key, final Object[] args,
+            final Locale locale) {
+        // if (locale == null) {
+        // locale = Locale.ENGLISH;
+        // }
+        String message = null;
+        try {
+            message = MessageHelper.context.getMessage(key, args, locale);
+        } catch (final Exception e) {
+            MessageHelper.log
+                    .error("Can't find the message from the resource for: "
+                            + locale + "\n***>>> " + key + "=" + key);
+            message = key + "_" + locale;
+        }
+        return message;
+    }
 }

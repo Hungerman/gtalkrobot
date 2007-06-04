@@ -12,19 +12,20 @@ import com.gtrobot.command.ProcessableCommand;
  * 
  */
 public class ChangeNickNameCommand extends ProcessableCommand {
-	private String newNickName;
+    private String newNickName;
 
-	public void parseArgv(List argv) {
-		if (argv.size() != 2) {
-			setError(ErrorType.wrongParameter);
-			return;
-		}
-		newNickName = ((String) argv.get(1)).trim();
+    @Override
+    public void parseArgv(final List argv) {
+        if (argv.size() != 2) {
+            this.setError(ErrorType.wrongParameter);
+            return;
+        }
+        this.newNickName = ((String) argv.get(1)).trim();
 
-		super.parseArgv(argv);
-	}
+        super.parseArgv(argv);
+    }
 
-	public String getNewNickName() {
-		return newNickName;
-	}
+    public String getNewNickName() {
+        return this.newNickName;
+    }
 }

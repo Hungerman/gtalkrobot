@@ -9,5 +9,5 @@ import com.gtrobot.command.BaseCommand;
  * 
  */
 public interface Processor {
-	public void process(BaseCommand command);
+    public void process(BaseCommand command);
 }

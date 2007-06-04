@@ -21,123 +21,133 @@ import com.gtrobot.model.word.WordUnit;
  * 
  */
 public class XlsWordImportor extends WordImportor {
-	private List<String> exculdes = new ArrayList<String>();
+    private final List<String> exculdes = new ArrayList<String>();
 
-	public void importFile(String fileName) {
-		String sheetName = null;
-		int totalRowCount = 0;
-		int curRowCount = 0;
-		short forstCellNum = 0;
-		HSSFRow row = null;
-		String unitName = null;
+    @Override
+    public void importFile(final String fileName) {
+        String sheetName = null;
+        int totalRowCount = 0;
+        int curRowCount = 0;
+        short forstCellNum = 0;
+        HSSFRow row = null;
+        String unitName = null;
 
-		try {
-			log.debug("Start of function of read()");
-			HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(
-					fileName));
+        try {
+            WordImportor.log.debug("Start of function of read()");
+            final HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(
+                    fileName));
 
-			for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
-				HSSFSheet sheet = workbook.getSheetAt(i);
-				sheetName = workbook.getSheetName(i).trim().toUpperCase();
-				if (exculdes != null
-						&& exculdes.contains(sheetName.toLowerCase())) {
-					continue;
-				}
+            for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+                final HSSFSheet sheet = workbook.getSheetAt(i);
+                sheetName = workbook.getSheetName(i).trim().toUpperCase();
+                if ((this.exculdes != null)
+                        && this.exculdes.contains(sheetName.toLowerCase())) {
+                    continue;
+                }
 
-				totalRowCount = sheet.getLastRowNum();
-				curRowCount = 0;
-				row = sheet.getRow(curRowCount++);
-				forstCellNum = 0;
-				forstCellNum++; // Id
-				unitName = getCellStringValue(row, forstCellNum++);
-				log.info("\n=================>: " + unitName);
-				WordUnit wordUnit = createWordUnit(unitName);
-				wordUnit.setLevel(getCellLongValue(row, forstCellNum++));
-				wordUnit.setWordCount(totalRowCount - 2);
-				saveWordUnit(wordUnit);
+                totalRowCount = sheet.getLastRowNum();
+                curRowCount = 0;
+                row = sheet.getRow(curRowCount++);
+                forstCellNum = 0;
+                forstCellNum++; // Id
+                unitName = this.getCellStringValue(row, forstCellNum++);
+                WordImportor.log.info("\n=================>: " + unitName);
+                final WordUnit wordUnit = this.createWordUnit(unitName);
+                wordUnit.setLevel(this.getCellLongValue(row, forstCellNum++));
+                wordUnit.setWordCount(totalRowCount - 2);
+                this.saveWordUnit(wordUnit);
 
-				// Skip the title row
-				curRowCount++;
-				for (; curRowCount <= totalRowCount; curRowCount++) {
-					row = sheet.getRow(curRowCount);
-					forstCellNum = 0;
-					forstCellNum++; // Id
+                // Skip the title row
+                curRowCount++;
+                for (; curRowCount <= totalRowCount; curRowCount++) {
+                    row = sheet.getRow(curRowCount);
+                    forstCellNum = 0;
+                    forstCellNum++; // Id
 
-					String word = getCellStringValue(row, forstCellNum++);
-					String pronounce = getCellStringValue(row, forstCellNum++);
-					String pronounceType = getCellStringValue(row,
-							forstCellNum++);
-					String wordType = getCellStringValue(row, forstCellNum++);
-					String meaning = getCellStringValue(row, forstCellNum++);
-					String sentence = getCellStringValue(row, forstCellNum++);
-					String comments = getCellStringValue(row, forstCellNum++);
+                    final String word = this.getCellStringValue(row,
+                            forstCellNum++);
+                    final String pronounce = this.getCellStringValue(row,
+                            forstCellNum++);
+                    final String pronounceType = this.getCellStringValue(row,
+                            forstCellNum++);
+                    final String wordType = this.getCellStringValue(row,
+                            forstCellNum++);
+                    final String meaning = this.getCellStringValue(row,
+                            forstCellNum++);
+                    final String sentence = this.getCellStringValue(row,
+                            forstCellNum++);
+                    final String comments = this.getCellStringValue(row,
+                            forstCellNum++);
 
-					WordEntry wordEntry = createWordEntry(word, pronounce,
-							pronounceType, wordType, meaning, sentence,
-							comments);
-					saveWordEntry(wordUnit, wordEntry);
-				}
-				flush();
-			}
-		} catch (Exception e) {
-			log.info("*****>" + fileName + " Sheet(" + sheetName + ":"
-					+ curRowCount + ")");
-			e.printStackTrace();
-		}
-		return;
-	}
+                    final WordEntry wordEntry = this.createWordEntry(word,
+                            pronounce, pronounceType, wordType, meaning,
+                            sentence, comments);
+                    this.saveWordEntry(wordUnit, wordEntry);
+                }
+                this.flush();
+            }
+        } catch (final Exception e) {
+            WordImportor.log.info("*****>" + fileName + " Sheet(" + sheetName
+                    + ":" + curRowCount + ")");
+            e.printStackTrace();
+        }
+        return;
+    }
 
-	/**
-	 * @param row
-	 * @param forstCellNum
-	 * @return
-	 */
-	private String getCellStringValue(HSSFRow row, short cellNum) {
-		HSSFCell cell = row.getCell(cellNum);
-		if (cell == null)
-			return null;
+    /**
+     * @param row
+     * @param forstCellNum
+     * @return
+     */
+    private String getCellStringValue(final HSSFRow row, final short cellNum) {
+        final HSSFCell cell = row.getCell(cellNum);
+        if (cell == null) {
+            return null;
+        }
 
-		String result = "**";
-		switch (cell.getCellType()) {
-		case HSSFCell.CELL_TYPE_STRING:
-			HSSFRichTextString richStringCellValue = cell
-					.getRichStringCellValue();
-			if (richStringCellValue == null)
-				result = null;
-			result = richStringCellValue.getString();
-			break;
-		case HSSFCell.CELL_TYPE_NUMERIC:
-			result = "" + cell.getNumericCellValue();
-			break;
-		}
+        String result = "**";
+        switch (cell.getCellType()) {
+        case HSSFCell.CELL_TYPE_STRING:
+            final HSSFRichTextString richStringCellValue = cell
+                    .getRichStringCellValue();
+            if (richStringCellValue == null) {
+                result = null;
+            }
+            result = richStringCellValue.getString();
+            break;
+        case HSSFCell.CELL_TYPE_NUMERIC:
+            result = "" + cell.getNumericCellValue();
+            break;
+        }
 
-		if (result != null)
-			result = result.trim();
-		return result;
-	}
+        if (result != null) {
+            result = result.trim();
+        }
+        return result;
+    }
 
-	private long getCellLongValue(HSSFRow row, short cellNum) {
-		String cellStringValue = getCellStringValue(row, cellNum);
-		return Long.parseLong(cellStringValue);
-	}
+    private long getCellLongValue(final HSSFRow row, final short cellNum) {
+        final String cellStringValue = this.getCellStringValue(row, cellNum);
+        return Long.parseLong(cellStringValue);
+    }
 
-	public static final void main(String[] argv) {
-		XlsWordImportor importor = new XlsWordImportor();
+    public static final void main(final String[] argv) {
+        final XlsWordImportor importor = new XlsWordImportor();
 
-		importFile("metadata\\data\\newwords\\", importor, 4);
+        XlsWordImportor.importFile("metadata\\data\\newwords\\", importor, 4);
 
-		System.exit(0);
-	}
+        System.exit(0);
+    }
 
-	private static void importFile(String filePath, XlsWordImportor importor,
-			int wordLevel) {
-		importor.wordLelvel = wordLevel;
-		importor.exculdes.add("index");
+    private static void importFile(final String filePath,
+            final XlsWordImportor importor, final int wordLevel) {
+        importor.wordLelvel = wordLevel;
+        importor.exculdes.add("index");
 
-		File dir = new File(filePath);
-		String[] filenames = dir.list();
-		for (int i = 0; i < filenames.length; i++) {
-			importor.importFile(filePath + filenames[i]);
-		}
-	}
+        final File dir = new File(filePath);
+        final String[] filenames = dir.list();
+        for (final String element : filenames) {
+            importor.importFile(filePath + element);
+        }
+    }
 }

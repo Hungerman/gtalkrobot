@@ -15,64 +15,72 @@ import com.gtrobot.processor.Processor;
  * 
  */
 public class UserSessionUtil {
-	private static final String PREVIOUS_COMMAND_KEY = "-preCommand";
+    private static final String PREVIOUS_COMMAND_KEY = "-preCommand";
 
-	public static String isInInteractiveOperation(String jid) {
-		BaseCommand previousCommand = retrievePreviousCommand(jid);
-		if (previousCommand == null) {
-			return null;
-		}
-		Processor processor = previousCommand.getProcessor();
-		if (processor == null) {
-			return null;
-		}
-		if (processor instanceof InteractiveProcessor) {
-			return previousCommand.getCommandType();
-		}
-		return null;
-	}
+    public static String isInInteractiveOperation(final String jid) {
+        final BaseCommand previousCommand = UserSessionUtil
+                .retrievePreviousCommand(jid);
+        if (previousCommand == null) {
+            return null;
+        }
+        final Processor processor = previousCommand.getProcessor();
+        if (processor == null) {
+            return null;
+        }
+        if (processor instanceof InteractiveProcessor) {
+            return previousCommand.getCommandType();
+        }
+        return null;
+    }
 
-	public static final void storePreviousCommand(BaseCommand abCmd) {
-		putSession(abCmd.getUserEntry().getJid(), PREVIOUS_COMMAND_KEY, abCmd);
-	}
+    public static final void storePreviousCommand(final BaseCommand abCmd) {
+        UserSessionUtil.putSession(abCmd.getUserEntry().getJid(),
+                UserSessionUtil.PREVIOUS_COMMAND_KEY, abCmd);
+    }
 
-	public static final void removePreviousCommand(BaseCommand abCmd) {
-		removeSession(abCmd.getUserEntry().getJid(), PREVIOUS_COMMAND_KEY);
-	}
+    public static final void removePreviousCommand(final BaseCommand abCmd) {
+        UserSessionUtil.removeSession(abCmd.getUserEntry().getJid(),
+                UserSessionUtil.PREVIOUS_COMMAND_KEY);
+    }
 
-	public static final BaseCommand retrievePreviousCommand(String jid) {
-		BaseCommand result = (BaseCommand) getSession(jid, PREVIOUS_COMMAND_KEY);
-		return result;
-	}
+    public static final BaseCommand retrievePreviousCommand(final String jid) {
+        final BaseCommand result = (BaseCommand) UserSessionUtil.getSession(
+                jid, UserSessionUtil.PREVIOUS_COMMAND_KEY);
+        return result;
+    }
 
-	public static final Object getSession(String jid, String key) {
-		Cache sessionCache = GTRobotContextHelper.getSessionCache();
-		Element element = sessionCache.get(getSessionKey(jid, key));
-		if (element == null)
-			return null;
-		return element.getObjectValue();
-	}
+    public static final Object getSession(final String jid, final String key) {
+        final Cache sessionCache = GTRobotContextHelper.getSessionCache();
+        final Element element = sessionCache.get(UserSessionUtil.getSessionKey(
+                jid, key));
+        if (element == null) {
+            return null;
+        }
+        return element.getObjectValue();
+    }
 
-	public static final void putSession(String jid, String key, Object obj) {
-		Cache sessionCache = GTRobotContextHelper.getSessionCache();
-		String sessionKey = getSessionKey(jid, key);
-		Element element = sessionCache.get(sessionKey);
-		if (element != null)
-			sessionCache.remove(sessionKey);
+    public static final void putSession(final String jid, final String key,
+            final Object obj) {
+        final Cache sessionCache = GTRobotContextHelper.getSessionCache();
+        final String sessionKey = UserSessionUtil.getSessionKey(jid, key);
+        Element element = sessionCache.get(sessionKey);
+        if (element != null) {
+            sessionCache.remove(sessionKey);
+        }
 
-		element = new Element(sessionKey, obj);
+        element = new Element(sessionKey, obj);
 
-		sessionCache.put(element);
-	}
+        sessionCache.put(element);
+    }
 
-	public static final void removeSession(String jid, String key) {
-		Cache sessionCache = GTRobotContextHelper.getSessionCache();
-		String sessionKey = getSessionKey(jid, key);
-		sessionCache.remove(sessionKey);
-	}
+    public static final void removeSession(final String jid, final String key) {
+        final Cache sessionCache = GTRobotContextHelper.getSessionCache();
+        final String sessionKey = UserSessionUtil.getSessionKey(jid, key);
+        sessionCache.remove(sessionKey);
+    }
 
-	private static final String getSessionKey(String jid, String key) {
-		return new StringBuffer().append("Session: ").append(jid).append(key)
-				.toString();
-	}
+    private static final String getSessionKey(final String jid, final String key) {
+        return new StringBuffer().append("Session: ").append(jid).append(key)
+                .toString();
+    }
 }

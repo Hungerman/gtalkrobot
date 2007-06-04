@@ -10,95 +10,100 @@ import com.gtrobot.command.BaseCommand;
 import com.gtrobot.command.ProcessableCommand;
 import com.gtrobot.engine.GTRobotContextHelper;
 import com.gtrobot.model.common.UserEntry;
+import com.gtrobot.processor.AbstractProcessor;
 import com.gtrobot.processor.InteractiveProcessor;
 
 public class RoomChatProcessor extends InteractiveProcessor {
-	private static final int STEP_TO_NORMAL_CHAT = 1000;
+    private static final int STEP_TO_NORMAL_CHAT = 1000;
 
-	private static SortedSet<String> activeUserList = new TreeSet<String>();
+    private static final SortedSet<String> activeUserList = new TreeSet<String>();
 
-	// The interactiveProcess_0 are skipped
-	protected int interactiveProcess_0(ProcessableCommand cmd)
-			throws XMPPException {
+    // The interactiveProcess_0 are skipped
+    protected int interactiveProcess_0(final ProcessableCommand cmd)
+            throws XMPPException {
 
-		activeUserList.add(cmd.getUserEntry().getJid());
+        RoomChatProcessor.activeUserList.add(cmd.getUserEntry().getJid());
 
-		StringBuffer msgBuf = new StringBuffer();
-		msgBuf.append(seperator);
-		msgBuf.append(endl);
-		msgBuf.append(getI18NMessage("roomchat.welcome"));
-		msgBuf.append(endl);
+        StringBuffer msgBuf = new StringBuffer();
+        msgBuf.append(AbstractProcessor.seperator);
+        msgBuf.append(AbstractProcessor.endl);
+        msgBuf.append(AbstractProcessor.getI18NMessage("roomchat.welcome"));
+        msgBuf.append(AbstractProcessor.endl);
 
-		sendBackMessage(cmd, msgBuf.toString());
+        this.sendBackMessage(cmd, msgBuf.toString());
 
-		msgBuf = new StringBuffer();
-		msgBuf.append("## #> ");
-		msgBuf.append(cmd.getUserEntry().getNickName());
-		msgBuf.append(getI18NMessage("roomchat.came.in"));
-		broadcastMessage(cmd.getUserEntry(), msgBuf.toString());
-		return super.interactiveProcess(cmd);
-	}
+        msgBuf = new StringBuffer();
+        msgBuf.append("## #> ");
+        msgBuf.append(cmd.getUserEntry().getNickName());
+        msgBuf.append(AbstractProcessor.getI18NMessage("roomchat.came.in"));
+        this.broadcastMessage(cmd.getUserEntry(), msgBuf.toString());
+        return super.interactiveProcess(cmd);
+    }
 
-	protected int interactiveProcessPrompt_10(ProcessableCommand cmd)
-			throws XMPPException {
-		StringBuffer msgBuf = new StringBuffer();
-		msgBuf.append(getI18NMessage("roomchat.menu.welcome"));
-		msgBuf.append(endl);
+    protected int interactiveProcessPrompt_10(final ProcessableCommand cmd)
+            throws XMPPException {
+        final StringBuffer msgBuf = new StringBuffer();
+        msgBuf
+                .append(AbstractProcessor
+                        .getI18NMessage("roomchat.menu.welcome"));
+        msgBuf.append(AbstractProcessor.endl);
 
-		sendBackMessage(cmd, msgBuf.toString());
-		return STEP_TO_NORMAL_CHAT;
-	}
+        this.sendBackMessage(cmd, msgBuf.toString());
+        return RoomChatProcessor.STEP_TO_NORMAL_CHAT;
+    }
 
-	/**
-	 * STEP_TO_NORMAL_CHAT
-	 */
-	protected int interactiveProcessPrompt_1000(ProcessableCommand cmd)
-			throws XMPPException {
-		return WAIT_INPUT;
-	}
+    /**
+     * STEP_TO_NORMAL_CHAT
+     */
+    protected int interactiveProcessPrompt_1000(final ProcessableCommand cmd)
+            throws XMPPException {
+        return InteractiveProcessor.WAIT_INPUT;
+    }
 
-	protected int interactiveProcess_1000(ProcessableCommand cmd)
-			throws XMPPException {
-		UserEntry sender = cmd.getUserEntry();
-		StringBuffer msgBuf = new StringBuffer();
-		msgBuf.append("【");
-		msgBuf.append(sender.getNickName());
-		msgBuf.append("】 ");
-		msgBuf.append(cmd.getOriginMessage());
+    protected int interactiveProcess_1000(final ProcessableCommand cmd)
+            throws XMPPException {
+        final UserEntry sender = cmd.getUserEntry();
+        final StringBuffer msgBuf = new StringBuffer();
+        msgBuf.append("【");
+        msgBuf.append(sender.getNickName());
+        msgBuf.append("】 ");
+        msgBuf.append(cmd.getOriginMessage());
 
-		broadcastMessage(cmd.getUserEntry(), msgBuf.toString());
-		return CONTINUE;
-	}
+        this.broadcastMessage(cmd.getUserEntry(), msgBuf.toString());
+        return InteractiveProcessor.CONTINUE;
+    }
 
-	protected void broadcastMessage(UserEntry sender, String message)
-			throws XMPPException {
-		Iterator userList = activeUserList.iterator();
-		while (userList.hasNext()) {
-			String jid = (String) userList.next();
-			if (jid.equals(sender.getJid()) && !sender.isEchoable()) {
-				continue;
-			}
-			UserEntry userEntry = GTRobotContextHelper.getUserEntryService()
-					.getUserEntry(jid);
-			sendMessage(message, userEntry);
-		}
-	}
+    protected void broadcastMessage(final UserEntry sender, final String message)
+            throws XMPPException {
+        final Iterator userList = RoomChatProcessor.activeUserList.iterator();
+        while (userList.hasNext()) {
+            final String jid = (String) userList.next();
+            if (jid.equals(sender.getJid()) && !sender.isEchoable()) {
+                continue;
+            }
+            final UserEntry userEntry = GTRobotContextHelper
+                    .getUserEntryService().getUserEntry(jid);
+            this.sendMessage(message, userEntry);
+        }
+    }
 
-	protected int interactiveProcess_1001(ProcessableCommand cmd)
-			throws XMPPException {
-		return STEP_TO_NORMAL_CHAT;
-	}
+    protected int interactiveProcess_1001(final ProcessableCommand cmd)
+            throws XMPPException {
+        return RoomChatProcessor.STEP_TO_NORMAL_CHAT;
+    }
 
-	protected void exitInteractiveProcess(BaseCommand cmd) throws XMPPException {
-		String jid = cmd.getUserEntry().getJid();
-		activeUserList.remove(jid);
+    @Override
+    protected void exitInteractiveProcess(final BaseCommand cmd)
+            throws XMPPException {
+        final String jid = cmd.getUserEntry().getJid();
+        RoomChatProcessor.activeUserList.remove(jid);
 
-		StringBuffer msgBuf = new StringBuffer();
-		msgBuf.append("## #> ");
-		msgBuf.append(cmd.getUserEntry().getNickName());
-		msgBuf.append(getI18NMessage("roomchat.left"));
-		broadcastMessage(cmd.getUserEntry(), msgBuf.toString());
+        final StringBuffer msgBuf = new StringBuffer();
+        msgBuf.append("## #> ");
+        msgBuf.append(cmd.getUserEntry().getNickName());
+        msgBuf.append(AbstractProcessor.getI18NMessage("roomchat.left"));
+        this.broadcastMessage(cmd.getUserEntry(), msgBuf.toString());
 
-		return;
-	}
+        return;
+    }
 }
