@@ -60,7 +60,7 @@ public class UserEntry extends BaseObject {
 
     /**
      * @hibernate.property column="JID" length="100" not-null="true"
-     *                     unique="true"
+     *                     unique="true" index="ind_user_jid"
      */
     public String getJid() {
         return this.jid;
@@ -72,7 +72,7 @@ public class UserEntry extends BaseObject {
 
     /**
      * @hibernate.property column="NICK_NAME" length="100" not-null="true"
-     *                     unique="true"
+     *                     unique="true" index="ind_user_nickname"
      */
     public String getNickName() {
         return this.nickName;

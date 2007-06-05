@@ -57,6 +57,7 @@ public class WordEntry extends BaseObject {
 
     /**
      * @hibernate.property column="PRONOUNCE" not-null="true" length="100"
+     *    index="ind_word_pronounce"
      */
     public String getPronounce() {
         return this.pronounce;
@@ -82,7 +83,7 @@ public class WordEntry extends BaseObject {
 
     /**
      * @hibernate.property column="WORD" length="100" not-null="true"
-     *                     unique="true"
+     *                     unique="true" index="ind_word"
      */
     public String getWord() {
         return this.word;

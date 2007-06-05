@@ -1,5 +1,5 @@
-alter table USER_FAILED_WORD_INFO drop constraint FK76757535C3088F0;
 alter table USER_FAILED_WORD_INFO drop constraint FK76757535DA14584;
+alter table USER_FAILED_WORD_INFO drop constraint FK76757535C3088F0;
 alter table USER_UNIT_INFO drop constraint FK4A327315C3088F0;
 alter table WORD_UNIT_ENTRY drop constraint FKD913BE2CC3088F0;
 drop table USER_ENTRY;
@@ -19,9 +19,13 @@ create table USER_WORD_STUDYING_INFO (USER_ENTRY_ID int8 not null, STUDYING_TYPE
 create table WORD_ENTRY (WORD_ENTRY_ID int8 not null, COMMENTS varchar(2000), MEANING varchar(1000) not null, PRONOUNCE varchar(100) not null, PRONOUNCE_TYPE varchar(50), SENTENCE varchar(2000), WORD varchar(100) not null unique, WORD_TYPE varchar(100), HAS_ERROR bool not null, primary key (WORD_ENTRY_ID));
 create table WORD_UNIT (WORD_UNIT_ID int8 not null, NAME varchar(100) not null unique, OWNER int8, LEVEL int8 not null, WORD_COUNT int8 not null, primary key (WORD_UNIT_ID));
 create table WORD_UNIT_ENTRY (WORD_ENTRY_ID int8 not null, WORD_UNIT_ID int8 not null, primary key (WORD_ENTRY_ID, WORD_UNIT_ID));
-alter table USER_FAILED_WORD_INFO add constraint FK76757535C3088F0 foreign key (WORD_UNIT_ID) references WORD_UNIT;
+create index ind_user_nickname on USER_ENTRY (NICK_NAME);
+create index ind_user_jid on USER_ENTRY (JID);
 alter table USER_FAILED_WORD_INFO add constraint FK76757535DA14584 foreign key (WORD_ENTRY_ID) references WORD_ENTRY;
+alter table USER_FAILED_WORD_INFO add constraint FK76757535C3088F0 foreign key (WORD_UNIT_ID) references WORD_UNIT;
 alter table USER_UNIT_INFO add constraint FK4A327315C3088F0 foreign key (WORD_UNIT_ID) references WORD_UNIT;
+create index ind_word_pronounce on WORD_ENTRY (PRONOUNCE);
+create index ind_word on WORD_ENTRY (WORD);
 alter table WORD_UNIT_ENTRY add constraint FKD913BE2CC3088F0 foreign key (WORD_UNIT_ID) references WORD_UNIT;
 create sequence SEQ_USER_ENTRY;
 create sequence SEQ_WORD_ENTRY;
