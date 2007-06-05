@@ -1,5 +1,5 @@
-alter table USER_FAILED_WORD_INFO drop constraint FK76757535C3088F0;
 alter table USER_FAILED_WORD_INFO drop constraint FK76757535DA14584;
+alter table USER_FAILED_WORD_INFO drop constraint FK76757535C3088F0;
 alter table USER_UNIT_INFO drop constraint FK4A327315C3088F0;
 alter table WORD_UNIT_ENTRY drop constraint FKD913BE2CC3088F0;
 drop table USER_ENTRY;
