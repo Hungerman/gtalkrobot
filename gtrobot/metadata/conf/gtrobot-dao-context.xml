@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+ 
+<beans>
+	<!--MessageCache-START-->  
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+	    <property name="basename" value="classpath:ResourceMessage"/> 
+	</bean>
+	
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:gtrobot.properties</value>
+            </list>
+        </property>
+    </bean>
+    
+    <!-- JNDI DataSource for J2EE environments -->
+    <!--bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName"><value>java:comp/env/jdbc/bpm2</value></property>
+    </bean-->
+    
+    <!-- Using Jakarta Commons Pool -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${hibernate.connection.driver_class}"/>
+        <property name="url" value="${hibernate.connection.url}"/>
+        <property name="username" value="${hibernate.connection.username}"/>
+        <property name="password" value="${hibernate.connection.password}"/>
+        <property name="maxActive" value="10"/>
+        <property name="maxIdle" value="2"/>
+        <property name="maxWait" value="2"/>
+        <property name="defaultAutoCommit" value="true"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="60"/>
+    </bean>
+
+    <!-- Hibernate SessionFactory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+		<property name="mappingLocations">  
+			<value>file:${hibernate.hbm.xml.dir}/**/*.hbm.xml</value>  
+		</property>
+        <!--
+        <property name="mappingResources">
+            <list>
+                <value>jp/co/softbrain/common/model/Message.hbm.xml</value> 
+                <value>jp/co/softbrain/common/model/LocaleMessage.hbm.xml</value>
+				<value>jp/co/softbrain/common/model/CommonParameter.hbm.xml</value>
+          </list>
+        </property>
+        -->
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <!-- Create/update the database tables automatically when the JVM starts up
+                <prop key="hibernate.hbm2ddl.auto">update</prop> -->
+                <!-- Turn batching off for better error messages under PostgreSQL 
+                <prop key="hibernate.jdbc.batch_size">0</prop> -->
+				<!--prop key="hibernate.show_sql">true</prop-->
+				<!--
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				<prop key="hibernate.cache.provider_class">org.impl.cache.EhCacheProvider</prop>
+				-->
+            </props>
+        </property>
+    </bean>
+
+    <!-- Generic Dao - can be used when doing standard CRUD -->
+    <bean id="dao" class="com.gtrobot.dao.impl.BaseDaoHibernate" autowire="byName"/>
+    
+  	<bean id="userEntryDao" class="com.gtrobot.dao.common.impl.UserEntryDaoHibernate" autowire="byName"/>
+
+    <!--WordEntry-START-->
+    <bean id="wordEntryDao" class="com.gtrobot.dao.word.impl.WordEntryDaoHibernate" autowire="byName"/>
+    <!--WordEntry-END-->
+    <!--WordUnit-START-->
+    <bean id="wordUnitDao" class="com.gtrobot.dao.word.impl.WordUnitDaoHibernate" autowire="byName"/>
+    <!--WordUnit-END-->
+    <!--WordUnitEntry-START-->
+    <bean id="wordUnitEntryDao" class="com.gtrobot.dao.word.impl.WordUnitEntryDaoHibernate" autowire="byName"/>
+    <!--WordUnitEntry-END-->
+    <!--UserFailedWordInfo-START-->
+    <bean id="userFailedWordInfoDao" class="com.gtrobot.dao.word.impl.UserFailedWordInfoDaoHibernate" autowire="byName"/>
+    <!--UserFailedWordInfo-END-->    
+    <!--UserUnitInfo-START-->
+    <bean id="userUnitInfoDao" class="com.gtrobot.dao.word.impl.UserUnitInfoDaoHibernate" autowire="byName"/>
+    <!--UserUnitInfo-END-->
+    <!--UserWordInfo-START-->
+    <bean id="userStudyingWordInfoDao" class="com.gtrobot.dao.word.impl.UserStudyingWordInfoDaoHibernate" autowire="byName"/>
+    <!--UserWordInfo-END-->
+</beans>

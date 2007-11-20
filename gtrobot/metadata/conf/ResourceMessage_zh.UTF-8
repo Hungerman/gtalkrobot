@@ -1,0 +1,175 @@
+﻿
+#GTRobot Message Bundle file
+error.prompt=错误: 
+error.wrongParameter=参数错误。
+error.reEnterInteractive=在进入另外一个交互式命令之前，需要先从当前的交互式命令离开。".x"可以帮助你。
+error.reEnterSameInteractive=你已经在这里了。
+error.accountLocked=非常抱歉，由于系统安全或者其他的原因，您的帐号已经被锁，请联系 http://groups.google.com/group/GTRobot.
+error.origin.prompt=你的命令是:
+invalid.command=不可识别的命令: 
+
+help.welcome=*** {0}，欢迎来到GTRobot! 请访问: http://code.google.com/p/gtalkrobot/ ***
+help.message= 多谢您的使用！ 请使用"/invite"发送邀请给您的朋友们，"/sendfeedback"提交您的使用建议。
+
+help.global.prompt=[全局命令 - 
+help.immediate.prompt=即时命令]
+help.command.help=/help : 显示此帮助信息
+help.command.lang=/lang <en|zh|ja> : 更改语言设定
+help.command.status=/st|status : 显示您的状态
+help.command.privatemessage=/pm|privatemessage <gmailId> <message>: 通过好友的Gmail帐号发送秘密消息
+help.command.changenickname=/cn|changenickname <newNickName> : 更改你的别名
+help.command.echo=/echo on|off : 是否回显您的输入
+help.command.searchuser=/sc [match string] : 查找当前在线用户
+help.interactive.prompt=交互式命令]
+help.command.invite=/invite : 给朋友发送邀请
+help.command.sendfeedback=/sf|sendfeedback : 给GTRobot发送建议
+help.command.roomchat=/rc|roomchat : 公共聊天室
+help.command.studyword=/sw|studyword : 日语单词练功房
+help.command.wordmanagement=/wm|wordmanagement : 日语单词办公楼
+help.interactive.help=. : 请输入"."可以查看到更多当前联机命令的帮助信息
+
+interactive.exit.roomchat= 你已经离开了公共聊天室，记得再回来哦！
+interactive.exit.studyword= 你已经离开了日语单词练功房。嗯，今天做的不错，回头继续哦！
+interactive.exit.wordmanagement= 你已经离开了日语单词办公楼。
+interactive.exit.invite= 你已经离开了邀请发送处。
+interactive.exit.sendfeedback= 你已经离开了建议发送处。
+
+
+
+lang.format=更改语言设定的命令格式是: /lang <en|zh|ja>
+lang.success=您的语言环境已经更改为:  
+
+status.welcome=您的状态: 
+status.item.jid= 账号邮箱地址: 
+status.item.nickname= 别名: 
+status.item.lang= 语言设定: 
+status.item.echoable= 是否回显: 
+status.item.interactive.mainmenu=您正在GTRobot的主菜单。
+status.item.interactive.roomchat=您正在公共聊天室，尽情享受吧!
+status.item.interactive.studyword=您正在努力学习单词，真是个好孩子！！！
+status.item.interactive.wordmanagement=您正在努力管理单词，加油！！！
+
+privatemessage.error.targetusernotfound=您要发送消息的用户不存在，也许他还没有加入到GTRobot聊天系统，赶快给他发个Mail邀请他吧! 
+privatemessage.format=发送秘密消息的格式是: /pm|privatemessage <emailId> <message>
+
+changenickname.result=你的别名已经成功改为【{0}】。
+changenickname.fail=运气不好，其他用户已经使用了别名【{0}】，请选择别的名称再试试。
+changenickname.format=更改别名的格式是: /cn|changenickname <newNickName> 
+
+echo.format=回显状态的命令格式是: /echo <on|off>
+echo.success.on=您已经*打开*了回显设置！
+echo.success.off=您已经*关闭*了回显设置！
+
+searchuser.format=查找用户的命令格式是: /sc [condition]
+searchuser.result.title=查找到以下用户列表: 
+searchuser.result.prompt.total=总共: 
+searchuser.result.prompt.next=请使用[ // or /n ] 命令继续显示更多用户列表。
+
+invite.welcome=请给您的朋友发送邀请，一起参与到GTRobot中来吧。
+invite.prompt= 请直接输入您朋友的GMail帐号，多个帐号之间使用空格来分隔。要退回到主菜单，请使用".x"命令。
+invite.result.sent=已经向您提交的如下朋友发送了加入到GTRobot的邀请。多谢您的配合。
+invite.result.notsent=嗯...你好像没有输入你朋友的GMail帐号哦。
+invite.result.bad=你提交的这些帐号，好像有问题哦，现在GTRobot只能处理GMail的帐号哦。
+
+sendfeedback.welcome=你有什么好的建议或者问题，都可以提交上来哦。
+sendfeedback.onlineHelper= .s 发送你的建议
+sendfeedback.sent=您的建议已经发送。多谢您的配合。
+sendfeedback.nosent=您还没有输入您的建议。如果要退出，请输入".x"。
+sendfeedback.prompt.content=您输入的建议是：
+sendfeedback.prompt.withcontent=请重新输入您的建议或者输入".s"发送您的建议。如果要退出，请输入".x"。
+sendfeedback.prompt.nocontent=请输入您的建议。如果要退出，请输入".x"。
+
+
+roomchat.welcome=欢迎来到聊天室，这里可以灌水哦！
+roomchat.came.in= 刚刚小腰一扭，晃了进来...
+roomchat.menu.welcome=聊吧...灌吧...别犹豫......
+roomchat.left= 发出一声巨响，“嘭”。 消失了......
+
+
+studyword.welcome=欢迎来到单词学习世界，要每天都坚持哦。
+studyword.conitinue= 1. 继续当前的学习
+studyword.management=学习内容管理
+studyword.management.addunit= 21. 添加新的学习单元到我的学习列表
+studyword.management.showunit= 22. 查看我的学习单元列表
+studyword.management.changeunit= 23.选择其他的单元进行学习
+studyword.management.changemode= 24. 更改我的学习模式
+
+studyword.conitinue.unitNotSet=你还没有设置好要学习的单元。请先到菜单23中选择要学习的单元。
+studyword.conitinue.onlineHelper.prievios= .p 返回到前一个单词
+studyword.conitinue.onlineHelper.skip= .s 跳过当前单词
+studyword.conitinue.onlineHelper.delete= .d 把这个单词从我的个人列表（私有单元）中删除
+studyword.conitinue.onlineHelper.delete.result= 这个单词已经从您的个人列表（私有单元）中删除了。
+studyword.conitinue.onlineHelper.add= .a 把这个单词添加到我的个人列表（私有单元）中。
+studyword.conitinue.onlineHelper.add.result= 这个单词已经添加你的个人列表（私有单元）中了。
+studyword.conitinue.onlineHelper.finish= .f 标识这个单词为已完成
+studyword.conitinue.onlineHelper.finish.result= 这个单词已经被标识为完成。已经从你的失败列表中删除了，同时添加到了你的个人列表（私有单元）中了。
+
+studyword.separator=~~~~~~~~~~~~~~~~~~~~
+studyword.conitinue.word.prompt=单词({0}/{1}
+studyword.conitinue.word.faildUnit=/失败): 
+studyword.conitinue.word.unit=/单元.{0}): 
+studyword.conitinue.word.enterPrompt=请输入单词:
+studyword.conitinue.failed=不懒哦，不过还有 {0} 个单词失败了哦，要加油哦。
+studyword.conitinue.finished=小强呀，你已经通过了本单元所有的单词啦。
+studyword.conitinue.finish.prompt=恭喜恭喜！ 既然这个单元所有的单词你都记住了，是不是把这个单元标识为完成了哪？ (y/n)
+studyword.conitinue.finish.YES=嗯，已经标识成完成了。不过你还是可以随时复习一下的哦。
+studyword.conitinue.finish.YES.next=快去菜单23选择新的单元来学习吧。
+studyword.conitinue.finish.NO=是吗，既然你决定了，那么继续吧。。。
+
+studyword.addunit.info=总共有 {0} 个单元还没有添加到你的单元列表中。
+studyword.addunit.prompt=请输入您想添加的单元号码，多个号码之间使用空格分割。
+studyword.addunit.result.prompt=你已经添加了下面这些单元到你的单元列表中: 
+
+studyword.showunit.prompt=在你的单元列表中，总共有 {0} 个单元。
+
+studyword.changeunit.noUnit=在你的单元列表中，没有未完成的单元，请到菜单21中去添加一些吧。
+studyword.changeunit.info=在你的单元列表中，还有 {0} 个单元没有完成。
+studyword.changeunit.status=现在你正在学习的是单元: {0}. 你的私有单元是: {1}.
+studyword.changeunit.prompt=请输入你想学习的一个单元号码：
+studyword.changeunit.invalidUnitNumber=你输入了一个非法的单元号码。
+studyword.changeunit.result=呵呵，单元 {0} ({1}) 已经为您准备好了，选择菜单1开始学习吧。
+
+studyword.changemode.allInUnit= 1. 学习单元中所有的单词
+studyword.changemode.failedInUnit= 2. 只学习单元中失败过的单词
+studyword.changemode.allFailed= 3. 学习所有失败的单词（所有单元中的）
+studyword.changemode.status=现在，你的学习模式是: {0}.
+studyword.changemode.prompt=请输入学习模式的号码：
+studyword.changemode.invalidChoice=输入错误哦，输入学习模式号码，就是1，2，3中的一个哦。
+studyword.changemode.OK=你的学习模式已经更改成功了。
+
+baseword.search.prompt= .g <keyword> 狗狗一个单词
+baseword.search.result=狗狗结果: {0}
+baseword.showword.sentence=<Example>
+baseword.showword.comments=<Comments>
+
+baseword.changeword.word= .cw <word> 修改单词（！覆盖）
+baseword.changeword.pronounce= .cp <pronounce> 修改单词的发音（！覆盖）
+baseword.changeword.pronounceType= .cpt <pronounceType> 修改单词的发音类型（！覆盖）
+baseword.changeword.wordType= .cwt <wordType> 修改单词的类型（！覆盖）
+baseword.changeword.meaning= .cm <meaning> 修改单词的解释（！覆盖）
+baseword.changeword.sentence= .cs <content> 修改单词的例句（！覆盖）
+baseword.changeword.comments= .cn <comments> 修改单词的注释（！覆盖）
+baseword.changeword.appendSentence= .as <content> 给单词添加例句
+baseword.changeword.appendConments= .an <comments> 给单词添加注释
+baseword.changeword.reportError= .rr <errors> 报告错误单词
+
+baseword.changeword.word.fail= 相同的单词已经存在。请选择《报告错误单词》，报告给管理员来修改。
+baseword.changeword.word.result= 单词已经被更改。
+baseword.changeword.pronounce.result= 单词的发音已经被更改。
+baseword.changeword.pronounceType.result= 单词的发音类型已经被更改。
+baseword.changeword.wordType.result= 单词的类型已经被更改。
+baseword.changeword.meaning.result= 单词的解释已经被更改。
+baseword.changeword.sentence.result= 单词的例句已经被更改。
+baseword.changeword.comments.result= 单词的注释已经被更改。
+baseword.changeword.appendSentence.result= 您提交的例句已经添加完成了。多谢您的共享！
+baseword.changeword.appendConments.result= 您提交的注释已经添加完成了。多谢您的共享！
+baseword.changeword.reportError.result= 多谢您的合作，您提交的错误信息已经被记录，我们回尽快调查修正这个错误。
+
+
+interactive.onlineHelper.prompt= 联机在线帮助：
+interactive.onlineHelper.help= .  显示联机帮助
+interactive.onlineHelper.backToMenu= .b 退回到菜单
+interactive.onlineHelper.exit= .x 退出当前的交互式操作
+
+
+

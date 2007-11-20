@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="GTRobot" basedir="." default="setup">
+
+    <property name="src.dir" value="${basedir}/src"/>
+    <property name="build.dir" value="${basedir}/build"/>
+    <property name="lib.dir" value="${basedir}/lib"/>
+    <property name="locallib.dir" value="${basedir}/locallib"/>
+    <property name="conf.dir" value="${basedir}/metadata/conf"/>
+    <property name="data.dir" value="${basedir}/metadata/data"/>
+    <property name="sql.dir" value="${basedir}/metadata/sql"/>
+    
+    <property name="compile.source.encoding" value="utf-8"/>
+    <property name="compile.debug" value="yes"/>
+
+    <property file="build.properties"/>
+    <property file="${conf.dir}/gtrobot.properties"/>
+    <property environment="env"/>
+
+	  <path id="lib.classpath">
+        <path location="${build.dir}"/>
+        <path location="${conf.dir}"/>
+        <fileset dir="${lib.dir}" includes="*.jar"/>
+    </path>
+    
+    <path id="locallib.classpath">
+    	<path refid="lib.classpath"/>
+      <fileset dir="${locallib.dir}" includes="*.jar"/>
+    </path>
+
+    <target name="init" description="defines custom tasks">
+        <taskdef name="dbunit" classname="org.dbunit.ant.DbUnitTask" classpathref="locallib.classpath"/>
+        
+        <!-- Ensure that Ant 1.6.2+ is being used -->
+        <available classname="org.apache.tools.ant.DynamicAttribute" property="ant-1.6.2"/>
+        <fail unless="ant-1.6.2" message="GTRobot requires Ant 1.6.2 for deployment"/>
+
+        <mkdir dir="logs"/>
+   </target>
+     
+    <!-- =================================================================== -->
+    <!--            Export the data                                          -->
+    <!-- =================================================================== -->
+    <target name="db-export-xml" depends="init"
+        description="Exports the current data in the database">
+        <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}"
+            userid="${hibernate.connection.username}" password="${hibernate.connection.password}">
+            <export dest="${data.dir}/db-export.xml" format="xml"/>
+        </dbunit>
+    </target>
+    <target name="db-load-xml" depends="init"
+        description="Loads the database with sample data">
+        <property name="operation" value="CLEAN_INSERT"/>
+        <property name="file" value="${data.dir}/data.xml"/>
+        <dbunit driver="${hibernate.connection.driver_class}"
+            supportBatchStatement="false" url="${hibernate.connection.url}"
+            userid="${hibernate.connection.username}" password="${hibernate.connection.password}">
+            <operation type="${operation}" src="${file}" format="xml"/>
+        </dbunit>
+    </target>
+    
+    <target name="db-export" depends="init"
+        description="Exports the current data in the database">
+        <dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}"
+            userid="${hibernate.connection.username}" password="${hibernate.connection.password}">
+            <export dest="${data.dir}/db-export.xls" format="xls"/>
+        </dbunit>
+    </target>
+    <target name="db-load" depends="init"
+        description="Loads the database with sample data">
+        <property name="operation" value="CLEAN_INSERT"/>
+        <property name="file" value="${data.dir}/data.xls"/>
+        <dbunit driver="${hibernate.connection.driver_class}"
+            supportBatchStatement="false" url="${hibernate.connection.url}"
+            userid="${hibernate.connection.username}" password="${hibernate.connection.password}">
+            <operation type="${operation}" src="${file}" format="xls"/>
+        </dbunit>
+        
+        <echo>GTRobot's system data has been loaded into your database!</echo>
+    </target>
+    
+    
+    <!-- =================================================================== -->
+    <!-- The "hibernatedoclet" target generates Hibernate mapping files      -->
+    <!-- based on XDoclet marked-up Plain Old Java Object (POJO)             -->
+    <!-- =================================================================== -->
+    <target name="hibernatedoclet" depends="init"
+        description="Generate Hibernate mapping files">
+
+        <taskdef name="hibernatedoclet"
+            classname="xdoclet.modules.hibernate.HibernateDocletTask"
+            classpathref="locallib.classpath"/>
+        
+        <!-- generate hibernate files -->
+        <hibernatedoclet destdir="${hibernate.hbm.xml.dir}"
+            excludedtags="@version,@author" addedtags="@xdoclet-generated at ${TODAY}"
+            force="${xdoclet.force}" encoding="utf-8">
+            <fileset dir="${src.dir}"/>
+            <hibernate validatexml="true" version="3.0"/>
+        </hibernatedoclet>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- The "db-prepare" target generates the database schema and creates   --> 
+    <!-- tables based on the mapping files                                   -->
+    <!-- =================================================================== -->
+    <target name="db-prepare" 
+        description="creates database tables">
+        <taskdef name="schemaexport"
+            classname="org.hibernate.tool.hbm2ddl.SchemaExportTask">
+            <classpath>
+                <path refid="locallib.classpath"/>
+            </classpath>
+        </taskdef>
+
+        <schemaexport quiet="no" text="no" drop="no" delimiter=";" 
+            properties="${conf.dir}/gtrobot.properties" output="create-tables.sql">
+            <fileset dir="${hibernate.hbm.xml.dir}" includes="**/*.hbm.xml"/>
+        </schemaexport>
+    </target>
+
+    <target name="db-drop"
+        description="drops database tables">
+        <taskdef name="schemaexport"
+            classname="org.hibernate.tool.hbm2ddl.SchemaExportTask">
+            <classpath>
+                <path refid="locallib.classpath"/>
+            </classpath>
+        </taskdef>
+
+        <schemaexport quiet="no" text="no" drop="yes" delimiter=";"
+            properties="${conf.dir}/gtrobot.properties" output="drop-tables.sql">
+            <fileset dir="${hibernate.hbm.xml.dir}" includes="**/*.hbm.xml"/>
+        </schemaexport>
+    </target>
+
+
+    <!-- =================================================================== -->
+    <!-- The "db-create" target creates a database based on properties       --> 
+    <!-- from the database.properties file                                   -->
+    <!-- =================================================================== -->
+    <target name="db-create" depends="init"
+        description="create database for ${database.type}">
+        <sql
+            driver="${hibernate.connection.driver_class}"
+            url="${hibernate.connection.url}"
+            userid="${hibernate.connection.username}"
+            password="${hibernate.connection.password}"
+            onerror="continue"
+            autocommit="true"
+            print="yes" 
+            output="logs/create-tables.log">
+
+            <classpath>
+                <path refid="lib.classpath"/>
+            </classpath>
+
+            <fileset dir="${sql.dir}">
+                <include name="*.sql"/>
+            </fileset>
+        </sql>
+        <echo>Tables have been created in to database("Drop" error infromation is ok for GTRobot)!</echo>
+    </target>
+    
+    <!-- =================================================================== -->
+    <!--            Setup GTRobot                                           -->
+    <!-- =================================================================== -->
+    <target name="setup" depends="xdoclet2, db-drop, db-prepare"
+        description="creates database and populates by calling other tasks">
+        <echo>GTRobot's database has been setup!</echo>
+    </target>
+
+    <!-- =================================================================== -->
+    <!--            Setup GTRobot                                           -->
+    <!-- =================================================================== -->
+    <target name="native2ascii" depends="init"
+        description="creates database and populates by calling other tasks">
+        <native2ascii encoding="UTF-8" src="${conf.dir}" dest="${conf.dir}"
+   					includes="**/*.UTF-8" ext=".properties"/>
+        <echo>GTRobot's resource files have been converted!</echo>
+    </target>
+    
+    <!-- Compile -->
+    <target name="compile" depends="init" description="Compile the src">
+        <javac srcdir="${src.dir}"
+            destdir="${build.dir}" debug="${compile.debug}"
+            deprecation="${compile.deprecation}" optimize="${compile.optimize}"
+            encoding="${compile.source.encoding}"
+            classpathref="lib.classpath">
+        </javac>
+    </target>
+
+   <target name="run" depends="compile, native2ascii"
+        description="Start GTRobot">
+        <java classname="com.gtrobot.GTRobotStarter" fork="yes">
+            <classpath>
+                <path refid="lib.classpath"/>
+            </classpath>
+        </java>
+    </target>
+    
+    <target name="xlsimport" depends=""
+        description="XlsWordImportor">
+        <java classname="com.gtrobot.utils.XlsWordImportor" fork="yes">
+            <classpath>
+                <path refid="locallib.classpath"/>
+            </classpath>
+        </java>
+    </target>
+    
+    <target name="xlsexport" depends=""
+        description="XlsWordExportor">
+        <java classname="com.gtrobot.utils.XlsWordExportor" fork="yes">
+            <classpath>
+                <path refid="locallib.classpath"/>
+            </classpath>
+        </java>
+    </target>
+    
+    
+    <target name="xdoclet2">
+        <mkdir dir="${hibernate.hbm.xml.dir}"/>
+        <path id="xdoclet2.task.classpath">
+        	<fileset dir="${locallib.dir}/xdoclet2" includes="*.jar"/>
+        </path>
+
+        <taskdef
+            name="xdoclet2"
+            classname="org.xdoclet.ant.XDocletTask"
+            classpathref="xdoclet2.task.classpath"
+            />
+        <xdoclet2 encoding="utf-8">
+            <!-- defines the file handled by xdoclet2 -->
+            <fileset dir="${src.dir}/com/gtrobot/model">
+                <include name="**/*.java"/>
+                <exclude name="**/AccountType.java"/>
+            </fileset>
+
+            <!-- defines the processing of a plugin -->
+            <component
+                classname="org.xdoclet.plugin.hibernate.HibernateMappingPlugin"
+                destdir="${hibernate.hbm.xml.dir}"
+                version="3.0"                
+            />
+        </xdoclet2>
+    </target>
+
+        
+</project>

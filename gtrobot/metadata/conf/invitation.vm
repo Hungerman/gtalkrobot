@@ -1,0 +1,57 @@
+-----------------------------------------------------------------------
+${fromNickName}<${fromJid}> 邀请你一起使用GTRobot。
+
+只需要把下面的GTRobot的帐号添加到你的GMail或者GTalk的联系人列表，你就
+可以通过GTRobot来联系你的朋友，同时享受GTRobot的各项功能：
+    GTRobot的gmail/gtalk帐号： ${GTRobotGmail}
+
+添加GTRobot的帐号到你的联系人列表之后，你就可以使用GTalk或者
+GMail的在线聊天功能开始同GTRobot聊天了。
+
+通过GTRobot，你现在可以：
+ - 享受免费的公共聊天室，同你的朋友一起尽情聊天。
+ - 在线学习日语（记忆单词，查看单词解释和例句，提交新的内容）
+
+目前，GTRobot还在继续开发测试过程中，同时我们正在努力增加更多有用的新功能。
+因此我们有可能会向你索取你对GTRobot的建议和看法。如果你有好的建议或者看法，
+可以随时使用GTRobot的联机功能提交你的建议，我们会非常感谢你的任何帮助。
+
+多谢！
+
+GTRobot开发小组
+
+访问下面网址，可以得到更多GTRobot的信息:
+    http://code.google.com/p/gtalkrobot/
+
+(如果点击上面的链接不能打开新的窗口，请直接把上面这个链接复制/粘帖到浏览器的
+地址栏进行访问)。
+
+
+-----------------------------------------------------------------------
+${fromNickName}<${fromJid}> has invited you to enjoy chatting with GTRobot.
+
+To meet your friend at GTRobot, just add this account to your 
+gmail/gtalk contact list:
+    GTRobot's gmail/gtalk account: ${GTRobotGmail}
+
+Once you add GTRobot to your contact list, your can use the gtalk or 
+gmail chatting function to start chatting with GTRobot.
+
+With GTrobot, you can:
+ - Chat with your friends in public chatting room.
+ - Study Japanese words.
+
+GTRobot is still in an early stage of development. But we are working 
+on adding more helpful functions for you. We might also ask for your 
+comments and suggestions sometime and we appreciate your help in 
+making GTRobot even better.
+
+Thanks,
+
+The GTRobot Team
+
+To learn more about GTRobot, visit:
+    http://code.google.com/p/gtalkrobot/
+
+(If clicking the URLs in this message does not work, copy and paste them
+into the address bar of your browser).
