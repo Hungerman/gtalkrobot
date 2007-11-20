@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+ 
+<beans>
+    <!-- GoogleTalkConnection  init-method="init" -->
+    <bean id="googleTalkConnection" class="com.gtrobot.engine.GoogleTalkConnection" 
+      destroy-method="destroy">
+        <property name="serviceName" value="${gtrobot.serviceName}"/>
+        <property name="host" value="${gtrobot.host}"/>
+        <property name="port" value="${gtrobot.port}"/>
+        <property name="username" value="${gtrobot.username}"/>
+        <property name="password" value="${gtrobot.password}"/>
+        <property name="resource" value="${gtrobot.resource}"/>
+        <property name="sendPresence" value="${gtrobot.sendPresence}"/>
+    </bean>
+    
+	<bean id="workerDispatcher" class="com.gtrobot.engine.GTRobotWorkerDispatcher">
+		<constructor-arg index="0" value="GTRobotWorkerDispatcher"/>
+		<constructor-arg index="1" value="3"/>
+	</bean>
+
+    <!-- Command Mapping -->
+	<bean id="gTRobotDispatcher" class="com.gtrobot.engine.GTRobotDispatcher">
+		<property name="defaultCommand" value="defaultCommand"/>
+		<property name="commandMappings">
+			<props>
+				<prop key="help">helpComamnd</prop>
+				<prop key="echo">echoComamnd</prop>
+				<prop key="lang">langComamnd</prop>
+				<prop key="status">statusComamnd</prop>
+				<prop key="st">statusComamnd</prop>
+				<prop key="searchuser">searchUserComamnd</prop>
+				<prop key="sc">searchUserComamnd</prop>
+				<prop key="privatemessage">privateMessageComamnd</prop>
+				<prop key="pm">privateMessageComamnd</prop>
+				<prop key="changenickname">changeNickNameCommand</prop>
+				<prop key="cn">changeNickNameCommand</prop>
+				<prop key="invite">inviteFriendsComamnd</prop>
+				<prop key="sendfeedback">sendFeedbackComamnd</prop>
+				<prop key="sf">sendFeedbackComamnd</prop>
+				<prop key="roomchat">roomChatComamnd</prop>
+				<prop key="rc">roomChatComamnd</prop>
+				<prop key="studyword">studyWordComamnd</prop>
+				<prop key="sw">studyWordComamnd</prop>
+				<prop key="wordmanagement">wordManagementComamnd</prop>
+				<prop key="wm">wordManagementComamnd</prop>
+				
+				
+			</props>
+		</property>
+	</bean>
+
+	<bean id="defaultCommand" class="com.gtrobot.command.BaseCommand" singleton="false">
+		<property name="commandType" value="invalid"/>
+		<property name="processor" ref="defaultProcessor"/>
+	</bean>
+	<bean id="defaultProcessor" class="com.gtrobot.processor.common.InvalidCommandProcessor"/>
+
+	<bean id="helpComamnd" class="com.gtrobot.command.BaseCommand" singleton="false">
+		<property name="commandType" value="help"/>
+		<property name="processor" ref="helpProcessor"/>
+	</bean>
+	<bean id="helpProcessor" class="com.gtrobot.processor.common.HelpProcessor"/>
+
+	<bean id="echoComamnd" class="com.gtrobot.command.SwitchCommand" singleton="false">
+		<property name="commandType" value="echo"/>
+		<property name="processor" ref="echoProcessor"/>
+	</bean>
+	<bean id="echoProcessor" class="com.gtrobot.processor.common.EchoProcessor"/>
+
+	<bean id="langComamnd" class="com.gtrobot.command.common.LangCommand" singleton="false">
+		<property name="commandType" value="lang"/>
+		<property name="processor" ref="langProcessor"/>
+	</bean>
+	<bean id="langProcessor" class="com.gtrobot.processor.common.LangProcessor"/>
+
+	<bean id="statusComamnd" class="com.gtrobot.command.BaseCommand" singleton="false">
+		<property name="commandType" value="status"/>
+		<property name="processor" ref="statusProcessor"/>
+	</bean>
+	<bean id="statusProcessor" class="com.gtrobot.processor.common.StatusProcessor"/>
+
+	<bean id="searchUserComamnd" class="com.gtrobot.command.common.SearchUserCommand" singleton="false">
+		<property name="commandType" value="searchuser"/>
+		<property name="processor" ref="searchUserProcessor"/>
+	</bean>
+	<bean id="searchUserProcessor" class="com.gtrobot.processor.common.SearchUserProcessor"/>
+
+	<bean id="privateMessageComamnd" class="com.gtrobot.command.common.PrivateMessageCommand" singleton="false">
+		<property name="commandType" value="privatemessage"/>
+		<property name="processor" ref="privateMessageProcessor"/>
+	</bean>
+	<bean id="privateMessageProcessor" class="com.gtrobot.processor.common.PrivateMessageProcessor"/>
+
+	<bean id="changeNickNameCommand" class="com.gtrobot.command.common.ChangeNickNameCommand" singleton="false">
+		<property name="commandType" value="changenickname"/>
+		<property name="processor" ref="changeNickNameProcessor"/>
+	</bean>
+	<bean id="changeNickNameProcessor" class="com.gtrobot.processor.common.ChangeNickNameProcessor"/>
+
+	<bean id="inviteFriendsComamnd" class="com.gtrobot.command.ProcessableCommand" singleton="false">
+		<property name="commandType" value="invite"/>
+		<property name="processor" ref="inviteFriendsProcessor"/>
+	</bean>
+	<bean id="inviteFriendsProcessor" class="com.gtrobot.processor.common.InviteFriendsProcessor">
+		<property name="mailMessage" ref="mailMessage"/>
+		<property name="gtrobotUsername" value="${gtrobot.username}"/>
+		<property name="gtrobotserviceName" value="${gtrobot.serviceName}"/>
+	</bean>
+
+	<bean id="sendFeedbackComamnd" class="com.gtrobot.command.ProcessableCommand" singleton="false">
+		<property name="commandType" value="sendfeedback"/>
+		<property name="processor" ref="sendFeedbackProcessor"/>
+	</bean>
+	<bean id="sendFeedbackProcessor" class="com.gtrobot.processor.common.SendFeedbackProcessor">
+		<property name="mailMessage" ref="mailMessage"/>
+		<property name="gtrobotUsername" value="${gtrobot.username}"/>
+		<property name="gtrobotserviceName" value="${gtrobot.serviceName}"/>
+	</bean>
+
+	<bean id="roomChatComamnd" class="com.gtrobot.command.ProcessableCommand" singleton="false">
+		<property name="commandType" value="roomchat"/>
+		<property name="processor" ref="roomChatProcessor"/>
+	</bean>
+	<bean id="roomChatProcessor" class="com.gtrobot.processor.common.RoomChatProcessor"/>
+
+	<bean id="studyWordComamnd" class="com.gtrobot.command.ProcessableCommand" singleton="false">
+		<property name="commandType" value="studyword"/>
+		<property name="processor" ref="studyWordProcessor"/>
+	</bean>
+	<bean id="studyWordProcessor" class="com.gtrobot.processor.word.StudyWordProcessor">
+			<property name="userUnitInfoManager" ref="userUnitInfoManager"/>
+			<property name="wordUnitManager" ref="wordUnitManager"/>
+			<property name="userStudyingWordInfoManager" ref="userStudyingWordInfoManager"/>
+			<property name="wordEntryManager" ref="wordEntryManager"/>
+			<property name="userFailedWordInfoManager" ref="userFailedWordInfoManager"/>
+			<property name="wordUnitEntryManager" ref="wordUnitEntryManager"/>
+			<property name="wordService" ref="wordService"/>
+			
+	</bean>
+	
+	<bean id="wordManagementComamnd" class="com.gtrobot.command.ProcessableCommand" singleton="false">
+		<property name="commandType" value="wordmanagement"/>
+		<property name="processor" ref="wordManagementProcessor"/>
+	</bean>
+	<bean id="wordManagementProcessor" class="com.gtrobot.processor.word.WordManagementProcessor">
+			<property name="userUnitInfoManager" ref="userUnitInfoManager"/>
+			<property name="wordUnitManager" ref="wordUnitManager"/>
+			<property name="userStudyingWordInfoManager" ref="userStudyingWordInfoManager"/>
+			<property name="wordEntryManager" ref="wordEntryManager"/>
+			<property name="userFailedWordInfoManager" ref="userFailedWordInfoManager"/>
+			<property name="wordUnitEntryManager" ref="wordUnitEntryManager"/>
+			<property name="wordService" ref="wordService"/>
+	</bean>
+
+
+	<bean id="mailSenderCommand" class="com.gtrobot.command.common.MailSenderCommand" singleton="false">
+		<property name="processor" ref="mailSenderProcessor"/>
+	</bean>
+	<bean id="mailSenderProcessor" class="com.gtrobot.processor.common.MailSenderProcessor">
+		<property name="mailEngine" ref="mailEngine"/>
+	</bean>
+</beans>
+

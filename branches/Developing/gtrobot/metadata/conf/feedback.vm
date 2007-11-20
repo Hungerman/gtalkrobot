@@ -1,0 +1,7 @@
+Feedback:
+From: ${fromNickName}<${fromJid}>
+Date: ${date}
+
+Content:
+  ${content}
+
