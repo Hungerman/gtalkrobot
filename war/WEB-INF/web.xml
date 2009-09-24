@@ -8,10 +8,18 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>Guestbook</servlet-name>
 		<servlet-class>org.guestbook.GuestbookServlet</servlet-class>
 	</servlet>
-	    <servlet>
+	<servlet>
         <servlet-name>sign</servlet-name>
         <servlet-class>org.guestbook.SignGuestbookServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>addWord</servlet-name>
+        <servlet-class>com.dictone.servlet.AddWordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>addWord</servlet-name>
+        <url-pattern>/addWord</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>sign</servlet-name>
         <url-pattern>/sign</url-pattern>
